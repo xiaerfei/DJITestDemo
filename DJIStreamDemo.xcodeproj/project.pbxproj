@@ -1,0 +1,1021 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2C8D86052F9A21C30037014A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D85F82F9A21C30037014A /* AppDelegate.m */; };
+		2C8D86062F9A21C30037014A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D85FD2F9A21C30037014A /* main.m */; };
+		2C8D86072F9A21C30037014A /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D86012F9A21C30037014A /* SceneDelegate.m */; };
+		2C8D86082F9A21C30037014A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D86032F9A21C30037014A /* ViewController.m */; };
+		2C8D86092F9A21C30037014A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C8D85F92F9A21C30037014A /* Assets.xcassets */; };
+		2C8D860B2F9A21C30037014A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C8D85FC2F9A21C30037014A /* LaunchScreen.storyboard */; };
+		2C8D860C2F9A21C30037014A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C8D85FF2F9A21C30037014A /* Main.storyboard */; };
+		2C8D860F2F9A21C90037014A /* DJIStreamDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D860D2F9A21C90037014A /* DJIStreamDemoTests.m */; };
+		2C8D86132F9A21CC0037014A /* DJIStreamDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D86102F9A21CC0037014A /* DJIStreamDemoUITests.m */; };
+		2C8D86142F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D86112F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m */; };
+		2C8D8D5A2F9A2D120037014A /* HevcNalUnitVps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D242F9A2D120037014A /* HevcNalUnitVps.swift */; };
+		2C8D8D5B2F9A2D120037014A /* RtmpAcknowledgementMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D342F9A2D120037014A /* RtmpAcknowledgementMessage.swift */; };
+		2C8D8D5E2F9A2D120037014A /* CMVideoFormatDescription+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D042F9A2D120037014A /* CMVideoFormatDescription+Extension.swift */; };
+		2C8D8D5F2F9A2D120037014A /* MpegTsVideoConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2A2F9A2D120037014A /* MpegTsVideoConfig.swift */; };
+		2C8D8D602F9A2D120037014A /* RtmpUserControlMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3C2F9A2D120037014A /* RtmpUserControlMessage.swift */; };
+		2C8D8D612F9A2D120037014A /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D052F9A2D120037014A /* Data+Extension.swift */; };
+		2C8D8D622F9A2D120037014A /* MpegTsVideoConfigHevc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D252F9A2D120037014A /* MpegTsVideoConfigHevc.swift */; };
+		2C8D8D672F9A2D120037014A /* ByteWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4F2F9A2D120037014A /* ByteWriter.swift */; };
+		2C8D8D692F9A2D120037014A /* HevcNalUnitSei.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D222F9A2D120037014A /* HevcNalUnitSei.swift */; };
+		2C8D8D6C2F9A2D120037014A /* AvcNalUnitPps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */; };
+		2C8D8D6E2F9A2D120037014A /* RtmpAggregateMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D352F9A2D120037014A /* RtmpAggregateMessage.swift */; };
+		2C8D8D6F2F9A2D120037014A /* NalUnitStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2C2F9A2D120037014A /* NalUnitStream.swift */; };
+		2C8D8D702F9A2D120037014A /* Amf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D312F9A2D120037014A /* Amf.swift */; };
+		2C8D8D732F9A2D120037014A /* AvcNalUnitSps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1D2F9A2D120037014A /* AvcNalUnitSps.swift */; };
+		2C8D8D752F9A2D120037014A /* HevcNalUnitPps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D212F9A2D120037014A /* HevcNalUnitPps.swift */; };
+		2C8D8D762F9A2D120037014A /* TargetLatenciesSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */; };
+		2C8D8D772F9A2D120037014A /* RtmpServerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */; };
+		2C8D8D7A2F9A2D120037014A /* RtmpAudioMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D362F9A2D120037014A /* RtmpAudioMessage.swift */; };
+		2C8D8D7B2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3A2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift */; };
+		2C8D8D7C2F9A2D120037014A /* VTDecompressionSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */; };
+		2C8D8D7D2F9A2D120037014A /* RtmpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D562F9A2D120037014A /* RtmpServer.swift */; };
+		2C8D8D7E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift */; };
+		2C8D8D7F2F9A2D120037014A /* RtmpChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D402F9A2D120037014A /* RtmpChunk.swift */; };
+		2C8D8D802F9A2D120037014A /* RtmpServerChunkStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */; };
+		2C8D8D812F9A2D120037014A /* MpegTsVideoConfigAvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1E2F9A2D120037014A /* MpegTsVideoConfigAvc.swift */; };
+		2C8D8D822F9A2D120037014A /* Adts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D272F9A2D120037014A /* Adts.swift */; };
+		2C8D8D852F9A2D120037014A /* MpegTsAudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D292F9A2D120037014A /* MpegTsAudioConfig.swift */; };
+		2C8D8D862F9A2D120037014A /* HevcNalUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D202F9A2D120037014A /* HevcNalUnit.swift */; };
+		2C8D8D872F9A2D120037014A /* ByteReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4E2F9A2D120037014A /* ByteReader.swift */; };
+		2C8D8D882F9A2D120037014A /* RtmpAbortMessge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D332F9A2D120037014A /* RtmpAbortMessge.swift */; };
+		2C8D8D892F9A2D120037014A /* HevcNalUnitSps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D232F9A2D120037014A /* HevcNalUnitSps.swift */; };
+		2C8D8D8D2F9A2D120037014A /* NalUnitWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2D2F9A2D120037014A /* NalUnitWriter.swift */; };
+		2C8D8D8E2F9A2D120037014A /* RtmpVideoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3D2F9A2D120037014A /* RtmpVideoMessage.swift */; };
+		2C8D8D8F2F9A2D120037014A /* RtmpMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D392F9A2D120037014A /* RtmpMessage.swift */; };
+		2C8D8D912F9A2D120037014A /* AudioSpecificConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */; };
+		2C8D8D922F9A2D120037014A /* AvcNalUnitSei.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */; };
+		2C8D8D952F9A2D120037014A /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D0F2F9A2D120037014A /* PreviewView.swift */; };
+		2C8D8D962F9A2D120037014A /* AvcNalUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */; };
+		2C8D8D972F9A2D120037014A /* Flv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D082F9A2D120037014A /* Flv.swift */; };
+		2C8D8D982F9A2D120037014A /* NalUnitReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */; };
+		2C8D8D992F9A2D120037014A /* RtmpCommandMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D372F9A2D120037014A /* RtmpCommandMessage.swift */; };
+		2C8D8D9A2F9A2D120037014A /* BitrateStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */; };
+		2C8D8D9B2F9A2D120037014A /* RtmpDataMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */; };
+		2C8D8D9C2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */; };
+		DA0DA0011A0001A001A00001 /* DjiMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00001 /* DjiMessage.swift */; };
+		DA0DA0011A0001A001A00002 /* DjiDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00002 /* DjiDevice.swift */; };
+		DA0DA0011A0001A001A00003 /* DjiDeviceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00003 /* DjiDeviceMessage.swift */; };
+		DA0DA0011A0001A001A00004 /* DjiDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00004 /* DjiDeviceModel.swift */; };
+		DA0DA0011A0001A001A00005 /* DjiDeviceScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00005 /* DjiDeviceScanner.swift */; };
+		DA0DA0011A0001A001A00006 /* DJIStreamController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00006 /* DJIStreamController.swift */; };
+		DA0DA0011A0001A001A00011 /* ByteIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00011 /* ByteIO.swift */; };
+		DA0DA0011A0001A001A00012 /* DjiCrc.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00012 /* DjiCrc.swift */; };
+		DA0DA0011A0001A001A00013 /* DjiLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00013 /* DjiLogger.swift */; };
+		DA0DA0011A0001A001A00014 /* SimpleTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00014 /* SimpleTimer.swift */; };
+		DA0DA0011A0001A001A00015 /* DjiSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00015 /* DjiSettings.swift */; };
+		DA0DA0021A0001A001A00001 /* VideoDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0021B0001A001A00001 /* VideoDecoder.swift */; };
+		DA0DA0021A0001A001A00002 /* SettingsRtmpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0021B0001A001A00002 /* SettingsRtmpServer.swift */; };
+		DA0DA0021A0001A001A00003 /* RTMPIngestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0021B0001A001A00003 /* RTMPIngestController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2C8D85DA2F9A20EC0037014A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C8D85B62F9A20EA0037014A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C8D85BD2F9A20EA0037014A;
+			remoteInfo = DJIStreamDemo;
+		};
+		2C8D85E42F9A20EC0037014A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C8D85B62F9A20EA0037014A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C8D85BD2F9A20EA0037014A;
+			remoteInfo = DJIStreamDemo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2C8D85BE2F9A20EA0037014A /* DJIStreamDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DJIStreamDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C8D85D92F9A20EC0037014A /* DJIStreamDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DJIStreamDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C8D85E32F9A20EC0037014A /* DJIStreamDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DJIStreamDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C8D85F72F9A21C30037014A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2C8D85F82F9A21C30037014A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2C8D85F92F9A21C30037014A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C8D85FA2F9A21C30037014A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C8D85FB2F9A21C30037014A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2C8D85FD2F9A21C30037014A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2C8D85FE2F9A21C30037014A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2C8D86002F9A21C30037014A /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		2C8D86012F9A21C30037014A /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		2C8D86022F9A21C30037014A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		2C8D86032F9A21C30037014A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		2C8D860D2F9A21C90037014A /* DJIStreamDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoTests.m; sourceTree = "<group>"; };
+		2C8D86102F9A21CC0037014A /* DJIStreamDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoUITests.m; sourceTree = "<group>"; };
+		2C8D86112F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoUITestsLaunchTests.m; sourceTree = "<group>"; };
+		2C8D8D042F9A2D120037014A /* CMVideoFormatDescription+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoFormatDescription+Extension.swift"; sourceTree = "<group>"; };
+		2C8D8D052F9A2D120037014A /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
+		2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VTDecompressionSession+Extension.swift"; sourceTree = "<group>"; };
+		2C8D8D082F9A2D120037014A /* Flv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flv.swift; sourceTree = "<group>"; };
+		2C8D8D0F2F9A2D120037014A /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetLatenciesSynchronizer.swift; sourceTree = "<group>"; };
+		2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnit.swift; sourceTree = "<group>"; };
+		2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitPps.swift; sourceTree = "<group>"; };
+		2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitSei.swift; sourceTree = "<group>"; };
+		2C8D8D1D2F9A2D120037014A /* AvcNalUnitSps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitSps.swift; sourceTree = "<group>"; };
+		2C8D8D1E2F9A2D120037014A /* MpegTsVideoConfigAvc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsVideoConfigAvc.swift; sourceTree = "<group>"; };
+		2C8D8D202F9A2D120037014A /* HevcNalUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnit.swift; sourceTree = "<group>"; };
+		2C8D8D212F9A2D120037014A /* HevcNalUnitPps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitPps.swift; sourceTree = "<group>"; };
+		2C8D8D222F9A2D120037014A /* HevcNalUnitSei.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitSei.swift; sourceTree = "<group>"; };
+		2C8D8D232F9A2D120037014A /* HevcNalUnitSps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitSps.swift; sourceTree = "<group>"; };
+		2C8D8D242F9A2D120037014A /* HevcNalUnitVps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitVps.swift; sourceTree = "<group>"; };
+		2C8D8D252F9A2D120037014A /* MpegTsVideoConfigHevc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsVideoConfigHevc.swift; sourceTree = "<group>"; };
+		2C8D8D272F9A2D120037014A /* Adts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adts.swift; sourceTree = "<group>"; };
+		2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSpecificConfig.swift; sourceTree = "<group>"; };
+		2C8D8D292F9A2D120037014A /* MpegTsAudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsAudioConfig.swift; sourceTree = "<group>"; };
+		2C8D8D2A2F9A2D120037014A /* MpegTsVideoConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsVideoConfig.swift; sourceTree = "<group>"; };
+		2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NalUnitReader.swift; sourceTree = "<group>"; };
+		2C8D8D2C2F9A2D120037014A /* NalUnitStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NalUnitStream.swift; sourceTree = "<group>"; };
+		2C8D8D2D2F9A2D120037014A /* NalUnitWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NalUnitWriter.swift; sourceTree = "<group>"; };
+		2C8D8D312F9A2D120037014A /* Amf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Amf.swift; sourceTree = "<group>"; };
+		2C8D8D332F9A2D120037014A /* RtmpAbortMessge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAbortMessge.swift; sourceTree = "<group>"; };
+		2C8D8D342F9A2D120037014A /* RtmpAcknowledgementMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAcknowledgementMessage.swift; sourceTree = "<group>"; };
+		2C8D8D352F9A2D120037014A /* RtmpAggregateMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAggregateMessage.swift; sourceTree = "<group>"; };
+		2C8D8D362F9A2D120037014A /* RtmpAudioMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAudioMessage.swift; sourceTree = "<group>"; };
+		2C8D8D372F9A2D120037014A /* RtmpCommandMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpCommandMessage.swift; sourceTree = "<group>"; };
+		2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpDataMessage.swift; sourceTree = "<group>"; };
+		2C8D8D392F9A2D120037014A /* RtmpMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpMessage.swift; sourceTree = "<group>"; };
+		2C8D8D3A2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpSetChunkSizeMessage.swift; sourceTree = "<group>"; };
+		2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpSetPeerBandwidthMessage.swift; sourceTree = "<group>"; };
+		2C8D8D3C2F9A2D120037014A /* RtmpUserControlMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpUserControlMessage.swift; sourceTree = "<group>"; };
+		2C8D8D3D2F9A2D120037014A /* RtmpVideoMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpVideoMessage.swift; sourceTree = "<group>"; };
+		2C8D8D3E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpWindowAcknowledgementSizeMessage.swift; sourceTree = "<group>"; };
+		2C8D8D402F9A2D120037014A /* RtmpChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpChunk.swift; sourceTree = "<group>"; };
+		2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitrateStats.swift; sourceTree = "<group>"; };
+		2C8D8D4E2F9A2D120037014A /* ByteReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteReader.swift; sourceTree = "<group>"; };
+		2C8D8D4F2F9A2D120037014A /* ByteWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteWriter.swift; sourceTree = "<group>"; };
+		2C8D8D562F9A2D120037014A /* RtmpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServer.swift; sourceTree = "<group>"; };
+		2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServerChunkStream.swift; sourceTree = "<group>"; };
+		2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServerClient.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00001 /* DjiMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiMessage.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00002 /* DjiDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDevice.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00003 /* DjiDeviceMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDeviceMessage.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00004 /* DjiDeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDeviceModel.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00005 /* DjiDeviceScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDeviceScanner.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00006 /* DJIStreamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIStreamController.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00011 /* ByteIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteIO.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00012 /* DjiCrc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiCrc.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00013 /* DjiLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiLogger.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00014 /* SimpleTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTimer.swift; sourceTree = "<group>"; };
+		DA0DA0011B0001A001A00015 /* DjiSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiSettings.swift; sourceTree = "<group>"; };
+		DA0DA0021B0001A001A00001 /* VideoDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDecoder.swift; sourceTree = "<group>"; };
+		DA0DA0021B0001A001A00002 /* SettingsRtmpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRtmpServer.swift; sourceTree = "<group>"; };
+		DA0DA0021B0001A001A00003 /* RTMPIngestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTMPIngestController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2C8D85BB2F9A20EA0037014A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C8D85D62F9A20EC0037014A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C8D85E02F9A20EC0037014A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2C8D85B52F9A20EA0037014A = {
+			isa = PBXGroup;
+			children = (
+				2C8D86042F9A21C30037014A /* DJIStreamDemo */,
+				2C8D860E2F9A21C90037014A /* DJIStreamDemoTests */,
+				2C8D86122F9A21CC0037014A /* DJIStreamDemoUITests */,
+				2C8D85BF2F9A20EA0037014A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2C8D85BF2F9A20EA0037014A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D85BE2F9A20EA0037014A /* DJIStreamDemo.app */,
+				2C8D85D92F9A20EC0037014A /* DJIStreamDemoTests.xctest */,
+				2C8D85E32F9A20EC0037014A /* DJIStreamDemoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2C8D86042F9A21C30037014A /* DJIStreamDemo */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D85F72F9A21C30037014A /* AppDelegate.h */,
+				2C8D85F82F9A21C30037014A /* AppDelegate.m */,
+				2C8D85F92F9A21C30037014A /* Assets.xcassets */,
+				2C8D85FA2F9A21C30037014A /* Info.plist */,
+				2C8D85FC2F9A21C30037014A /* LaunchScreen.storyboard */,
+				2C8D85FD2F9A21C30037014A /* main.m */,
+				2C8D85FF2F9A21C30037014A /* Main.storyboard */,
+				2C8D86002F9A21C30037014A /* SceneDelegate.h */,
+				2C8D86012F9A21C30037014A /* SceneDelegate.m */,
+				2C8D86022F9A21C30037014A /* ViewController.h */,
+				2C8D86032F9A21C30037014A /* ViewController.m */,
+				2C8D8D032F9A2AF50037014A /* Ingest */,
+				DA0DA0011C0001A001A00001 /* DJI */,
+			);
+			path = DJIStreamDemo;
+			sourceTree = "<group>";
+		};
+		2C8D860E2F9A21C90037014A /* DJIStreamDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D860D2F9A21C90037014A /* DJIStreamDemoTests.m */,
+			);
+			path = DJIStreamDemoTests;
+			sourceTree = "<group>";
+		};
+		2C8D86122F9A21CC0037014A /* DJIStreamDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D86102F9A21CC0037014A /* DJIStreamDemoUITests.m */,
+				2C8D86112F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m */,
+			);
+			path = DJIStreamDemoUITests;
+			sourceTree = "<group>";
+		};
+		2C8D8D032F9A2AF50037014A /* Ingest */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D552F9A2D120037014A /* HaishinKit */,
+				2C8D8D592F9A2D120037014A /* RtmpServer */,
+				DA0DA0021B0001A001A00003 /* RTMPIngestController.swift */,
+			);
+			path = Ingest;
+			sourceTree = "<group>";
+		};
+		2C8D8D072F9A2D120037014A /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D042F9A2D120037014A /* CMVideoFormatDescription+Extension.swift */,
+				2C8D8D052F9A2D120037014A /* Data+Extension.swift */,
+				2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		2C8D8D092F9A2D120037014A /* Flv */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D082F9A2D120037014A /* Flv.swift */,
+			);
+			path = Flv;
+			sourceTree = "<group>";
+		};
+		2C8D8D0D2F9A2D120037014A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		2C8D8D122F9A2D120037014A /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D0F2F9A2D120037014A /* PreviewView.swift */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		2C8D8D192F9A2D120037014A /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D0D2F9A2D120037014A /* Audio */,
+				2C8D8D122F9A2D120037014A /* Video */,
+				2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
+		2C8D8D1F2F9A2D120037014A /* Avc */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */,
+				2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */,
+				2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */,
+				2C8D8D1D2F9A2D120037014A /* AvcNalUnitSps.swift */,
+				2C8D8D1E2F9A2D120037014A /* MpegTsVideoConfigAvc.swift */,
+			);
+			path = Avc;
+			sourceTree = "<group>";
+		};
+		2C8D8D262F9A2D120037014A /* Hevc */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D202F9A2D120037014A /* HevcNalUnit.swift */,
+				2C8D8D212F9A2D120037014A /* HevcNalUnitPps.swift */,
+				2C8D8D222F9A2D120037014A /* HevcNalUnitSei.swift */,
+				2C8D8D232F9A2D120037014A /* HevcNalUnitSps.swift */,
+				2C8D8D242F9A2D120037014A /* HevcNalUnitVps.swift */,
+				2C8D8D252F9A2D120037014A /* MpegTsVideoConfigHevc.swift */,
+			);
+			path = Hevc;
+			sourceTree = "<group>";
+		};
+		2C8D8D2E2F9A2D120037014A /* Mpeg */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D1F2F9A2D120037014A /* Avc */,
+				2C8D8D262F9A2D120037014A /* Hevc */,
+				2C8D8D272F9A2D120037014A /* Adts.swift */,
+				2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */,
+				2C8D8D292F9A2D120037014A /* MpegTsAudioConfig.swift */,
+				2C8D8D2A2F9A2D120037014A /* MpegTsVideoConfig.swift */,
+				2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */,
+				2C8D8D2C2F9A2D120037014A /* NalUnitStream.swift */,
+				2C8D8D2D2F9A2D120037014A /* NalUnitWriter.swift */,
+			);
+			path = Mpeg;
+			sourceTree = "<group>";
+		};
+		2C8D8D302F9A2D120037014A /* Rist */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Rist;
+			sourceTree = "<group>";
+		};
+		2C8D8D322F9A2D120037014A /* Amf */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D312F9A2D120037014A /* Amf.swift */,
+			);
+			path = Amf;
+			sourceTree = "<group>";
+		};
+		2C8D8D3F2F9A2D120037014A /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D332F9A2D120037014A /* RtmpAbortMessge.swift */,
+				2C8D8D342F9A2D120037014A /* RtmpAcknowledgementMessage.swift */,
+				2C8D8D352F9A2D120037014A /* RtmpAggregateMessage.swift */,
+				2C8D8D362F9A2D120037014A /* RtmpAudioMessage.swift */,
+				2C8D8D372F9A2D120037014A /* RtmpCommandMessage.swift */,
+				2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */,
+				2C8D8D392F9A2D120037014A /* RtmpMessage.swift */,
+				2C8D8D3A2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift */,
+				2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */,
+				2C8D8D3C2F9A2D120037014A /* RtmpUserControlMessage.swift */,
+				2C8D8D3D2F9A2D120037014A /* RtmpVideoMessage.swift */,
+				2C8D8D3E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		2C8D8D462F9A2D120037014A /* Rtmp */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D322F9A2D120037014A /* Amf */,
+				2C8D8D3F2F9A2D120037014A /* Message */,
+				2C8D8D402F9A2D120037014A /* RtmpChunk.swift */,
+			);
+			path = Rtmp;
+			sourceTree = "<group>";
+		};
+		2C8D8D4C2F9A2D120037014A /* Srt */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Srt;
+			sourceTree = "<group>";
+		};
+		2C8D8D502F9A2D120037014A /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */,
+				2C8D8D4E2F9A2D120037014A /* ByteReader.swift */,
+				2C8D8D4F2F9A2D120037014A /* ByteWriter.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		2C8D8D552F9A2D120037014A /* HaishinKit */ = {
+			isa = PBXGroup;
+			children = (
+				DA0DA0021C0001A001A00001 /* Codec */,
+				2C8D8D072F9A2D120037014A /* Extension */,
+				2C8D8D092F9A2D120037014A /* Flv */,
+				2C8D8D192F9A2D120037014A /* Media */,
+				2C8D8D2E2F9A2D120037014A /* Mpeg */,
+				2C8D8D302F9A2D120037014A /* Rist */,
+				2C8D8D462F9A2D120037014A /* Rtmp */,
+				2C8D8D4C2F9A2D120037014A /* Srt */,
+				2C8D8D502F9A2D120037014A /* Util */,
+			);
+			path = HaishinKit;
+			sourceTree = "<group>";
+		};
+		DA0DA0021C0001A001A00001 /* Codec */ = {
+			isa = PBXGroup;
+			children = (
+				DA0DA0021B0001A001A00001 /* VideoDecoder.swift */,
+			);
+			path = Codec;
+			sourceTree = "<group>";
+		};
+		2C8D8D592F9A2D120037014A /* RtmpServer */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D8D562F9A2D120037014A /* RtmpServer.swift */,
+				2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */,
+				2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */,
+				DA0DA0021B0001A001A00002 /* SettingsRtmpServer.swift */,
+			);
+			path = RtmpServer;
+			sourceTree = "<group>";
+		};
+		DA0DA0011C0001A001A00001 /* DJI */ = {
+			isa = PBXGroup;
+			children = (
+				DA0DA0011B0001A001A00001 /* DjiMessage.swift */,
+				DA0DA0011B0001A001A00002 /* DjiDevice.swift */,
+				DA0DA0011B0001A001A00003 /* DjiDeviceMessage.swift */,
+				DA0DA0011B0001A001A00004 /* DjiDeviceModel.swift */,
+				DA0DA0011B0001A001A00005 /* DjiDeviceScanner.swift */,
+				DA0DA0011B0001A001A00006 /* DJIStreamController.swift */,
+				DA0DA0011C0001A001A00002 /* Support */,
+			);
+			path = DJI;
+			sourceTree = "<group>";
+		};
+		DA0DA0011C0001A001A00002 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				DA0DA0011B0001A001A00011 /* ByteIO.swift */,
+				DA0DA0011B0001A001A00012 /* DjiCrc.swift */,
+				DA0DA0011B0001A001A00013 /* DjiLogger.swift */,
+				DA0DA0011B0001A001A00014 /* SimpleTimer.swift */,
+				DA0DA0011B0001A001A00015 /* DjiSettings.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2C8D85BD2F9A20EA0037014A /* DJIStreamDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C8D85EC2F9A20EC0037014A /* Build configuration list for PBXNativeTarget "DJIStreamDemo" */;
+			buildPhases = (
+				2C8D85BA2F9A20EA0037014A /* Sources */,
+				2C8D85BB2F9A20EA0037014A /* Frameworks */,
+				2C8D85BC2F9A20EA0037014A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DJIStreamDemo;
+			packageProductDependencies = (
+			);
+			productName = DJIStreamDemo;
+			productReference = 2C8D85BE2F9A20EA0037014A /* DJIStreamDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2C8D85D82F9A20EC0037014A /* DJIStreamDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C8D85F12F9A20EC0037014A /* Build configuration list for PBXNativeTarget "DJIStreamDemoTests" */;
+			buildPhases = (
+				2C8D85D52F9A20EC0037014A /* Sources */,
+				2C8D85D62F9A20EC0037014A /* Frameworks */,
+				2C8D85D72F9A20EC0037014A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C8D85DB2F9A20EC0037014A /* PBXTargetDependency */,
+			);
+			name = DJIStreamDemoTests;
+			packageProductDependencies = (
+			);
+			productName = DJIStreamDemoTests;
+			productReference = 2C8D85D92F9A20EC0037014A /* DJIStreamDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2C8D85E22F9A20EC0037014A /* DJIStreamDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C8D85F42F9A20EC0037014A /* Build configuration list for PBXNativeTarget "DJIStreamDemoUITests" */;
+			buildPhases = (
+				2C8D85DF2F9A20EC0037014A /* Sources */,
+				2C8D85E02F9A20EC0037014A /* Frameworks */,
+				2C8D85E12F9A20EC0037014A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C8D85E52F9A20EC0037014A /* PBXTargetDependency */,
+			);
+			name = DJIStreamDemoUITests;
+			packageProductDependencies = (
+			);
+			productName = DJIStreamDemoUITests;
+			productReference = 2C8D85E32F9A20EC0037014A /* DJIStreamDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2C8D85B62F9A20EA0037014A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 2630;
+				TargetAttributes = {
+					2C8D85BD2F9A20EA0037014A = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					2C8D85D82F9A20EC0037014A = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 2C8D85BD2F9A20EA0037014A;
+					};
+					2C8D85E22F9A20EC0037014A = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 2C8D85BD2F9A20EA0037014A;
+					};
+				};
+			};
+			buildConfigurationList = 2C8D85B92F9A20EA0037014A /* Build configuration list for PBXProject "DJIStreamDemo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2C8D85B52F9A20EA0037014A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2C8D85BF2F9A20EA0037014A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2C8D85BD2F9A20EA0037014A /* DJIStreamDemo */,
+				2C8D85D82F9A20EC0037014A /* DJIStreamDemoTests */,
+				2C8D85E22F9A20EC0037014A /* DJIStreamDemoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2C8D85BC2F9A20EA0037014A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C8D86092F9A21C30037014A /* Assets.xcassets in Resources */,
+				2C8D860B2F9A21C30037014A /* LaunchScreen.storyboard in Resources */,
+				2C8D860C2F9A21C30037014A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C8D85D72F9A20EC0037014A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C8D85E12F9A20EC0037014A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2C8D85BA2F9A20EA0037014A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C8D86052F9A21C30037014A /* AppDelegate.m in Sources */,
+				2C8D86062F9A21C30037014A /* main.m in Sources */,
+				2C8D86072F9A21C30037014A /* SceneDelegate.m in Sources */,
+				2C8D86082F9A21C30037014A /* ViewController.m in Sources */,
+				DA0DA0011A0001A001A00011 /* ByteIO.swift in Sources */,
+				DA0DA0011A0001A001A00012 /* DjiCrc.swift in Sources */,
+				DA0DA0011A0001A001A00013 /* DjiLogger.swift in Sources */,
+				DA0DA0011A0001A001A00014 /* SimpleTimer.swift in Sources */,
+				DA0DA0011A0001A001A00015 /* DjiSettings.swift in Sources */,
+				DA0DA0011A0001A001A00001 /* DjiMessage.swift in Sources */,
+				DA0DA0011A0001A001A00003 /* DjiDeviceMessage.swift in Sources */,
+				2C8D8D5A2F9A2D120037014A /* HevcNalUnitVps.swift in Sources */,
+				2C8D8D5B2F9A2D120037014A /* RtmpAcknowledgementMessage.swift in Sources */,
+				2C8D8D5E2F9A2D120037014A /* CMVideoFormatDescription+Extension.swift in Sources */,
+				2C8D8D5F2F9A2D120037014A /* MpegTsVideoConfig.swift in Sources */,
+				2C8D8D602F9A2D120037014A /* RtmpUserControlMessage.swift in Sources */,
+				2C8D8D612F9A2D120037014A /* Data+Extension.swift in Sources */,
+				2C8D8D622F9A2D120037014A /* MpegTsVideoConfigHevc.swift in Sources */,
+				2C8D8D672F9A2D120037014A /* ByteWriter.swift in Sources */,
+				2C8D8D692F9A2D120037014A /* HevcNalUnitSei.swift in Sources */,
+				2C8D8D6C2F9A2D120037014A /* AvcNalUnitPps.swift in Sources */,
+				2C8D8D6E2F9A2D120037014A /* RtmpAggregateMessage.swift in Sources */,
+				2C8D8D6F2F9A2D120037014A /* NalUnitStream.swift in Sources */,
+				2C8D8D702F9A2D120037014A /* Amf.swift in Sources */,
+				2C8D8D732F9A2D120037014A /* AvcNalUnitSps.swift in Sources */,
+				2C8D8D752F9A2D120037014A /* HevcNalUnitPps.swift in Sources */,
+				2C8D8D762F9A2D120037014A /* TargetLatenciesSynchronizer.swift in Sources */,
+				2C8D8D772F9A2D120037014A /* RtmpServerClient.swift in Sources */,
+				2C8D8D7A2F9A2D120037014A /* RtmpAudioMessage.swift in Sources */,
+				2C8D8D7B2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift in Sources */,
+				2C8D8D7C2F9A2D120037014A /* VTDecompressionSession+Extension.swift in Sources */,
+				2C8D8D7D2F9A2D120037014A /* RtmpServer.swift in Sources */,
+				2C8D8D7E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift in Sources */,
+				2C8D8D7F2F9A2D120037014A /* RtmpChunk.swift in Sources */,
+				2C8D8D802F9A2D120037014A /* RtmpServerChunkStream.swift in Sources */,
+				2C8D8D812F9A2D120037014A /* MpegTsVideoConfigAvc.swift in Sources */,
+				2C8D8D822F9A2D120037014A /* Adts.swift in Sources */,
+				2C8D8D852F9A2D120037014A /* MpegTsAudioConfig.swift in Sources */,
+				2C8D8D862F9A2D120037014A /* HevcNalUnit.swift in Sources */,
+				2C8D8D872F9A2D120037014A /* ByteReader.swift in Sources */,
+				2C8D8D882F9A2D120037014A /* RtmpAbortMessge.swift in Sources */,
+				2C8D8D892F9A2D120037014A /* HevcNalUnitSps.swift in Sources */,
+				2C8D8D8D2F9A2D120037014A /* NalUnitWriter.swift in Sources */,
+				2C8D8D8E2F9A2D120037014A /* RtmpVideoMessage.swift in Sources */,
+				2C8D8D8F2F9A2D120037014A /* RtmpMessage.swift in Sources */,
+				2C8D8D912F9A2D120037014A /* AudioSpecificConfig.swift in Sources */,
+				2C8D8D922F9A2D120037014A /* AvcNalUnitSei.swift in Sources */,
+				2C8D8D952F9A2D120037014A /* PreviewView.swift in Sources */,
+				2C8D8D962F9A2D120037014A /* AvcNalUnit.swift in Sources */,
+				2C8D8D972F9A2D120037014A /* Flv.swift in Sources */,
+				2C8D8D982F9A2D120037014A /* NalUnitReader.swift in Sources */,
+				2C8D8D992F9A2D120037014A /* RtmpCommandMessage.swift in Sources */,
+				2C8D8D9A2F9A2D120037014A /* BitrateStats.swift in Sources */,
+				2C8D8D9B2F9A2D120037014A /* RtmpDataMessage.swift in Sources */,
+				2C8D8D9C2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift in Sources */,
+				DA0DA0011A0001A001A00004 /* DjiDeviceModel.swift in Sources */,
+				DA0DA0011A0001A001A00005 /* DjiDeviceScanner.swift in Sources */,
+				DA0DA0011A0001A001A00002 /* DjiDevice.swift in Sources */,
+				DA0DA0011A0001A001A00006 /* DJIStreamController.swift in Sources */,
+				DA0DA0021A0001A001A00001 /* VideoDecoder.swift in Sources */,
+				DA0DA0021A0001A001A00002 /* SettingsRtmpServer.swift in Sources */,
+				DA0DA0021A0001A001A00003 /* RTMPIngestController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C8D85D52F9A20EC0037014A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C8D860F2F9A21C90037014A /* DJIStreamDemoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C8D85DF2F9A20EC0037014A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C8D86132F9A21CC0037014A /* DJIStreamDemoUITests.m in Sources */,
+				2C8D86142F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2C8D85DB2F9A20EC0037014A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C8D85BD2F9A20EA0037014A /* DJIStreamDemo */;
+			targetProxy = 2C8D85DA2F9A20EC0037014A /* PBXContainerItemProxy */;
+		};
+		2C8D85E52F9A20EC0037014A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C8D85BD2F9A20EA0037014A /* DJIStreamDemo */;
+			targetProxy = 2C8D85E42F9A20EC0037014A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2C8D85FC2F9A21C30037014A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C8D85FB2F9A21C30037014A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2C8D85FF2F9A21C30037014A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C8D85FE2F9A21C30037014A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2C8D85ED2F9A20EC0037014A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YDEVQQ22JR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DJIStreamDemo/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Used to connect to DJI Osmo Action cameras over BLE.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "bluetooth-central";
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2C8D85EE2F9A20EC0037014A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YDEVQQ22JR;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DJIStreamDemo/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Used to connect to DJI Osmo Action cameras over BLE.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "bluetooth-central";
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2C8D85EF2F9A20EC0037014A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		2C8D85F02F9A20EC0037014A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2C8D85F22F9A20EC0037014A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetowrks.DJIStreamDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DJIStreamDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DJIStreamDemo";
+			};
+			name = Debug;
+		};
+		2C8D85F32F9A20EC0037014A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetowrks.DJIStreamDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DJIStreamDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DJIStreamDemo";
+			};
+			name = Release;
+		};
+		2C8D85F52F9A20EC0037014A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetowrks.DJIStreamDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DJIStreamDemo;
+			};
+			name = Debug;
+		};
+		2C8D85F62F9A20EC0037014A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetowrks.DJIStreamDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DJIStreamDemo;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C8D85B92F9A20EA0037014A /* Build configuration list for PBXProject "DJIStreamDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C8D85EF2F9A20EC0037014A /* Debug */,
+				2C8D85F02F9A20EC0037014A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C8D85EC2F9A20EC0037014A /* Build configuration list for PBXNativeTarget "DJIStreamDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C8D85ED2F9A20EC0037014A /* Debug */,
+				2C8D85EE2F9A20EC0037014A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C8D85F12F9A20EC0037014A /* Build configuration list for PBXNativeTarget "DJIStreamDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C8D85F22F9A20EC0037014A /* Debug */,
+				2C8D85F32F9A20EC0037014A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C8D85F42F9A20EC0037014A /* Build configuration list for PBXNativeTarget "DJIStreamDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C8D85F52F9A20EC0037014A /* Debug */,
+				2C8D85F62F9A20EC0037014A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2C8D85B62F9A20EA0037014A /* Project object */;
+}
