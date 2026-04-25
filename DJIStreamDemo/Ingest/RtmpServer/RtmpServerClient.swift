@@ -99,6 +99,12 @@ class RtmpServerClient {
         server?.delegate.rtmpServerOnVideoBuffer(cameraId: cameraId, sampleBuffer)
     }
 
+    /// Zero-copy path: delivers the decoded CVPixelBuffer directly to the
+    /// Metal renderer, bypassing CMSampleBuffer packing/unpacking overhead.
+    func handleFrame(imageBuffer: CVImageBuffer) {
+        server?.delegate.rtmpServerOnVideoImageBuffer(cameraId: cameraId, imageBuffer)
+    }
+
     func handleAudioBuffer(sampleBuffer: CMSampleBuffer) {
         server?.delegate.rtmpServerOnAudioBuffer(cameraId: cameraId, sampleBuffer)
     }

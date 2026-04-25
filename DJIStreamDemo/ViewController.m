@@ -31,15 +31,16 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 @property (nonatomic, strong) UIView *previewContainer;
 @property (nonatomic, strong) UITableView *deviceTable;
 @property (nonatomic, strong) UIButton *scanButton;
-@property (nonatomic, strong) UIButton *startButton;
-@property (nonatomic, strong) UIButton *stopButton;
+@property (nonatomic, strong) UIButton *startStreamButton;
+@property (nonatomic, strong) UIButton *stopStreamButton;
+@property (nonatomic, strong) UIButton *startServerButton;
+@property (nonatomic, strong) UIButton *stopServerButton;
 @property (nonatomic, strong) UILabel *statusLabel;
 @property (nonatomic, strong) UITextField *ssidField;
 @property (nonatomic, strong) UITextField *passwordField;
 @property (nonatomic, strong) UITextField *rtmpField;
 @property (nonatomic, strong) UITextField *latencyField;
 @property (nonatomic, strong) UISwitch *noDelaySwitch;
-@property (nonatomic, strong) UITextField *queueSizeField;
 @property (nonatomic, strong) UISegmentedControl *resolutionControl;
 @property (nonatomic, strong) UISegmentedControl *bitrateControl;
 
@@ -171,8 +172,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.passwordField.text = @"tvu@2026-->CNY";
     self.rtmpField.text = [NSString stringWithFormat:kRtmpUrlTemplate, [self currentLocalIP]];
 
-    // In SRT mode the stream goes directly to the PC, so the iPhone has no
-    // frames to render. Show a hint on top of the preview area.
+    // SRT hint label
     UILabel *srtHint = [[UILabel alloc] initWithFrame:self.previewContainer.bounds];
     srtHint.tag = 9001;
     srtHint.text = @"SRT mode\nstream is on the PC";
@@ -184,42 +184,38 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     srtHint.hidden = YES;
     [self.previewContainer addSubview:srtHint];
 
-    // Queue size (free input, frames to buffer before display)
-    UILabel *qsLbl = [[UILabel alloc] initWithFrame:CGRectMake(margin, y + 6, 140, 22)];
-    qsLbl.text = @"Smooth Queue (frames)";
-    qsLbl.font = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
-    qsLbl.textColor = [UIColor secondaryLabelColor];
-    [self.view addSubview:qsLbl];
-
-    self.queueSizeField = [[UITextField alloc] initWithFrame:CGRectMake(margin + 144, y, 70, 34)];
-    self.queueSizeField.borderStyle = UITextBorderStyleRoundedRect;
-    self.queueSizeField.text = @"3";
-    self.queueSizeField.keyboardType = UIKeyboardTypeNumberPad;
-    self.queueSizeField.font = [UIFont systemFontOfSize:14];
-    self.queueSizeField.textAlignment = NSTextAlignmentCenter;
-    self.queueSizeField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.queueSizeField.inputAccessoryView = [self makeDoneToolbar];
-    [self.view addSubview:self.queueSizeField];
-    y += 44;
-
     // Resolution picker
     [self makeLabel:@"Resolution" y:y];
     y += 22;
     self.resolutionControl = [self makeSegmented:@[@"480p", @"720p", @"1080p"] y:y];
-    self.resolutionControl.selectedSegmentIndex = 2;  // default 1080p
+    self.resolutionControl.selectedSegmentIndex = 1;  // default 720p
     y += 40;
 
     // Bitrate picker
     [self makeLabel:@"Bitrate (Mbps)" y:y];
     y += 22;
     self.bitrateControl = [self makeSegmented:@[@"2", @"4", @"6", @"8", @"10", @"12", @"16", @"20"] y:y];
-    self.bitrateControl.selectedSegmentIndex = 2;  // default 6 Mbps
+    self.bitrateControl.selectedSegmentIndex = 1;  // default 4 Mbps
     y += 44;
 
-    CGFloat btnW = (w - margin * 4) / 3.0;
-    self.scanButton = [self makeButton:@"Scan" x:margin y:y w:btnW action:@selector(onScanTap)];
-    self.startButton = [self makeButton:@"Start" x:margin * 2 + btnW y:y w:btnW action:@selector(onStartTap)];
-    self.stopButton = [self makeButton:@"Stop" x:margin * 3 + btnW * 2 y:y w:btnW action:@selector(onStopTap)];
+    // RTMP Server controls — row 1
+    CGFloat btnW = (w - margin * 3) / 2.0;
+    self.startServerButton = [self makeButton:@"Start Server"
+                                            x:margin y:y w:btnW
+                                        action:@selector(onStartServerTap)];
+    self.startServerButton.backgroundColor = [UIColor systemTealColor];
+    self.stopServerButton = [self makeButton:@"Stop Server"
+                                           x:margin * 2 + btnW y:y w:btnW
+                                       action:@selector(onStopServerTap)];
+    y += 44;
+
+    // DJI Stream controls — row 2
+    CGFloat btnW3 = (w - margin * 4) / 3.0;
+    self.scanButton = [self makeButton:@"Scan" x:margin y:y w:btnW3 action:@selector(onScanTap)];
+    self.startStreamButton = [self makeButton:@"Start DJI" x:margin * 2 + btnW3 y:y w:btnW3
+                                        action:@selector(onStartStreamTap)];
+    self.stopStreamButton = [self makeButton:@"Stop DJI" x:margin * 3 + btnW3 * 2 y:y w:btnW3
+                                       action:@selector(onStopStreamTap)];
     y += 48;
 
     CGRect tableRect = CGRectMake(margin, y, w - margin * 2,
@@ -276,37 +272,71 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     return b;
 }
 
-// Updates button/control enabled-state from `currentState`. Call after every state change.
+// Updates button/control enabled-state from `currentState` and RTMP server state.
+// Call after every state change.
 - (void)refreshControlState {
-    BOOL idle = self.currentState == DJIStreamStateIdle
-             || self.currentState == DJIStreamStateWifiSetupFailed;
-    BOOL streaming = self.currentState == DJIStreamStateStreaming;
+    BOOL djiIdle = self.currentState == DJIStreamStateIdle
+                || self.currentState == DJIStreamStateWifiSetupFailed;
+    BOOL djiStreaming = self.currentState == DJIStreamStateStreaming;
+    BOOL serverRunning = [RTMPIngestController.shared isRunning];
 
-    self.startButton.enabled = idle && self.selected != nil;
-    self.startButton.alpha = self.startButton.enabled ? 1.0 : 0.4;
-    self.stopButton.enabled = !idle;
-    self.stopButton.alpha = self.stopButton.enabled ? 1.0 : 0.4;
+    // Server buttons: can start when not running, can stop when running
+    self.startServerButton.enabled = !serverRunning;
+    self.startServerButton.alpha = self.startServerButton.enabled ? 1.0 : 0.4;
+    self.stopServerButton.enabled = serverRunning;
+    self.stopServerButton.alpha = self.stopServerButton.enabled ? 1.0 : 0.4;
 
-    // Lock configuration while a session is in-flight.
-    self.resolutionControl.enabled = idle;
-    self.bitrateControl.enabled = idle;
-    self.ssidField.enabled = idle;
-    self.passwordField.enabled = idle;
-    self.rtmpField.enabled = idle;
-    self.latencyField.enabled = idle;
-    self.noDelaySwitch.enabled = idle;
-    self.queueSizeField.enabled = idle;
-    self.scanButton.enabled = idle;
-    self.scanButton.alpha = idle ? 1.0 : 0.4;
+    // DJI stream buttons: Start requires a selected device + idle state
+    self.startStreamButton.enabled = djiIdle && self.selected != nil;
+    self.startStreamButton.alpha = self.startStreamButton.enabled ? 1.0 : 0.4;
+    self.stopStreamButton.enabled = !djiIdle;
+    self.stopStreamButton.alpha = self.stopStreamButton.enabled ? 1.0 : 0.4;
 
-    if (streaming) {
+    // Scan button
+    self.scanButton.enabled = djiIdle;
+    self.scanButton.alpha = djiIdle ? 1.0 : 0.4;
+
+    // Lock DJI configuration while a stream session is in-flight
+    self.resolutionControl.enabled = djiIdle;
+    self.bitrateControl.enabled = djiIdle;
+    self.ssidField.enabled = djiIdle;
+    self.passwordField.enabled = djiIdle;
+    self.rtmpField.enabled = djiIdle && !serverRunning;
+    self.latencyField.enabled = djiIdle && !serverRunning;
+    self.noDelaySwitch.enabled = djiIdle && !serverRunning;
+
+    if (djiStreaming || serverRunning) {
         self.statusLabel.textColor = [UIColor systemGreenColor];
     } else {
         self.statusLabel.textColor = [UIColor secondaryLabelColor];
     }
 }
 
-#pragma mark - Actions
+#pragma mark - RTMP Server Actions
+
+- (void)onStartServerTap {
+    NSString *url = self.rtmpField.text ?: @"";
+    if ([self isSrtUrl:url]) {
+        self.statusLabel.text = @"Status: SRT URL — server not needed";
+        return;
+    }
+    uint16_t port = 1935;
+    NSString *streamKey = @"dji";
+    [self parseRtmpUrl:url port:&port streamKey:&streamKey];
+    RTMPIngestController.shared.latency = (int32_t)[self.latencyField.text integerValue];
+    RTMPIngestController.shared.noDelay = self.noDelaySwitch.isOn;
+    [RTMPIngestController.shared startWithPort:port streamKey:streamKey];
+    self.statusLabel.text = @"Status: RTMP server listening";
+    [self refreshControlState];
+}
+
+- (void)onStopServerTap {
+    [RTMPIngestController.shared stop];
+    self.statusLabel.text = @"Status: RTMP server stopped";
+    [self refreshControlState];
+}
+
+#pragma mark - DJI Stream Actions
 
 - (void)onScanTap {
     [self refreshRtmpUrlSuggestion];
@@ -318,7 +348,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     [self refreshControlState];
 }
 
-- (void)onStartTap {
+- (void)onStartStreamTap {
     if (!self.selected) {
         self.statusLabel.text = @"Status: pick a device first";
         return;
@@ -334,26 +364,26 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     NSInteger resIdx = self.resolutionControl.selectedSegmentIndex;
     DJIStreamResolution resolution = (resIdx >= 0 && resIdx < 3)
         ? kResolutionOptions[resIdx]
-        : DJIStreamResolutionR1080p;
+        : DJIStreamResolutionR720p;
 
     NSInteger brIdx = self.bitrateControl.selectedSegmentIndex;
-    uint32_t bitrate = (brIdx >= 0 && brIdx < 8) ? kBitrateOptions[brIdx] : 6000000;
+    uint32_t bitrate = (brIdx >= 0 && brIdx < 8) ? kBitrateOptions[brIdx] : 4000000;
 
     BOOL srtMode = [self isSrtUrl:url];
     if (srtMode) {
         // SRT: camera streams directly to the PC. No local ingest on the phone.
         [self setSrtHintHidden:NO];
     } else {
-        // RTMP: iPhone hosts the ingest server and renders frames locally.
+        // RTMP: auto-start the server if not already running.
         [self setSrtHintHidden:YES];
-        uint16_t port = 1935;
-        NSString *streamKey = @"dji";
-        [self parseRtmpUrl:url port:&port streamKey:&streamKey];
-        RTMPIngestController.shared.latency = (int32_t)[self.latencyField.text integerValue];
-        RTMPIngestController.shared.noDelay = self.noDelaySwitch.isOn;
-        NSInteger queueSize = [self.queueSizeField.text integerValue];
-        RTMPIngestController.shared.frameQueueSize = queueSize > 0 ? queueSize : 1;
-        [RTMPIngestController.shared startWithPort:port streamKey:streamKey];
+        if (![RTMPIngestController.shared isRunning]) {
+            uint16_t port = 1935;
+            NSString *streamKey = @"dji";
+            [self parseRtmpUrl:url port:&port streamKey:&streamKey];
+            RTMPIngestController.shared.latency = (int32_t)[self.latencyField.text integerValue];
+            RTMPIngestController.shared.noDelay = self.noDelaySwitch.isOn;
+            [RTMPIngestController.shared startWithPort:port streamKey:streamKey];
+        }
     }
 
     BOOL ok = [DJIStreamController.shared startLiveStreamWithPeripheralId:self.selected.peripheralId
@@ -365,15 +395,13 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
                                                                   bitrate:bitrate
                                                        imageStabilization:DJIStreamImageStabilizationRockSteady];
     if (!ok) {
-        if (!srtMode) [RTMPIngestController.shared stop];
         self.statusLabel.text = @"Status: start rejected";
     }
     [self refreshControlState];
 }
 
-- (void)onStopTap {
+- (void)onStopStreamTap {
     [DJIStreamController.shared stopLiveStream];
-    [RTMPIngestController.shared stop];
     [self setSrtHintHidden:YES];
 }
 
@@ -435,6 +463,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     dispatch_async(dispatch_get_main_queue(), ^{
         self.statusLabel.text = [NSString stringWithFormat:@"Status: publish stopped (%@)", reason];
         self.statusLabel.textColor = [UIColor secondaryLabelColor];
+        [self refreshControlState];
     });
 }
 

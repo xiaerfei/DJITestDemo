@@ -3,6 +3,15 @@ import VideoToolbox
 
 protocol VideoDecoderDelegate: AnyObject {
     func videoDecoderOutputSampleBuffer(_ codec: VideoDecoder, _ sampleBuffer: CMSampleBuffer)
+    /// Direct zero-copy path: delivers the decoded CVImageBuffer without the
+    /// overhead of repacking it into a CMSampleBuffer. Preferred when the
+    /// consumer only needs the pixel buffer (e.g. Metal rendering).
+    func videoDecoderOutputImageBuffer(_ codec: VideoDecoder, _ imageBuffer: CVImageBuffer)
+}
+
+extension VideoDecoderDelegate {
+    // Default no-op for backward compatibility
+    func videoDecoderOutputImageBuffer(_ codec: VideoDecoder, _ imageBuffer: CVImageBuffer) {}
 }
 
 class VideoDecoder {
@@ -57,6 +66,11 @@ class VideoDecoder {
                     logger.info("video-decoder: Failed to decode frame status \(status)")
                     return
                 }
+                // Zero-copy path: deliver imageBuffer directly
+                self.lockQueue.async {
+                    self.delegate?.videoDecoderOutputImageBuffer(self, imageBuffer)
+                }
+                // Legacy path: also deliver as CMSampleBuffer for any consumer that needs it
                 guard let formatDescription = CMVideoFormatDescription.create(imageBuffer: imageBuffer) else {
                     return
                 }

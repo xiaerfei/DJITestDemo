@@ -15,6 +15,8 @@ protocol RtmpServerDelegate: AnyObject {
     func rtmpServerOnPublishStart(streamKey: String)
     func rtmpServerOnPublishStop(streamKey: String, reason: String)
     func rtmpServerOnVideoBuffer(cameraId: UUID, _ sampleBuffer: CMSampleBuffer)
+    /// Zero-copy path: delivers decoded CVPixelBuffer directly (Metal rendering).
+    func rtmpServerOnVideoImageBuffer(cameraId: UUID, _ imageBuffer: CVImageBuffer)
     func rtmpServerOnAudioBuffer(cameraId: UUID, _ sampleBuffer: CMSampleBuffer)
     func rtmpServerSetTargetLatencies(
         cameraId: UUID,

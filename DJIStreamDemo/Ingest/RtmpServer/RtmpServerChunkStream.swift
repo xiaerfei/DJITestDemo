@@ -159,17 +159,17 @@ class RtmpServerChunkStream {
         client.sendMessage(chunk: RtmpChunk(
             type: .zero,
             chunkStreamId: RtmpChunk.ChunkStreamId.control.rawValue,
-            message: RtmpWindowAcknowledgementSizeMessage(2_500_000)
+            message: RtmpWindowAcknowledgementSizeMessage(500_000)
         ))
         client.sendMessage(chunk: RtmpChunk(
             type: .zero,
             chunkStreamId: RtmpChunk.ChunkStreamId.control.rawValue,
-            message: RtmpSetPeerBandwidthMessage(size: 2_500_000, limit: .dynamic)
+            message: RtmpSetPeerBandwidthMessage(size: 10_000_000, limit: .dynamic)
         ))
         client.sendMessage(chunk: RtmpChunk(
             type: .zero,
             chunkStreamId: RtmpChunk.ChunkStreamId.control.rawValue,
-            message: RtmpSetChunkSizeMessage(1024)
+            message: RtmpSetChunkSizeMessage(65536)
         ))
         client.sendMessage(chunk: RtmpChunk(
             type: .zero,
@@ -648,5 +648,9 @@ class RtmpServerChunkStream {
 extension RtmpServerChunkStream: VideoDecoderDelegate {
     func videoDecoderOutputSampleBuffer(_: VideoDecoder, _ sampleBuffer: CMSampleBuffer) {
         client?.handleFrame(sampleBuffer: sampleBuffer)
+    }
+
+    func videoDecoderOutputImageBuffer(_: VideoDecoder, _ imageBuffer: CVImageBuffer) {
+        client?.handleFrame(imageBuffer: imageBuffer)
     }
 }

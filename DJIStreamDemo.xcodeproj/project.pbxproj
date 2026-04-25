@@ -53,7 +53,7 @@
 		2C8D8D8F2F9A2D120037014A /* RtmpMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D392F9A2D120037014A /* RtmpMessage.swift */; };
 		2C8D8D912F9A2D120037014A /* AudioSpecificConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */; };
 		2C8D8D922F9A2D120037014A /* AvcNalUnitSei.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */; };
-		2C8D8D952F9A2D120037014A /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D0F2F9A2D120037014A /* PreviewView.swift */; };
+		2C8D8D952F9A2D120037014A /* MetalPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D0F2F9A2D120037014A /* MetalPreviewView.swift */; };
 		2C8D8D962F9A2D120037014A /* AvcNalUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */; };
 		2C8D8D972F9A2D120037014A /* Flv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D082F9A2D120037014A /* Flv.swift */; };
 		2C8D8D982F9A2D120037014A /* NalUnitReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */; };
@@ -116,7 +116,8 @@
 		2C8D8D052F9A2D120037014A /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VTDecompressionSession+Extension.swift"; sourceTree = "<group>"; };
 		2C8D8D082F9A2D120037014A /* Flv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flv.swift; sourceTree = "<group>"; };
-		2C8D8D0F2F9A2D120037014A /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		2C8D8D0F2F9A2D120037014A /* MetalPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPreviewView.swift; sourceTree = "<group>"; };
+		2C8D8D102F9A2D120037014A /* Shader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
 		2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetLatenciesSynchronizer.swift; sourceTree = "<group>"; };
 		2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnit.swift; sourceTree = "<group>"; };
 		2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitPps.swift; sourceTree = "<group>"; };
@@ -292,7 +293,8 @@
 		2C8D8D122F9A2D120037014A /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D0F2F9A2D120037014A /* PreviewView.swift */,
+				2C8D8D0F2F9A2D120037014A /* MetalPreviewView.swift */,
+				2C8D8D102F9A2D120037014A /* Shader.metal */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -425,14 +427,6 @@
 			path = HaishinKit;
 			sourceTree = "<group>";
 		};
-		DA0DA0021C0001A001A00001 /* Codec */ = {
-			isa = PBXGroup;
-			children = (
-				DA0DA0021B0001A001A00001 /* VideoDecoder.swift */,
-			);
-			path = Codec;
-			sourceTree = "<group>";
-		};
 		2C8D8D592F9A2D120037014A /* RtmpServer */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,6 +462,14 @@
 				DA0DA0011B0001A001A00015 /* DjiSettings.swift */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		DA0DA0021C0001A001A00001 /* Codec */ = {
+			isa = PBXGroup;
+			children = (
+				DA0DA0021B0001A001A00001 /* VideoDecoder.swift */,
+			);
+			path = Codec;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -654,8 +656,9 @@
 				2C8D8D8F2F9A2D120037014A /* RtmpMessage.swift in Sources */,
 				2C8D8D912F9A2D120037014A /* AudioSpecificConfig.swift in Sources */,
 				2C8D8D922F9A2D120037014A /* AvcNalUnitSei.swift in Sources */,
-				2C8D8D952F9A2D120037014A /* PreviewView.swift in Sources */,
+				2C8D8D952F9A2D120037014A /* MetalPreviewView.swift in Sources */,
 				2C8D8D962F9A2D120037014A /* AvcNalUnit.swift in Sources */,
+				2C8D8D972F9A2D120037014A /* Flv.swift in Sources */,
 				2C8D8D972F9A2D120037014A /* Flv.swift in Sources */,
 				2C8D8D982F9A2D120037014A /* NalUnitReader.swift in Sources */,
 				2C8D8D992F9A2D120037014A /* RtmpCommandMessage.swift in Sources */,
@@ -730,9 +733,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YDEVQQ22JR;
+				DEVELOPMENT_TEAM = UG4W2B7XPD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DJIStreamDemo/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Used to connect to DJI Osmo Action cameras over BLE.";
@@ -748,8 +752,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite.sharexia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -764,9 +769,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YDEVQQ22JR;
+				DEVELOPMENT_TEAM = UG4W2B7XPD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DJIStreamDemo/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Used to connect to DJI Osmo Action cameras over BLE.";
@@ -782,8 +788,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite.sharexia;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
