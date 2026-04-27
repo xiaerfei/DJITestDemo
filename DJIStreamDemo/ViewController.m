@@ -5,14 +5,15 @@
 
 #import "ViewController.h"
 #import "DJIStreamDemo-Swift.h"
+#import "TVUIRLDJIStreamManager.h"
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 
 // Resolution presets — maps 1:1 to segmentedControl.selectedSegmentIndex.
-static const DJIStreamResolution kResolutionOptions[] = {
-    DJIStreamResolutionR480p,
-    DJIStreamResolutionR720p,
-    DJIStreamResolutionR1080p,
+static const TVUIRLDJIStreamResolution kResolutionOptions[] = {
+    TVUIRLDJIStreamResolution480p,
+    TVUIRLDJIStreamResolution720p,
+    TVUIRLDJIStreamResolution1080p,
 };
 
 // Bitrate presets in bits/sec — maps 1:1 to segmentedControl.selectedSegmentIndex.
@@ -25,7 +26,7 @@ static const uint32_t kBitrateOptions[] = {
 // Fallback IP (172.20.10.1) is used when the iPhone acts as a Personal Hotspot.
 static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 
-@interface ViewController () <DJIStreamControllerDelegate, RTMPIngestControllerDelegate,
+@interface ViewController () <TVUIRLDJIStreamManagerDelegate, RTMPIngestControllerDelegate,
                               UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) UIView *previewContainer;
@@ -43,10 +44,15 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 @property (nonatomic, strong) UISwitch *noDelaySwitch;
 @property (nonatomic, strong) UISegmentedControl *resolutionControl;
 @property (nonatomic, strong) UISegmentedControl *bitrateControl;
+@property (nonatomic, strong) UIView *batteryContainer;
+@property (nonatomic, strong) UIView *batteryBody;
+@property (nonatomic, strong) UIView *batteryLevel;
+@property (nonatomic, strong) UILabel *batteryLabel;
+@property (nonatomic, strong) NSTimer *batteryTimer;
 
-@property (nonatomic, strong) NSMutableArray<DJIDiscoveredPeripheral *> *devices;
-@property (nonatomic, strong) DJIDiscoveredPeripheral *selected;
-@property (nonatomic, assign) enum DJIStreamState currentState;
+@property (nonatomic, strong) NSMutableArray<TVUIRLDJIDiscoveredPeripheral *> *devices;
+@property (nonatomic, strong) TVUIRLDJIDiscoveredPeripheral *selected;
+@property (nonatomic, assign) TVUIRLDJIStreamState currentState;
 
 @end
 
@@ -57,9 +63,9 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.title = @"DJI Osmo Action Stream Demo";
     self.view.backgroundColor = [UIColor systemBackgroundColor];
     self.devices = [NSMutableArray array];
-    self.currentState = DJIStreamStateIdle;
+    self.currentState = TVUIRLDJIStreamStateIdle;
 
-    DJIStreamController.shared.delegate = self;
+    TVUIRLDJIStreamManager.manager.delegate = self;
     RTMPIngestController.shared.delegate = self;
 
     [self buildUI];
@@ -125,6 +131,37 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     preview.frame = self.previewContainer.bounds;
     preview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.previewContainer addSubview:preview];
+
+    self.batteryContainer = [[UIView alloc] init];
+    self.batteryContainer.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
+    self.batteryContainer.layer.cornerRadius = 5;
+    [self.previewContainer addSubview:self.batteryContainer];
+
+    self.batteryBody = [[UIView alloc] init];
+    self.batteryBody.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.0];
+    self.batteryBody.layer.cornerRadius = 2;
+    self.batteryBody.layer.borderWidth = 1;
+    self.batteryBody.layer.borderColor = [UIColor whiteColor].CGColor;
+    [self.batteryContainer addSubview:self.batteryBody];
+
+    self.batteryLevel = [[UIView alloc] init];
+    self.batteryLevel.backgroundColor = [UIColor systemGreenColor];
+    self.batteryLevel.layer.cornerRadius = 1;
+    [self.batteryBody addSubview:self.batteryLevel];
+
+    UIView *batteryTip = [[UIView alloc] init];
+    batteryTip.backgroundColor = [UIColor whiteColor];
+    batteryTip.layer.cornerRadius = 1.5;
+    [self.previewContainer addSubview:batteryTip];
+
+    self.batteryLabel = [[UILabel alloc] init];
+    self.batteryLabel.font = [UIFont systemFontOfSize:10 weight:UIFontWeightMedium];
+    self.batteryLabel.textColor = [UIColor whiteColor];
+    self.batteryLabel.textAlignment = NSTextAlignmentCenter;
+    [self.previewContainer addSubview:self.batteryLabel];
+
+    [self layoutBatteryUI];
+
     y += previewHeight + 8;
 
     self.statusLabel = [self makeLabel:@"Status: idle" y:y];
@@ -275,9 +312,9 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 // Updates button/control enabled-state from `currentState` and RTMP server state.
 // Call after every state change.
 - (void)refreshControlState {
-    BOOL djiIdle = self.currentState == DJIStreamStateIdle
-                || self.currentState == DJIStreamStateWifiSetupFailed;
-    BOOL djiStreaming = self.currentState == DJIStreamStateStreaming;
+    BOOL djiIdle = self.currentState == TVUIRLDJIStreamStateIdle
+                || self.currentState == TVUIRLDJIStreamStateWifiSetupFailed;
+    BOOL djiStreaming = self.currentState == TVUIRLDJIStreamStateStreaming;
     BOOL serverRunning = [RTMPIngestController.shared isRunning];
 
     // Server buttons: can start when not running, can stop when running
@@ -312,6 +349,65 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     }
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutBatteryUI];
+}
+
+- (void)layoutBatteryUI {
+    CGFloat containerW = 52;
+    CGFloat containerH = 20;
+    CGFloat bodyW = 42;
+    CGFloat bodyH = 14;
+    CGFloat tipW = 3;
+    CGFloat tipH = 6;
+    CGFloat padding = 3;
+
+    CGFloat containerX = self.previewContainer.bounds.size.width - containerW - 8;
+    CGFloat containerY = 8;
+    self.batteryContainer.frame = CGRectMake(containerX, containerY, containerW, containerH);
+
+    CGFloat bodyX = (containerW - bodyW) / 2.0;
+    CGFloat bodyY = (containerH - bodyH) / 2.0;
+    self.batteryBody.frame = CGRectMake(bodyX, bodyY, bodyW, bodyH);
+
+    UIView *batteryTip = self.batteryContainer.superview.subviews.lastObject;
+    if (batteryTip && batteryTip != self.batteryLabel) {
+        batteryTip.frame = CGRectMake(containerX + containerW, containerY + (containerH - tipH) / 2.0, tipW, tipH);
+    }
+
+    self.batteryLabel.frame = CGRectMake(containerX, containerY + containerH + 2, containerW, 12);
+
+    [self updateBatteryDisplay];
+}
+
+- (void)updateBatteryDisplay {
+    NSNumber *battery = [TVUIRLDJIStreamManager.manager batteryPercentage];
+    if (battery) {
+        NSInteger percentage = battery.integerValue;
+        self.batteryLabel.text = [NSString stringWithFormat:@"%ld%%", (long)percentage];
+
+        CGFloat fillWidth = (percentage / 100.0) * (self.batteryBody.bounds.size.width - 4);
+        if (fillWidth < 0) fillWidth = 0;
+
+        self.batteryLevel.frame = CGRectMake(2, 2, fillWidth, self.batteryBody.bounds.size.height - 4);
+
+        if (percentage <= 20) {
+            self.batteryLevel.backgroundColor = [UIColor systemRedColor];
+        } else if (percentage <= 50) {
+            self.batteryLevel.backgroundColor = [UIColor systemOrangeColor];
+        } else {
+            self.batteryLevel.backgroundColor = [UIColor systemGreenColor];
+        }
+
+        self.batteryContainer.hidden = NO;
+        self.batteryLabel.hidden = NO;
+    } else {
+        self.batteryContainer.hidden = YES;
+        self.batteryLabel.hidden = YES;
+    }
+}
+
 #pragma mark - RTMP Server Actions
 
 - (void)onStartServerTap {
@@ -343,7 +439,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     [self.devices removeAllObjects];
     self.selected = nil;
     [self.deviceTable reloadData];
-    [DJIStreamController.shared startScan];
+    [TVUIRLDJIStreamManager.manager startScan];
     self.statusLabel.text = @"Status: scanning…";
     [self refreshControlState];
 }
@@ -362,9 +458,9 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     }
 
     NSInteger resIdx = self.resolutionControl.selectedSegmentIndex;
-    DJIStreamResolution resolution = (resIdx >= 0 && resIdx < 3)
+    TVUIRLDJIStreamResolution resolution = (resIdx >= 0 && resIdx < 3)
         ? kResolutionOptions[resIdx]
-        : DJIStreamResolutionR720p;
+        : TVUIRLDJIStreamResolution720p;
 
     NSInteger brIdx = self.bitrateControl.selectedSegmentIndex;
     uint32_t bitrate = (brIdx >= 0 && brIdx < 8) ? kBitrateOptions[brIdx] : 4000000;
@@ -386,14 +482,14 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
         }
     }
 
-    BOOL ok = [DJIStreamController.shared startLiveStreamWithPeripheralId:self.selected.peripheralId
+    BOOL ok = [TVUIRLDJIStreamManager.manager startLiveStreamWithPeripheralId:self.selected.peripheralId
                                                                  wifiSsid:ssid
                                                              wifiPassword:pwd
                                                                   rtmpUrl:url
                                                                resolution:resolution
                                                                       fps:30
                                                                   bitrate:bitrate
-                                                       imageStabilization:DJIStreamImageStabilizationRockSteady];
+                                                       imageStabilization:TVUIRLDJIStreamImageStabilizationRockSteady];
     if (!ok) {
         self.statusLabel.text = @"Status: start rejected";
     }
@@ -401,7 +497,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 }
 
 - (void)onStopStreamTap {
-    [DJIStreamController.shared stopLiveStream];
+    [TVUIRLDJIStreamManager.manager stopLiveStream];
     [self setSrtHintHidden:YES];
 }
 
@@ -427,12 +523,12 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     }
 }
 
-#pragma mark - DJIStreamControllerDelegate
+#pragma mark - TVUIRLDJIStreamManagerDelegate
 
-- (void)djiStreamController:(DJIStreamController *)controller
-                didDiscover:(DJIDiscoveredPeripheral *)peripheral {
+- (void)djiStreamManager:(TVUIRLDJIStreamManager *)manager
+            didDiscover:(TVUIRLDJIDiscoveredPeripheral *)peripheral {
     dispatch_async(dispatch_get_main_queue(), ^{
-        for (DJIDiscoveredPeripheral *d in self.devices) {
+        for (TVUIRLDJIDiscoveredPeripheral *d in self.devices) {
             if ([d.peripheralId isEqualToString:peripheral.peripheralId]) return;
         }
         [self.devices addObject:peripheral];
@@ -440,13 +536,26 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     });
 }
 
-- (void)djiStreamController:(DJIStreamController *)controller
-             didChangeState:(enum DJIStreamState)state
-                  stateName:(NSString *)stateName {
+- (void)djiStreamManager:(TVUIRLDJIStreamManager *)manager
+          didChangeState:(TVUIRLDJIStreamState)state
+               stateName:(NSString *)stateName {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.currentState = state;
         self.statusLabel.text = [NSString stringWithFormat:@"Status: %@", stateName];
         [self refreshControlState];
+        [self updateBatteryDisplay];
+
+        if (state == TVUIRLDJIStreamStateStreaming) {
+            [self.batteryTimer invalidate];
+            self.batteryTimer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                                 target:self
+                                                               selector:@selector(updateBatteryDisplay)
+                                                               userInfo:nil
+                                                                repeats:YES];
+        } else {
+            [self.batteryTimer invalidate];
+            self.batteryTimer = nil;
+        }
     });
 }
 
@@ -475,7 +584,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    DJIDiscoveredPeripheral *d = self.devices[indexPath.row];
+    TVUIRLDJIDiscoveredPeripheral *d = self.devices[indexPath.row];
     cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", d.name, d.modelName];
     cell.detailTextLabel.text = d.peripheralId;
     cell.accessoryType = (self.selected == d) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
@@ -486,7 +595,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.selected = self.devices[indexPath.row];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [tableView reloadData];
-    [DJIStreamController.shared stopScan];
+    [TVUIRLDJIStreamManager.manager stopScan];
     [self refreshControlState];
 }
 

@@ -61,6 +61,16 @@
 		2C8D8D9A2F9A2D120037014A /* BitrateStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */; };
 		2C8D8D9B2F9A2D120037014A /* RtmpDataMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */; };
 		2C8D8D9C2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */; };
+		2C8D94B92F9F545F0037014A /* TVUIRLDJIDeviceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94AD2F9F545F0037014A /* TVUIRLDJIDeviceMessage.m */; };
+		2C8D94BA2F9F545F0037014A /* TVUIRLDJITypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B72F9F545F0037014A /* TVUIRLDJITypes.m */; };
+		2C8D94BB2F9F545F0037014A /* TVUIRLDJIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B32F9F545F0037014A /* TVUIRLDJIMessage.m */; };
+		2C8D94BC2F9F545F0037014A /* TVUIRLDJIStreamManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B52F9F545F0037014A /* TVUIRLDJIStreamManager.m */; };
+		2C8D94BD2F9F545F0037014A /* TVUIRLDJIDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94AB2F9F545F0037014A /* TVUIRLDJIDevice.m */; };
+		2C8D94BE2F9F545F0037014A /* TVUIRLDJICrc.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94A62F9F545F0037014A /* TVUIRLDJICrc.m */; };
+		2C8D94BF2F9F545F0037014A /* TVUIRLByteIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94A42F9F545F0037014A /* TVUIRLByteIO.m */; };
+		2C8D94C02F9F545F0037014A /* TVUIRLDJIDeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94AF2F9F545F0037014A /* TVUIRLDJIDeviceModel.m */; };
+		2C8D94C12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m */; };
+		2C8D94C22F9F545F0037014A /* TVUIRLSimpleTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94A82F9F545F0037014A /* TVUIRLSimpleTimer.m */; };
 		DA0DA0011A0001A001A00001 /* DjiMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00001 /* DjiMessage.swift */; };
 		DA0DA0011A0001A001A00002 /* DjiDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00002 /* DjiDevice.swift */; };
 		DA0DA0011A0001A001A00003 /* DjiDeviceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0011B0001A001A00003 /* DjiDeviceMessage.swift */; };
@@ -157,6 +167,26 @@
 		2C8D8D562F9A2D120037014A /* RtmpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServer.swift; sourceTree = "<group>"; };
 		2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServerChunkStream.swift; sourceTree = "<group>"; };
 		2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServerClient.swift; sourceTree = "<group>"; };
+		2C8D94A32F9F545F0037014A /* TVUIRLByteIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLByteIO.h; sourceTree = "<group>"; };
+		2C8D94A42F9F545F0037014A /* TVUIRLByteIO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLByteIO.m; sourceTree = "<group>"; };
+		2C8D94A52F9F545F0037014A /* TVUIRLDJICrc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJICrc.h; sourceTree = "<group>"; };
+		2C8D94A62F9F545F0037014A /* TVUIRLDJICrc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJICrc.m; sourceTree = "<group>"; };
+		2C8D94A72F9F545F0037014A /* TVUIRLSimpleTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLSimpleTimer.h; sourceTree = "<group>"; };
+		2C8D94A82F9F545F0037014A /* TVUIRLSimpleTimer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLSimpleTimer.m; sourceTree = "<group>"; };
+		2C8D94AA2F9F545F0037014A /* TVUIRLDJIDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJIDevice.h; sourceTree = "<group>"; };
+		2C8D94AB2F9F545F0037014A /* TVUIRLDJIDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIDevice.m; sourceTree = "<group>"; };
+		2C8D94AC2F9F545F0037014A /* TVUIRLDJIDeviceMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJIDeviceMessage.h; sourceTree = "<group>"; };
+		2C8D94AD2F9F545F0037014A /* TVUIRLDJIDeviceMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIDeviceMessage.m; sourceTree = "<group>"; };
+		2C8D94AE2F9F545F0037014A /* TVUIRLDJIDeviceModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJIDeviceModel.h; sourceTree = "<group>"; };
+		2C8D94AF2F9F545F0037014A /* TVUIRLDJIDeviceModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIDeviceModel.m; sourceTree = "<group>"; };
+		2C8D94B02F9F545F0037014A /* TVUIRLDJIDeviceScanner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJIDeviceScanner.h; sourceTree = "<group>"; };
+		2C8D94B12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIDeviceScanner.m; sourceTree = "<group>"; };
+		2C8D94B22F9F545F0037014A /* TVUIRLDJIMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJIMessage.h; sourceTree = "<group>"; };
+		2C8D94B32F9F545F0037014A /* TVUIRLDJIMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIMessage.m; sourceTree = "<group>"; };
+		2C8D94B42F9F545F0037014A /* TVUIRLDJIStreamManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJIStreamManager.h; sourceTree = "<group>"; };
+		2C8D94B52F9F545F0037014A /* TVUIRLDJIStreamManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIStreamManager.m; sourceTree = "<group>"; };
+		2C8D94B62F9F545F0037014A /* TVUIRLDJITypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJITypes.h; sourceTree = "<group>"; };
+		2C8D94B72F9F545F0037014A /* TVUIRLDJITypes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJITypes.m; sourceTree = "<group>"; };
 		DA0DA0011B0001A001A00001 /* DjiMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiMessage.swift; sourceTree = "<group>"; };
 		DA0DA0011B0001A001A00002 /* DjiDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDevice.swift; sourceTree = "<group>"; };
 		DA0DA0011B0001A001A00003 /* DjiDeviceMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDeviceMessage.swift; sourceTree = "<group>"; };
@@ -221,6 +251,7 @@
 		2C8D86042F9A21C30037014A /* DJIStreamDemo */ = {
 			isa = PBXGroup;
 			children = (
+				2C8D94B82F9F545F0037014A /* DJIObjc */,
 				2C8D85F72F9A21C30037014A /* AppDelegate.h */,
 				2C8D85F82F9A21C30037014A /* AppDelegate.m */,
 				2C8D85F92F9A21C30037014A /* Assets.xcassets */,
@@ -438,6 +469,41 @@
 			path = RtmpServer;
 			sourceTree = "<group>";
 		};
+		2C8D94A92F9F545F0037014A /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D94A32F9F545F0037014A /* TVUIRLByteIO.h */,
+				2C8D94A42F9F545F0037014A /* TVUIRLByteIO.m */,
+				2C8D94A52F9F545F0037014A /* TVUIRLDJICrc.h */,
+				2C8D94A62F9F545F0037014A /* TVUIRLDJICrc.m */,
+				2C8D94A72F9F545F0037014A /* TVUIRLSimpleTimer.h */,
+				2C8D94A82F9F545F0037014A /* TVUIRLSimpleTimer.m */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		2C8D94B82F9F545F0037014A /* DJIObjc */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D94A92F9F545F0037014A /* Support */,
+				2C8D94AA2F9F545F0037014A /* TVUIRLDJIDevice.h */,
+				2C8D94AB2F9F545F0037014A /* TVUIRLDJIDevice.m */,
+				2C8D94AC2F9F545F0037014A /* TVUIRLDJIDeviceMessage.h */,
+				2C8D94AD2F9F545F0037014A /* TVUIRLDJIDeviceMessage.m */,
+				2C8D94AE2F9F545F0037014A /* TVUIRLDJIDeviceModel.h */,
+				2C8D94AF2F9F545F0037014A /* TVUIRLDJIDeviceModel.m */,
+				2C8D94B02F9F545F0037014A /* TVUIRLDJIDeviceScanner.h */,
+				2C8D94B12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m */,
+				2C8D94B22F9F545F0037014A /* TVUIRLDJIMessage.h */,
+				2C8D94B32F9F545F0037014A /* TVUIRLDJIMessage.m */,
+				2C8D94B42F9F545F0037014A /* TVUIRLDJIStreamManager.h */,
+				2C8D94B52F9F545F0037014A /* TVUIRLDJIStreamManager.m */,
+				2C8D94B62F9F545F0037014A /* TVUIRLDJITypes.h */,
+				2C8D94B72F9F545F0037014A /* TVUIRLDJITypes.m */,
+			);
+			path = DJIObjc;
+			sourceTree = "<group>";
+		};
 		DA0DA0011C0001A001A00001 /* DJI */ = {
 			isa = PBXGroup;
 			children = (
@@ -639,6 +705,16 @@
 				2C8D8D772F9A2D120037014A /* RtmpServerClient.swift in Sources */,
 				2C8D8D7A2F9A2D120037014A /* RtmpAudioMessage.swift in Sources */,
 				2C8D8D7B2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift in Sources */,
+				2C8D94B92F9F545F0037014A /* TVUIRLDJIDeviceMessage.m in Sources */,
+				2C8D94BA2F9F545F0037014A /* TVUIRLDJITypes.m in Sources */,
+				2C8D94BB2F9F545F0037014A /* TVUIRLDJIMessage.m in Sources */,
+				2C8D94BC2F9F545F0037014A /* TVUIRLDJIStreamManager.m in Sources */,
+				2C8D94BD2F9F545F0037014A /* TVUIRLDJIDevice.m in Sources */,
+				2C8D94BE2F9F545F0037014A /* TVUIRLDJICrc.m in Sources */,
+				2C8D94BF2F9F545F0037014A /* TVUIRLByteIO.m in Sources */,
+				2C8D94C02F9F545F0037014A /* TVUIRLDJIDeviceModel.m in Sources */,
+				2C8D94C12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m in Sources */,
+				2C8D94C22F9F545F0037014A /* TVUIRLSimpleTimer.m in Sources */,
 				2C8D8D7C2F9A2D120037014A /* VTDecompressionSession+Extension.swift in Sources */,
 				2C8D8D7D2F9A2D120037014A /* RtmpServer.swift in Sources */,
 				2C8D8D7E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift in Sources */,
@@ -736,7 +812,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UG4W2B7XPD;
+				DEVELOPMENT_TEAM = YDEVQQ22JR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DJIStreamDemo/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Used to connect to DJI Osmo Action cameras over BLE.";
@@ -752,7 +828,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite.sharexia;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -772,7 +848,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UG4W2B7XPD;
+				DEVELOPMENT_TEAM = YDEVQQ22JR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DJIStreamDemo/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Used to connect to DJI Osmo Action cameras over BLE.";
@@ -788,7 +864,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite.sharexia;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tvunetworks.TVUAnywhereLite;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
