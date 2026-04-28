@@ -4,7 +4,6 @@
 //
 
 #import "ViewController.h"
-#import "DJIStreamDemo-Swift.h"
 #import "TVUIRLDJIStreamManager.h"
 #import "RTMPIngestController.h"
 #include <ifaddrs.h>
@@ -185,7 +184,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 
     self.latencyField = [[UITextField alloc] initWithFrame:CGRectMake(margin + 88, y, 70, 34)];
     self.latencyField.borderStyle = UITextBorderStyleRoundedRect;
-    self.latencyField.text = @"0";
+    self.latencyField.text = @"1000";
     self.latencyField.keyboardType = UIKeyboardTypeNumberPad;
     self.latencyField.font = [UIFont systemFontOfSize:14];
     self.latencyField.textAlignment = NSTextAlignmentCenter;
@@ -194,7 +193,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     [self.view addSubview:self.latencyField];
 
     self.noDelaySwitch = [[UISwitch alloc] initWithFrame:CGRectMake(w - margin - 51, y + 2, 51, 31)];
-    self.noDelaySwitch.on = YES;
+    self.noDelaySwitch.on = NO;
     [self.view addSubview:self.noDelaySwitch];
 
     UILabel *ndLbl = [[UILabel alloc] initWithFrame:CGRectMake(w - margin - 51 - 90, y + 6, 88, 22)];
