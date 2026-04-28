@@ -5,7 +5,7 @@ import MetalKit
 /// Metal-based video preview view. Replaces AVSampleBufferDisplayLayer to eliminate
 /// PTS-driven buffering latency. Renders the latest CVPixelBuffer immediately on
 /// every display refresh — no queue, no PTS wait, no frame accumulation.
-class MetalPreviewView: MTKView {
+@objc public final class MetalPreviewView: MTKView {
     private let commandQueue: MTLCommandQueue
     private let pipelineState: MTLRenderPipelineState
     private let textureCache: CVMetalTextureCache
@@ -64,7 +64,7 @@ class MetalPreviewView: MTKView {
     }
     """
 
-    override init(frame frameRect: CGRect, device: MTLDevice?) {
+    @objc public override init(frame frameRect: CGRect, device: MTLDevice?) {
         let device = device ?? MTLCreateSystemDefaultDevice()!
         self.commandQueue = device.makeCommandQueue()!
 
@@ -95,20 +95,20 @@ class MetalPreviewView: MTKView {
         self.backgroundColor = .black
     }
 
-    required init(coder: NSCoder) {
+    public required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     /// Called from decode pipeline: update the latest frame.
     /// Thread-safe — may be called from any queue.
-    func updateFrame(_ pixelBuffer: CVPixelBuffer) {
+    @objc public func updateFrame(_ pixelBuffer: CVPixelBuffer) {
         frameLock.lock()
         latestPixelBuffer = pixelBuffer
         frameLock.unlock()
     }
 
     /// Clear current frame (called on stop).
-    func clearFrame() {
+    @objc public func clearFrame() {
         frameLock.lock()
         latestPixelBuffer = nil
         frameLock.unlock()
@@ -147,11 +147,11 @@ class MetalPreviewView: MTKView {
 }
 
 extension MetalPreviewView: MTKViewDelegate {
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         // No action needed — we recalculate textures from CVPixelBuffer each frame.
     }
 
-    func draw(in view: MTKView) {
+    public func draw(in view: MTKView) {
         frameLock.lock()
         let pixelBuffer = latestPixelBuffer
         frameLock.unlock()

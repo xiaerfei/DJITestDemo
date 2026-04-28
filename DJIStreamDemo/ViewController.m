@@ -6,6 +6,7 @@
 #import "ViewController.h"
 #import "DJIStreamDemo-Swift.h"
 #import "TVUIRLDJIStreamManager.h"
+#import "RTMPIngestController.h"
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 
