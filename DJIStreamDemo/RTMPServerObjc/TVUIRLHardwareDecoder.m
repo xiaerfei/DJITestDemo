@@ -42,6 +42,7 @@ static void decompressionOutputCallback(
     NSDictionary *outputAttrs = @{
         (NSString *)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange),
         (NSString *)kCVPixelBufferIOSurfacePropertiesKey: @{},
+        (NSString *)kCVPixelBufferMetalCompatibilityKey: @YES,
     };
     VTDecompressionOutputCallbackRecord cb = {
         .decompressionOutputCallback = decompressionOutputCallback,

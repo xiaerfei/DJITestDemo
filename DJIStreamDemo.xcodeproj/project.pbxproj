@@ -17,50 +17,6 @@
 		2C8D860F2F9A21C90037014A /* DJIStreamDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D860D2F9A21C90037014A /* DJIStreamDemoTests.m */; };
 		2C8D86132F9A21CC0037014A /* DJIStreamDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D86102F9A21CC0037014A /* DJIStreamDemoUITests.m */; };
 		2C8D86142F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D86112F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m */; };
-		2C8D8D5A2F9A2D120037014A /* HevcNalUnitVps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D242F9A2D120037014A /* HevcNalUnitVps.swift */; };
-		2C8D8D5B2F9A2D120037014A /* RtmpAcknowledgementMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D342F9A2D120037014A /* RtmpAcknowledgementMessage.swift */; };
-		2C8D8D5E2F9A2D120037014A /* CMVideoFormatDescription+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D042F9A2D120037014A /* CMVideoFormatDescription+Extension.swift */; };
-		2C8D8D5F2F9A2D120037014A /* MpegTsVideoConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2A2F9A2D120037014A /* MpegTsVideoConfig.swift */; };
-		2C8D8D602F9A2D120037014A /* RtmpUserControlMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3C2F9A2D120037014A /* RtmpUserControlMessage.swift */; };
-		2C8D8D612F9A2D120037014A /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D052F9A2D120037014A /* Data+Extension.swift */; };
-		2C8D8D622F9A2D120037014A /* MpegTsVideoConfigHevc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D252F9A2D120037014A /* MpegTsVideoConfigHevc.swift */; };
-		2C8D8D672F9A2D120037014A /* ByteWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4F2F9A2D120037014A /* ByteWriter.swift */; };
-		2C8D8D692F9A2D120037014A /* HevcNalUnitSei.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D222F9A2D120037014A /* HevcNalUnitSei.swift */; };
-		2C8D8D6C2F9A2D120037014A /* AvcNalUnitPps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */; };
-		2C8D8D6E2F9A2D120037014A /* RtmpAggregateMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D352F9A2D120037014A /* RtmpAggregateMessage.swift */; };
-		2C8D8D6F2F9A2D120037014A /* NalUnitStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2C2F9A2D120037014A /* NalUnitStream.swift */; };
-		2C8D8D702F9A2D120037014A /* Amf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D312F9A2D120037014A /* Amf.swift */; };
-		2C8D8D732F9A2D120037014A /* AvcNalUnitSps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1D2F9A2D120037014A /* AvcNalUnitSps.swift */; };
-		2C8D8D752F9A2D120037014A /* HevcNalUnitPps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D212F9A2D120037014A /* HevcNalUnitPps.swift */; };
-		2C8D8D762F9A2D120037014A /* TargetLatenciesSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */; };
-		2C8D8D772F9A2D120037014A /* RtmpServerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */; };
-		2C8D8D7A2F9A2D120037014A /* RtmpAudioMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D362F9A2D120037014A /* RtmpAudioMessage.swift */; };
-		2C8D8D7B2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3A2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift */; };
-		2C8D8D7C2F9A2D120037014A /* VTDecompressionSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */; };
-		2C8D8D7D2F9A2D120037014A /* RtmpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D562F9A2D120037014A /* RtmpServer.swift */; };
-		2C8D8D7E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift */; };
-		2C8D8D7F2F9A2D120037014A /* RtmpChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D402F9A2D120037014A /* RtmpChunk.swift */; };
-		2C8D8D802F9A2D120037014A /* RtmpServerChunkStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */; };
-		2C8D8D812F9A2D120037014A /* MpegTsVideoConfigAvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1E2F9A2D120037014A /* MpegTsVideoConfigAvc.swift */; };
-		2C8D8D822F9A2D120037014A /* Adts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D272F9A2D120037014A /* Adts.swift */; };
-		2C8D8D852F9A2D120037014A /* MpegTsAudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D292F9A2D120037014A /* MpegTsAudioConfig.swift */; };
-		2C8D8D862F9A2D120037014A /* HevcNalUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D202F9A2D120037014A /* HevcNalUnit.swift */; };
-		2C8D8D872F9A2D120037014A /* ByteReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4E2F9A2D120037014A /* ByteReader.swift */; };
-		2C8D8D882F9A2D120037014A /* RtmpAbortMessge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D332F9A2D120037014A /* RtmpAbortMessge.swift */; };
-		2C8D8D892F9A2D120037014A /* HevcNalUnitSps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D232F9A2D120037014A /* HevcNalUnitSps.swift */; };
-		2C8D8D8D2F9A2D120037014A /* NalUnitWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2D2F9A2D120037014A /* NalUnitWriter.swift */; };
-		2C8D8D8E2F9A2D120037014A /* RtmpVideoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3D2F9A2D120037014A /* RtmpVideoMessage.swift */; };
-		2C8D8D8F2F9A2D120037014A /* RtmpMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D392F9A2D120037014A /* RtmpMessage.swift */; };
-		2C8D8D912F9A2D120037014A /* AudioSpecificConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */; };
-		2C8D8D922F9A2D120037014A /* AvcNalUnitSei.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */; };
-		2C8D8D952F9A2D120037014A /* MetalPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D0F2F9A2D120037014A /* MetalPreviewView.swift */; };
-		2C8D8D962F9A2D120037014A /* AvcNalUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */; };
-		2C8D8D972F9A2D120037014A /* Flv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D082F9A2D120037014A /* Flv.swift */; };
-		2C8D8D982F9A2D120037014A /* NalUnitReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */; };
-		2C8D8D992F9A2D120037014A /* RtmpCommandMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D372F9A2D120037014A /* RtmpCommandMessage.swift */; };
-		2C8D8D9A2F9A2D120037014A /* BitrateStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */; };
-		2C8D8D9B2F9A2D120037014A /* RtmpDataMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */; };
-		2C8D8D9C2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */; };
 		2C8D94B92F9F545F0037014A /* TVUIRLDJIDeviceMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94AD2F9F545F0037014A /* TVUIRLDJIDeviceMessage.m */; };
 		2C8D94BA2F9F545F0037014A /* TVUIRLDJITypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B72F9F545F0037014A /* TVUIRLDJITypes.m */; };
 		2C8D94BB2F9F545F0037014A /* TVUIRLDJIMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B32F9F545F0037014A /* TVUIRLDJIMessage.m */; };
@@ -109,11 +65,14 @@
 		2C8D952C2FA083EF0037014A /* DjiDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D951D2FA083EF0037014A /* DjiDevice.swift */; };
 		2C8D952D2FA083EF0037014A /* DjiLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95192FA083EF0037014A /* DjiLogger.swift */; };
 		2C8D952E2FA083EF0037014A /* DjiMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95212FA083EF0037014A /* DjiMessage.swift */; };
+		2C8D954F2FA090BF0037014A /* TVUIRLShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95472FA090BF0037014A /* TVUIRLShaderProgram.m */; };
+		2C8D95512FA090BF0037014A /* TVUIRLTextureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D954B2FA090BF0037014A /* TVUIRLTextureCache.m */; };
+		2C8D95532FA090BF0037014A /* TVUIRLPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */; };
+		2C8D95552FA095C70037014A /* ByteReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95542FA095C70037014A /* ByteReader.swift */; };
+		2C8D95572FA095CC0037014A /* ByteWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95562FA095CC0037014A /* ByteWriter.swift */; };
 		3223E841F5B4CA77814944C6 /* Pods_DJIStreamDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1C3CA46F5DB5217E658BC3E /* Pods_DJIStreamDemoTests.framework */; };
 		AA8C4DEAAC03EA9D79DD8D11 /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A72C08608C59BBF286C162A /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework */; };
 		D6D659F2DCC7E74783545036 /* Pods_DJIStreamDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BBB5707B7BE8B4AB2C5BDAD /* Pods_DJIStreamDemo.framework */; };
-		DA0DA0021A0001A001A00001 /* VideoDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0021B0001A001A00001 /* VideoDecoder.swift */; };
-		DA0DA0021A0001A001A00002 /* SettingsRtmpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0DA0021B0001A001A00002 /* SettingsRtmpServer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,51 +111,7 @@
 		2C8D860D2F9A21C90037014A /* DJIStreamDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoTests.m; sourceTree = "<group>"; };
 		2C8D86102F9A21CC0037014A /* DJIStreamDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoUITests.m; sourceTree = "<group>"; };
 		2C8D86112F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoUITestsLaunchTests.m; sourceTree = "<group>"; };
-		2C8D8D042F9A2D120037014A /* CMVideoFormatDescription+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CMVideoFormatDescription+Extension.swift"; sourceTree = "<group>"; };
-		2C8D8D052F9A2D120037014A /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
-		2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VTDecompressionSession+Extension.swift"; sourceTree = "<group>"; };
-		2C8D8D082F9A2D120037014A /* Flv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flv.swift; sourceTree = "<group>"; };
-		2C8D8D0F2F9A2D120037014A /* MetalPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPreviewView.swift; sourceTree = "<group>"; };
 		2C8D8D102F9A2D120037014A /* Shader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
-		2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetLatenciesSynchronizer.swift; sourceTree = "<group>"; };
-		2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnit.swift; sourceTree = "<group>"; };
-		2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitPps.swift; sourceTree = "<group>"; };
-		2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitSei.swift; sourceTree = "<group>"; };
-		2C8D8D1D2F9A2D120037014A /* AvcNalUnitSps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvcNalUnitSps.swift; sourceTree = "<group>"; };
-		2C8D8D1E2F9A2D120037014A /* MpegTsVideoConfigAvc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsVideoConfigAvc.swift; sourceTree = "<group>"; };
-		2C8D8D202F9A2D120037014A /* HevcNalUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnit.swift; sourceTree = "<group>"; };
-		2C8D8D212F9A2D120037014A /* HevcNalUnitPps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitPps.swift; sourceTree = "<group>"; };
-		2C8D8D222F9A2D120037014A /* HevcNalUnitSei.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitSei.swift; sourceTree = "<group>"; };
-		2C8D8D232F9A2D120037014A /* HevcNalUnitSps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitSps.swift; sourceTree = "<group>"; };
-		2C8D8D242F9A2D120037014A /* HevcNalUnitVps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HevcNalUnitVps.swift; sourceTree = "<group>"; };
-		2C8D8D252F9A2D120037014A /* MpegTsVideoConfigHevc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsVideoConfigHevc.swift; sourceTree = "<group>"; };
-		2C8D8D272F9A2D120037014A /* Adts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Adts.swift; sourceTree = "<group>"; };
-		2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSpecificConfig.swift; sourceTree = "<group>"; };
-		2C8D8D292F9A2D120037014A /* MpegTsAudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsAudioConfig.swift; sourceTree = "<group>"; };
-		2C8D8D2A2F9A2D120037014A /* MpegTsVideoConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MpegTsVideoConfig.swift; sourceTree = "<group>"; };
-		2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NalUnitReader.swift; sourceTree = "<group>"; };
-		2C8D8D2C2F9A2D120037014A /* NalUnitStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NalUnitStream.swift; sourceTree = "<group>"; };
-		2C8D8D2D2F9A2D120037014A /* NalUnitWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NalUnitWriter.swift; sourceTree = "<group>"; };
-		2C8D8D312F9A2D120037014A /* Amf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Amf.swift; sourceTree = "<group>"; };
-		2C8D8D332F9A2D120037014A /* RtmpAbortMessge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAbortMessge.swift; sourceTree = "<group>"; };
-		2C8D8D342F9A2D120037014A /* RtmpAcknowledgementMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAcknowledgementMessage.swift; sourceTree = "<group>"; };
-		2C8D8D352F9A2D120037014A /* RtmpAggregateMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAggregateMessage.swift; sourceTree = "<group>"; };
-		2C8D8D362F9A2D120037014A /* RtmpAudioMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpAudioMessage.swift; sourceTree = "<group>"; };
-		2C8D8D372F9A2D120037014A /* RtmpCommandMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpCommandMessage.swift; sourceTree = "<group>"; };
-		2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpDataMessage.swift; sourceTree = "<group>"; };
-		2C8D8D392F9A2D120037014A /* RtmpMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpMessage.swift; sourceTree = "<group>"; };
-		2C8D8D3A2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpSetChunkSizeMessage.swift; sourceTree = "<group>"; };
-		2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpSetPeerBandwidthMessage.swift; sourceTree = "<group>"; };
-		2C8D8D3C2F9A2D120037014A /* RtmpUserControlMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpUserControlMessage.swift; sourceTree = "<group>"; };
-		2C8D8D3D2F9A2D120037014A /* RtmpVideoMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpVideoMessage.swift; sourceTree = "<group>"; };
-		2C8D8D3E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpWindowAcknowledgementSizeMessage.swift; sourceTree = "<group>"; };
-		2C8D8D402F9A2D120037014A /* RtmpChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpChunk.swift; sourceTree = "<group>"; };
-		2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitrateStats.swift; sourceTree = "<group>"; };
-		2C8D8D4E2F9A2D120037014A /* ByteReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteReader.swift; sourceTree = "<group>"; };
-		2C8D8D4F2F9A2D120037014A /* ByteWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteWriter.swift; sourceTree = "<group>"; };
-		2C8D8D562F9A2D120037014A /* RtmpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServer.swift; sourceTree = "<group>"; };
-		2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServerChunkStream.swift; sourceTree = "<group>"; };
-		2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RtmpServerClient.swift; sourceTree = "<group>"; };
 		2C8D94A32F9F545F0037014A /* TVUIRLByteIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLByteIO.h; sourceTree = "<group>"; };
 		2C8D94A42F9F545F0037014A /* TVUIRLByteIO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLByteIO.m; sourceTree = "<group>"; };
 		2C8D94A52F9F545F0037014A /* TVUIRLDJICrc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJICrc.h; sourceTree = "<group>"; };
@@ -283,6 +198,14 @@
 		2C8D95202FA083EF0037014A /* DjiDeviceScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiDeviceScanner.swift; sourceTree = "<group>"; };
 		2C8D95212FA083EF0037014A /* DjiMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DjiMessage.swift; sourceTree = "<group>"; };
 		2C8D95222FA083EF0037014A /* DJIStreamController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DJIStreamController.swift; sourceTree = "<group>"; };
+		2C8D95422FA090BF0037014A /* TVUIRLPreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLPreviewController.h; sourceTree = "<group>"; };
+		2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLPreviewController.m; sourceTree = "<group>"; };
+		2C8D95462FA090BF0037014A /* TVUIRLShaderProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLShaderProgram.h; sourceTree = "<group>"; };
+		2C8D95472FA090BF0037014A /* TVUIRLShaderProgram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLShaderProgram.m; sourceTree = "<group>"; };
+		2C8D954A2FA090BF0037014A /* TVUIRLTextureCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLTextureCache.h; sourceTree = "<group>"; };
+		2C8D954B2FA090BF0037014A /* TVUIRLTextureCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLTextureCache.m; sourceTree = "<group>"; };
+		2C8D95542FA095C70037014A /* ByteReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteReader.swift; sourceTree = "<group>"; };
+		2C8D95562FA095CC0037014A /* ByteWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteWriter.swift; sourceTree = "<group>"; };
 		32D45325092FFCE21D500478 /* Pods-DJIStreamDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemoTests/Pods-DJIStreamDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6BB6B34982B433D6E77DCB0E /* Pods-DJIStreamDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemoTests.release.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemoTests/Pods-DJIStreamDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		7BBB5707B7BE8B4AB2C5BDAD /* Pods_DJIStreamDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -290,8 +213,6 @@
 		852FB89DADB48E72E0B75ED4 /* Pods-DJIStreamDemo-DJIStreamDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemo-DJIStreamDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemo-DJIStreamDemoUITests/Pods-DJIStreamDemo-DJIStreamDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		8A72C08608C59BBF286C162A /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemo_DJIStreamDemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1C3CA46F5DB5217E658BC3E /* Pods_DJIStreamDemoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA0DA0021B0001A001A00001 /* VideoDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDecoder.swift; sourceTree = "<group>"; };
-		DA0DA0021B0001A001A00002 /* SettingsRtmpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRtmpServer.swift; sourceTree = "<group>"; };
 		E109A146404C5E1E72442540 /* Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemo-DJIStreamDemoUITests/Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -361,6 +282,7 @@
 		2C8D86042F9A21C30037014A /* DJIStreamDemo */ = {
 			isa = PBXGroup;
 			children = (
+				2C8D954C2FA090BF0037014A /* IngestObjc */,
 				2C8D95232FA083EF0037014A /* DJI */,
 				2C8D94B82F9F545F0037014A /* DJIObjc */,
 				2C8D85F72F9A21C30037014A /* AppDelegate.h */,
@@ -411,9 +333,6 @@
 		2C8D8D072F9A2D120037014A /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D042F9A2D120037014A /* CMVideoFormatDescription+Extension.swift */,
-				2C8D8D052F9A2D120037014A /* Data+Extension.swift */,
-				2C8D8D062F9A2D120037014A /* VTDecompressionSession+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -421,7 +340,6 @@
 		2C8D8D092F9A2D120037014A /* Flv */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D082F9A2D120037014A /* Flv.swift */,
 			);
 			path = Flv;
 			sourceTree = "<group>";
@@ -436,7 +354,6 @@
 		2C8D8D122F9A2D120037014A /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D0F2F9A2D120037014A /* MetalPreviewView.swift */,
 				2C8D8D102F9A2D120037014A /* Shader.metal */,
 			);
 			path = Video;
@@ -447,7 +364,6 @@
 			children = (
 				2C8D8D0D2F9A2D120037014A /* Audio */,
 				2C8D8D122F9A2D120037014A /* Video */,
-				2C8D8D182F9A2D120037014A /* TargetLatenciesSynchronizer.swift */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -455,11 +371,6 @@
 		2C8D8D1F2F9A2D120037014A /* Avc */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D1A2F9A2D120037014A /* AvcNalUnit.swift */,
-				2C8D8D1B2F9A2D120037014A /* AvcNalUnitPps.swift */,
-				2C8D8D1C2F9A2D120037014A /* AvcNalUnitSei.swift */,
-				2C8D8D1D2F9A2D120037014A /* AvcNalUnitSps.swift */,
-				2C8D8D1E2F9A2D120037014A /* MpegTsVideoConfigAvc.swift */,
 			);
 			path = Avc;
 			sourceTree = "<group>";
@@ -467,12 +378,6 @@
 		2C8D8D262F9A2D120037014A /* Hevc */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D202F9A2D120037014A /* HevcNalUnit.swift */,
-				2C8D8D212F9A2D120037014A /* HevcNalUnitPps.swift */,
-				2C8D8D222F9A2D120037014A /* HevcNalUnitSei.swift */,
-				2C8D8D232F9A2D120037014A /* HevcNalUnitSps.swift */,
-				2C8D8D242F9A2D120037014A /* HevcNalUnitVps.swift */,
-				2C8D8D252F9A2D120037014A /* MpegTsVideoConfigHevc.swift */,
 			);
 			path = Hevc;
 			sourceTree = "<group>";
@@ -482,13 +387,6 @@
 			children = (
 				2C8D8D1F2F9A2D120037014A /* Avc */,
 				2C8D8D262F9A2D120037014A /* Hevc */,
-				2C8D8D272F9A2D120037014A /* Adts.swift */,
-				2C8D8D282F9A2D120037014A /* AudioSpecificConfig.swift */,
-				2C8D8D292F9A2D120037014A /* MpegTsAudioConfig.swift */,
-				2C8D8D2A2F9A2D120037014A /* MpegTsVideoConfig.swift */,
-				2C8D8D2B2F9A2D120037014A /* NalUnitReader.swift */,
-				2C8D8D2C2F9A2D120037014A /* NalUnitStream.swift */,
-				2C8D8D2D2F9A2D120037014A /* NalUnitWriter.swift */,
 			);
 			path = Mpeg;
 			sourceTree = "<group>";
@@ -503,7 +401,6 @@
 		2C8D8D322F9A2D120037014A /* Amf */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D312F9A2D120037014A /* Amf.swift */,
 			);
 			path = Amf;
 			sourceTree = "<group>";
@@ -511,18 +408,6 @@
 		2C8D8D3F2F9A2D120037014A /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D332F9A2D120037014A /* RtmpAbortMessge.swift */,
-				2C8D8D342F9A2D120037014A /* RtmpAcknowledgementMessage.swift */,
-				2C8D8D352F9A2D120037014A /* RtmpAggregateMessage.swift */,
-				2C8D8D362F9A2D120037014A /* RtmpAudioMessage.swift */,
-				2C8D8D372F9A2D120037014A /* RtmpCommandMessage.swift */,
-				2C8D8D382F9A2D120037014A /* RtmpDataMessage.swift */,
-				2C8D8D392F9A2D120037014A /* RtmpMessage.swift */,
-				2C8D8D3A2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift */,
-				2C8D8D3B2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift */,
-				2C8D8D3C2F9A2D120037014A /* RtmpUserControlMessage.swift */,
-				2C8D8D3D2F9A2D120037014A /* RtmpVideoMessage.swift */,
-				2C8D8D3E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
@@ -532,7 +417,6 @@
 			children = (
 				2C8D8D322F9A2D120037014A /* Amf */,
 				2C8D8D3F2F9A2D120037014A /* Message */,
-				2C8D8D402F9A2D120037014A /* RtmpChunk.swift */,
 			);
 			path = Rtmp;
 			sourceTree = "<group>";
@@ -547,9 +431,6 @@
 		2C8D8D502F9A2D120037014A /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D4D2F9A2D120037014A /* BitrateStats.swift */,
-				2C8D8D4E2F9A2D120037014A /* ByteReader.swift */,
-				2C8D8D4F2F9A2D120037014A /* ByteWriter.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -573,10 +454,6 @@
 		2C8D8D592F9A2D120037014A /* RtmpServer */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D8D562F9A2D120037014A /* RtmpServer.swift */,
-				2C8D8D572F9A2D120037014A /* RtmpServerChunkStream.swift */,
-				2C8D8D582F9A2D120037014A /* RtmpServerClient.swift */,
-				DA0DA0021B0001A001A00002 /* SettingsRtmpServer.swift */,
 			);
 			path = RtmpServer;
 			sourceTree = "<group>";
@@ -684,6 +561,8 @@
 				2C8D95192FA083EF0037014A /* DjiLogger.swift */,
 				2C8D951A2FA083EF0037014A /* DjiSettings.swift */,
 				2C8D951B2FA083EF0037014A /* SimpleTimer.swift */,
+				2C8D95542FA095C70037014A /* ByteReader.swift */,
+				2C8D95562FA095CC0037014A /* ByteWriter.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -702,10 +581,22 @@
 			path = DJI;
 			sourceTree = "<group>";
 		};
+		2C8D954C2FA090BF0037014A /* IngestObjc */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D95422FA090BF0037014A /* TVUIRLPreviewController.h */,
+				2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */,
+				2C8D95462FA090BF0037014A /* TVUIRLShaderProgram.h */,
+				2C8D95472FA090BF0037014A /* TVUIRLShaderProgram.m */,
+				2C8D954A2FA090BF0037014A /* TVUIRLTextureCache.h */,
+				2C8D954B2FA090BF0037014A /* TVUIRLTextureCache.m */,
+			);
+			path = IngestObjc;
+			sourceTree = "<group>";
+		};
 		DA0DA0021C0001A001A00001 /* Codec */ = {
 			isa = PBXGroup;
 			children = (
-				DA0DA0021B0001A001A00001 /* VideoDecoder.swift */,
 			);
 			path = Codec;
 			sourceTree = "<group>";
@@ -973,28 +864,12 @@
 				2C8D86072F9A21C30037014A /* SceneDelegate.m in Sources */,
 				2C8D86082F9A21C30037014A /* ViewController.m in Sources */,
 				2C8D94C62FA05E580037014A /* TVUIRLDataReader.m in Sources */,
+				2C8D95552FA095C70037014A /* ByteReader.swift in Sources */,
 				2C8D95122FA07BB30037014A /* TVUIRLTransport.m in Sources */,
-				2C8D8D5A2F9A2D120037014A /* HevcNalUnitVps.swift in Sources */,
-				2C8D8D5B2F9A2D120037014A /* RtmpAcknowledgementMessage.swift in Sources */,
 				2C8D94DB2FA05F4C0037014A /* TVUIRLAckMessage.m in Sources */,
-				2C8D8D5E2F9A2D120037014A /* CMVideoFormatDescription+Extension.swift in Sources */,
-				2C8D8D5F2F9A2D120037014A /* MpegTsVideoConfig.swift in Sources */,
-				2C8D8D602F9A2D120037014A /* RtmpUserControlMessage.swift in Sources */,
-				2C8D8D612F9A2D120037014A /* Data+Extension.swift in Sources */,
 				2C8D950D2FA07B8A0037014A /* TVUIRLNetworkTransport.m in Sources */,
-				2C8D8D622F9A2D120037014A /* MpegTsVideoConfigHevc.swift in Sources */,
-				2C8D8D672F9A2D120037014A /* ByteWriter.swift in Sources */,
-				2C8D8D692F9A2D120037014A /* HevcNalUnitSei.swift in Sources */,
-				2C8D8D6C2F9A2D120037014A /* AvcNalUnitPps.swift in Sources */,
-				2C8D8D6E2F9A2D120037014A /* RtmpAggregateMessage.swift in Sources */,
-				2C8D8D6F2F9A2D120037014A /* NalUnitStream.swift in Sources */,
-				2C8D8D702F9A2D120037014A /* Amf.swift in Sources */,
-				2C8D8D732F9A2D120037014A /* AvcNalUnitSps.swift in Sources */,
 				2C8D95152FA07FBF0037014A /* RTMPIngestController.m in Sources */,
-				2C8D8D752F9A2D120037014A /* HevcNalUnitPps.swift in Sources */,
 				2C8D95092FA077F60037014A /* TVUIRLAudioDecoder.m in Sources */,
-				2C8D8D762F9A2D120037014A /* TargetLatenciesSynchronizer.swift in Sources */,
-				2C8D8D772F9A2D120037014A /* RtmpServerClient.swift in Sources */,
 				2C8D94E72FA05F9B0037014A /* TVUIRLCommandMessage.m in Sources */,
 				2C8D95242FA083EF0037014A /* ByteIO.swift in Sources */,
 				2C8D95252FA083EF0037014A /* DjiCrc.swift in Sources */,
@@ -1004,11 +879,13 @@
 				2C8D95292FA083EF0037014A /* DjiDeviceModel.swift in Sources */,
 				2C8D952A2FA083EF0037014A /* DjiDeviceScanner.swift in Sources */,
 				2C8D952B2FA083EF0037014A /* DJIStreamController.swift in Sources */,
+				2C8D95572FA095CC0037014A /* ByteWriter.swift in Sources */,
+				2C8D954F2FA090BF0037014A /* TVUIRLShaderProgram.m in Sources */,
+				2C8D95512FA090BF0037014A /* TVUIRLTextureCache.m in Sources */,
+				2C8D95532FA090BF0037014A /* TVUIRLPreviewController.m in Sources */,
 				2C8D952C2FA083EF0037014A /* DjiDevice.swift in Sources */,
 				2C8D952D2FA083EF0037014A /* DjiLogger.swift in Sources */,
 				2C8D952E2FA083EF0037014A /* DjiMessage.swift in Sources */,
-				2C8D8D7A2F9A2D120037014A /* RtmpAudioMessage.swift in Sources */,
-				2C8D8D7B2F9A2D120037014A /* RtmpSetChunkSizeMessage.swift in Sources */,
 				2C8D94D82FA05F3F0037014A /* TVUIRLProtocolMessage.m in Sources */,
 				2C8D94F92FA060C40037014A /* TVUIRLMediaClock.m in Sources */,
 				2C8D94B92F9F545F0037014A /* TVUIRLDJIDeviceMessage.m in Sources */,
@@ -1024,46 +901,18 @@
 				2C8D94C12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m in Sources */,
 				2C8D94C22F9F545F0037014A /* TVUIRLSimpleTimer.m in Sources */,
 				2C8D94E12FA05F650037014A /* TVUIRLFlowControl.m in Sources */,
-				2C8D8D7C2F9A2D120037014A /* VTDecompressionSession+Extension.swift in Sources */,
-				2C8D8D7D2F9A2D120037014A /* RtmpServer.swift in Sources */,
-				2C8D8D7E2F9A2D120037014A /* RtmpWindowAcknowledgementSizeMessage.swift in Sources */,
-				2C8D8D7F2F9A2D120037014A /* RtmpChunk.swift in Sources */,
-				2C8D8D802F9A2D120037014A /* RtmpServerChunkStream.swift in Sources */,
-				2C8D8D812F9A2D120037014A /* MpegTsVideoConfigAvc.swift in Sources */,
-				2C8D8D822F9A2D120037014A /* Adts.swift in Sources */,
 				2C8D94ED2FA060130037014A /* TVUIRLVideoConfigAvc.m in Sources */,
 				2C8D94CF2FA05EAB0037014A /* TVUIRLAmfValue.m in Sources */,
-				2C8D8D852F9A2D120037014A /* MpegTsAudioConfig.swift in Sources */,
-				2C8D8D862F9A2D120037014A /* HevcNalUnit.swift in Sources */,
 				2C8D95032FA062090037014A /* TVUIRLStreamConnection.m in Sources */,
-				2C8D8D872F9A2D120037014A /* ByteReader.swift in Sources */,
 				2C8D94EA2FA05FD80037014A /* TVUIRLMediaPacket.m in Sources */,
-				2C8D8D882F9A2D120037014A /* RtmpAbortMessge.swift in Sources */,
-				2C8D8D892F9A2D120037014A /* HevcNalUnitSps.swift in Sources */,
-				2C8D8D8D2F9A2D120037014A /* NalUnitWriter.swift in Sources */,
-				2C8D8D8E2F9A2D120037014A /* RtmpVideoMessage.swift in Sources */,
-				2C8D8D8F2F9A2D120037014A /* RtmpMessage.swift in Sources */,
-				2C8D8D912F9A2D120037014A /* AudioSpecificConfig.swift in Sources */,
 				2C8D94CC2FA05E850037014A /* TVUIRLBandwidthMeter.m in Sources */,
-				2C8D8D922F9A2D120037014A /* AvcNalUnitSei.swift in Sources */,
-				2C8D8D952F9A2D120037014A /* MetalPreviewView.swift in Sources */,
-				2C8D8D962F9A2D120037014A /* AvcNalUnit.swift in Sources */,
-				2C8D8D972F9A2D120037014A /* Flv.swift in Sources */,
-				2C8D8D972F9A2D120037014A /* Flv.swift in Sources */,
 				2C8D94F62FA060B00037014A /* TVUIRLStreamConfig.m in Sources */,
-				2C8D8D982F9A2D120037014A /* NalUnitReader.swift in Sources */,
 				2C8D94DE2FA05F5A0037014A /* TVUIRLWindowAckMessage.m in Sources */,
-				2C8D8D992F9A2D120037014A /* RtmpCommandMessage.swift in Sources */,
-				2C8D8D9A2F9A2D120037014A /* BitrateStats.swift in Sources */,
-				2C8D8D9B2F9A2D120037014A /* RtmpDataMessage.swift in Sources */,
 				2C8D94F02FA0602B0037014A /* TVUIRLVideoConfigHevc.m in Sources */,
-				2C8D8D9C2F9A2D120037014A /* RtmpSetPeerBandwidthMessage.swift in Sources */,
 				2C8D94D52FA05EF50037014A /* TVUIRLAmfDecoder.m in Sources */,
 				2C8D94E42FA05F780037014A /* TVUIRLBandwidthConfig.m in Sources */,
 				2C8D95072FA077D80037014A /* TVUIRLHardwareDecoder.m in Sources */,
 				2C8D94C92FA05E6F0037014A /* TVUIRLDataWriter.m in Sources */,
-				DA0DA0021A0001A001A00001 /* VideoDecoder.swift in Sources */,
-				DA0DA0021A0001A001A00002 /* SettingsRtmpServer.swift in Sources */,
 				2C8D95102FA07BA90037014A /* TVUIRLAsyncSocketTransport.m in Sources */,
 				2C8D94D22FA05EC50037014A /* TVUIRLAmfEncoder.m in Sources */,
 			);

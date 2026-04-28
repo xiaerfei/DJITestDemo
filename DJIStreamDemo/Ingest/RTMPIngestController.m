@@ -4,13 +4,13 @@
 //
 
 #import "RTMPIngestController.h"
-#import "DJIStreamDemo-Swift.h"  // 引入 Swift 端 MetalPreviewView
 #import "TVUIRLStreamingServer.h"
 #import "TVUIRLStreamConfig.h"
+#import "TVUIRLPreviewController.h"
 
 @interface RTMPIngestController () <TVUIRLStreamingServerDelegate>
 @property (nonatomic, strong, readwrite) UIView *previewView;
-@property (nonatomic, strong) MetalPreviewView *preview;
+@property (nonatomic, strong) TVUIRLPreviewController *previewController;
 @property (nonatomic, strong, nullable) TVUIRLStreamingServer *server;
 @end
 
@@ -27,8 +27,8 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _preview = [[MetalPreviewView alloc] initWithFrame:CGRectZero device:nil];
-        _previewView = _preview;
+        _previewController = [[TVUIRLPreviewController alloc] init];
+        _previewView = _previewController.view;
         _latency = 0;
         _noDelay = YES;
         _frameQueueSize = 3;
@@ -54,7 +54,7 @@
 - (void)stop {
     [self.server stop];
     self.server = nil;
-    [self.preview clearFrame];
+    [self.previewController clearFrame];
 }
 
 - (BOOL)isRunning {
@@ -81,12 +81,12 @@
     // 优先使用 zero-copy image buffer 路径；这里收到 CMSampleBuffer 时再 fallback 解出 CVPixelBuffer
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     if (pixelBuffer) {
-        [self.preview updateFrame:pixelBuffer];
+        [self.previewController updateFrame:pixelBuffer];
     }
 }
 
 - (void)server:(TVUIRLStreamingServer *)server didReceiveVideoImageBuffer:(CVImageBufferRef)imageBuffer {
-    [self.preview updateFrame:imageBuffer];
+    [self.previewController updateFrame:imageBuffer];
 }
 
 - (void)server:(TVUIRLStreamingServer *)server didReceiveAudioSampleBuffer:(CMSampleBufferRef)sampleBuffer {
