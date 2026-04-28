@@ -535,5 +535,230 @@ RtmpServerClient.start()
 
 ---
 
+## 十一、RTMPServerObjc 架构（ObjC 移植版）
+
+### 11.1 整体架构图
+
+```mermaid
+graph TB
+    subgraph "TVUIRLStreamingServer (主入口)"
+        StreamingServer["TVUIRLStreamingServer<br/>端口监听 · 分发连接"]
+        StreamConfig["TVUIRLStreamConfig<br/>服务器配置"]
+        BandwidthMeter["TVUIRLBandwidthMeter<br/>码率统计"]
+    end
+
+    subgraph "TVUIRLTransport (传输抽象层)"
+        TransportFactory["TVUIRLTransportFactory"]
+        NetworkTransport["TVUIRLNetworkTransport<br/>Network.framework"]
+        AsyncSocketTransport["TVUIRLAsyncSocketTransport<br/>GCDAsyncSocket"]
+    end
+
+    subgraph "TVUIRLStreamConnection (单客户端连接)"
+        Connection["TVUIRLStreamConnection<br/>握手 · Chunk状态机"]
+        MediaPipeline["TVUIRLMediaPipeline<br/>消息解析管道"]
+        MediaClock["TVUIRLMediaClock<br/>音视频同步"]
+        FlowControl["TVUIRLFlowControl<br/>Set Chunk Size"]
+        WindowAck["TVUIRLWindowAckMessage<br/>Window Ack Size"]
+    end
+
+    subgraph "TVUIRLProtocolMessage (协议消息)"
+        ProtocolMessage["TVUIRLProtocolMessage"]
+        CommandMessage["TVUIRLCommandMessage<br/>AMF0/AMF3 命令"]
+        MediaPacket["TVUIRLMediaPacket<br/>Chunk 封装"]
+    end
+
+    subgraph "编解码器"
+        HardwareDecoder["TVUIRLHardwareDecoder<br/>H.264/H.265 硬解"]
+        VideoConfigHevc["TVUIRLVideoConfigHevc<br/>HEVC 配置解析"]
+        VideoConfigAvc["TVUIRLVideoConfigAvc<br/>AVC 配置解析"]
+        AudioConfig["TVUIRLAudioConfig<br/>AAC 配置解析"]
+        AudioDecoder["TVUIRLAudioDecoder<br/>AAC 音频解码"]
+    end
+
+    subgraph "AMF 编解码"
+        AmfValue["TVUIRLAmfValue<br/>AMF 值类型"]
+        AmfEncoder["TVUIRLAmfEncoder"]
+        AmfDecoder["TVUIRLAmfDecoder"]
+    end
+
+    subgraph "工具类"
+        DataReader["TVUIRLDataReader<br/>二进制读取"]
+        DataWriter["TVUIRLDataWriter<br/>二进制写入"]
+    end
+
+    StreamingServer --> StreamConfig
+    StreamingServer --> BandwidthMeter
+    StreamingServer --> TransportFactory
+
+    TransportFactory --> NetworkTransport
+    TransportFactory --> AsyncSocketTransport
+
+    StreamingServer --> Connection
+    Connection --> MediaPipeline
+    Connection --> MediaClock
+    Connection --> FlowControl
+    Connection --> WindowAck
+
+    MediaPipeline --> ProtocolMessage
+    MediaPipeline --> CommandMessage
+    MediaPipeline --> MediaPacket
+
+    MediaPipeline --> VideoConfigHevc
+    MediaPipeline --> VideoConfigAvc
+    MediaPipeline --> AudioConfig
+
+    VideoConfigHevc --> HardwareDecoder
+    VideoConfigAvc --> HardwareDecoder
+
+    CommandMessage --> AmfValue
+    AmfEncoder --> DataWriter
+    AmfDecoder --> DataReader
+```
+
+### 11.2 类层次关系
+
+```mermaid
+classDiagram
+    class TVUIRLProtocolMessage {
+        +TVUIRLMessageType type
+        +NSInteger length
+        +uint32_t streamId
+        +NSData *encoded
+        +buildEncoded() NSData
+        +parseEncoded(NSData)
+    }
+
+    class TVUIRLCommandMessage {
+        +TVUIRLCommandName commandName
+        +NSInteger transactionId
+        +NSDictionary *commandObject
+        +NSArray *arguments
+    }
+
+    class TVUIRLFlowControl {
+        +uint32_t size
+    }
+
+    class TVUIRLWindowAckMessage {
+        +uint32_t size
+    }
+
+    class TVUIRLMediaPacket {
+        +TVUIRLPacketType type
+        +uint16_t chunkStreamId
+        +TVUIRLProtocolMessage *message
+        +splitWithMaximumSize() NSArray
+    }
+
+    class TVUIRLAmfValue {
+        +TVUIRLAmfValueType type
+        +numberValue() TVUIRLAmfValue
+        +stringValue() TVUIRLAmfValue
+        +objectValue() TVUIRLAmfValue
+        +nullValue() TVUIRLAmfValue
+    }
+
+    TVUIRLProtocolMessage <|-- TVUIRLCommandMessage
+    TVUIRLProtocolMessage <|-- TVUIRLFlowControl
+    TVUIRLProtocolMessage <|-- TVUIRLWindowAckMessage
+```
+
+### 11.3 消息流向
+
+```mermaid
+sequenceDiagram
+    participant Camera as "DJI 相机"
+    participant Transport as "TVUIRLTransport"
+    participant Connection as "TVUIRLStreamConnection"
+    participant Pipeline as "TVUIRLMediaPipeline"
+    participant Decoder as "TVUIRLHardwareDecoder"
+    participant Server as "TVUIRLStreamingServer"
+
+    Camera->>Transport: TCP 连接 (:1935)
+    Transport->>Connection: 新连接
+    Connection->>Connection: 握手 (C0/C1/C2)
+    Connection->>Pipeline: 接收 Chunk
+
+    rect rgb(200, 220, 255)
+        Note over Pipeline: AMF0 Command 解析
+        Pipeline->>AmfDecoder: 解析命令
+        Note over AmfDecoder: connect / createStream<br/>/ publish / fcPublish
+    end
+
+    rect rgb(255, 220, 200)
+        Note over Pipeline: Video 处理
+        Pipeline->>VideoConfigHevc: HEVC 配置
+        VideoConfigHevc->>Decoder: 创建 VTDecompressionSession
+        Pipeline->>Decoder: H.265 NAL Units
+        Decoder->>Server: CVPixelBuffer
+    end
+
+    rect rgb(220, 255, 200)
+        Note over Pipeline: Audio 处理
+        Pipeline->>AudioConfig: AAC 配置
+        Pipeline->>AudioDecoder: AAC Raw Data
+        AudioDecoder->>Server: CMSampleBuffer
+    end
+
+    Server->>Camera: Window Ack / Set Chunk Size
+```
+
+### 11.4 核心类说明
+
+| 类名 | 职责 | 关键接口 |
+|------|------|----------|
+| **TVUIRLStreamingServer** | TCP 端口监听，多客户端管理 | `start/stop`, `isStreamConnected`, `updateStats` |
+| **TVUIRLTransport** | 传输层抽象 (Protocol-oriented) | `TVUIRLTransportListener`, `TVUIRLTransportConnection` |
+| **TVUIRLStreamConnection** | 单客户端握手 + Chunk 状态机 | `start/stopWithReason`, `sendMessagePacket` |
+| **TVUIRLMediaPipeline** | 消息体累积 + 分发处理 | `appendChunkData`, `remainingMessageBytes` |
+| **TVUIRLProtocolMessage** | RTMP 消息基类 | `buildEncoded`, `parseEncoded` |
+| **TVUIRLCommandMessage** | AMF0/AMF3 命令消息 | `connect`, `createStream`, `publish` |
+| **TVUIRLHardwareDecoder** | H.264/H.265 硬解码 | `startWithFormatDescription`, `decodeSampleBuffer` |
+| **TVUIRLVideoConfigHevc** | HEVC 序列头解析 | `initWithHvcC`, `makeFormatDescription` |
+| **TVUIRLAudioConfig** | AAC 音频配置解析 | `initWithData`, `audioStreamBasicDescription` |
+| **TVUIRLMediaClock** | 音视频延迟同步 | `setLatestAudioPresentationTimeStamp`, `update` |
+| **TVUIRLBandwidthMeter** | 码率统计 | `addBytesTransferred`, `update` |
+
+### 11.5 RTMPServerObjc 文件映射表
+
+| ObjC 文件 | 对应 Swift (Moblin) | 功能 |
+|-----------|---------------------|------|
+| `TVUIRLStreamingServer.*` | `RtmpServer` | 服务器主入口 |
+| `TVUIRLStreamConnection.*` | `RtmpServerClient` | 客户端连接处理 |
+| `TVUIRLMediaPipeline.*` | `RtmpServerChunkStream` | Chunk 流解析 |
+| `TVUIRLTransport.*` | `RtmpChunk` | Chunk 封装 |
+| `TVUIRLCommandMessage.*` | `RtmpCommandMessage` | 命令消息 |
+| `TVUIRLWindowAckMessage.*` | `RtmpWindowAcknowledgementSizeMessage` | Window Ack |
+| `TVUIRLFlowControl.*` | `RtmpSetChunkSizeMessage` | Set Chunk Size |
+| `TVUIRLAmfValue/Encoder/Decoder` | `Amf` | AMF0 编解码 |
+| `TVUIRLVideoConfigHevc.*` | `MpegTsVideoConfigHevc` | HEVC 配置 |
+| `TVUIRLVideoConfigAvc.*` | `MpegTsVideoConfigAvc` | AVC 配置 |
+| `TVUIRLAudioConfig.*` | `MpegTsAudioConfig` | AAC 配置 |
+| `TVUIRLHardwareDecoder.*` | `VideoDecoder` | 视频硬解码 |
+| `TVUIRLBandwidthMeter.*` | `BitrateStats` | 码率统计 |
+| `TVUIRLDataReader.*` | `ByteReader` | 二进制读取 |
+| `TVUIRLDataWriter.*` | `ByteWriter` | 二进制写入 |
+| `TVUIRLNetworkTransport.*` | Network.framework | 网络传输 |
+| `TVUIRLAsyncSocketTransport.*` | GCDAsyncSocket | Socket 传输 |
+
+### 11.6 状态机转换
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle: init
+    Idle --> Connecting: start
+    Connecting --> Connected: 握手完成
+    Connected --> Idle: stopWithReason
+
+    Connected --> Connected: 接收 Chunk
+    Connected --> Connected: 发送响应
+    Connected --> Connected: 解码视频
+    Connected --> Connected: 解码音频
+
+    note right of Connected: 超时 10s 无数据 → 断开
+```
+
+---
+
 *文档版本：1.0*
 *参考：Moblin RTMPServer (MIT License, eerimoq/moblin)*
