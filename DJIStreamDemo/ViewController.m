@@ -352,7 +352,7 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
         RTMPIngestController.shared.latency = (int32_t)[self.latencyField.text integerValue];
         RTMPIngestController.shared.noDelay = self.noDelaySwitch.isOn;
         NSInteger queueSize = [self.queueSizeField.text integerValue];
-        RTMPIngestController.shared.frameQueueSize = queueSize > 0 ? queueSize : 1;
+
         [RTMPIngestController.shared startWithPort:port streamKey:streamKey];
     }
 
