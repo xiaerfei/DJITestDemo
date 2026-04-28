@@ -737,5 +737,170 @@ CMTime presentationTimeStamp = CMTimeMake(
 
 ---
 
-*生成时间：2026-04-27（修订：2026-04-28）*
+## 九、迁移完成记录（2026-04-28）
+
+整个 plan 的 7 个阶段全部落地完成，并在落地之后做了两次扩展：引入 Transport 抽象、替换 Swift 集成层。下文记录最终交付的代码结构与与计划的偏差。
+
+### 9.1 实际交付的文件清单
+
+`DJIStreamDemo/DJIStreamDemo/RTMPServerObjc/`（共 28 个 .h/.m，按编译单元 23 个 .m）：
+
+```
+Phase 1 基础设施
+  TVUIRLDataReader.h/.m
+  TVUIRLDataWriter.h/.m
+  TVUIRLBandwidthMeter.h/.m
+
+Phase 2 AMF
+  TVUIRLAmfValue.h/.m
+  TVUIRLAmfEncoder.h/.m
+  TVUIRLAmfDecoder.h/.m
+
+Phase 3 RTMP 协议消息
+  TVUIRLProtocolMessage.h/.m         // 基类
+  TVUIRLAckMessage.h/.m              // 0x03
+  TVUIRLWindowAckMessage.h/.m        // 0x05（计划外但 sendAck 路径需要）
+  TVUIRLFlowControl.h/.m             // 0x01 SetChunkSize
+  TVUIRLBandwidthConfig.h/.m         // 0x06 SetPeerBandwidth
+  TVUIRLCommandMessage.h/.m          // 0x14 AMF0 Command
+  TVUIRLMediaPacket.h/.m             // RTMP Chunk 封装
+
+Phase 4 媒体格式
+  TVUIRLVideoConfigAvc.h/.m
+  TVUIRLVideoConfigHevc.h/.m
+  TVUIRLAudioConfig.h/.m
+
+Phase 5 核心服务器
+  TVUIRLStreamConfig.h/.m
+  TVUIRLMediaClock.h/.m
+  TVUIRLStreamConnection.h/.m        // 握手 + chunk 状态机
+  TVUIRLMediaPipeline.h/.m           // FLV 视频/音频路由
+  TVUIRLStreamingServer.h/.m
+  TVUIRLStreamingServer+Internal.h   // 内部 API 类目
+
+Phase 6 解码器
+  TVUIRLHardwareDecoder.h/.m         // VTDecompressionSession
+  TVUIRLAudioDecoder.h/.m            // AVAudioConverter
+
+Transport 抽象（Phase 5 之后扩展）
+  TVUIRLTransport.h/.m               // 协议 + 工厂
+  TVUIRLNetworkTransport.h/.m        // Network.framework 后端
+  TVUIRLAsyncSocketTransport.h/.m    // CocoaAsyncSocket 后端
+```
+
+`DJIStreamDemo/DJIStreamDemo/Ingest/`（替换原 Swift 集成层）：
+
+```
+RTMPIngestController.h/.m            // 新增 ObjC 版本，公开 API 兼容旧 Swift 版
+RTMPIngestController.swift           // 已删除
+HaishinKit/Media/Video/MetalPreviewView.swift   // 保留，加 @objc public 暴露给 ObjC
+```
+
+### 9.2 与计划的偏差
+
+| 偏差点 | 计划 | 实际 | 原因 |
+|---|---|---|---|
+| **HEVC FourCC** | `0x68657663` ("hevc")（plan §2.5） | `0x68766331` ("hvc1") | Moblin/HaishinKit 实际使用的是 `hvc1`；plan 文档笔误。以源码为准 |
+| **网络层** | `pod 'CocoaAsyncSocket'`（plan §四） | 默认 `Network.framework`，可切换到 `GCDAsyncSocket` | 引入 `TVUIRLTransport` 协议抽象，两后端并存可切换 |
+| **delegate 协议** | 不带 cameraId（plan §3.16） | 同上，未带 cameraId | 与计划一致 |
+| **TVUIRLAckMessage 类型值** | plan §3.10 表注 `0x05` | 实际为 `0x03`（标准 RTMP Ack） | plan 表笔误。`0x05` 为 WindowAck，单独建 `TVUIRLWindowAckMessage` |
+| **基础时间戳** | `currentPresentationTimeStamp().seconds`（CoreMedia clock，plan §7.3） | `CACurrentMediaTime() * 1000`（QuartzCore） | 二者均为 mach absolute time 衍生值；ObjC 下 `CACurrentMediaTime` 接口更直接 |
+| **`isProcessing` 重入保护** | Moblin Swift 有 | 已删除 | ObjC 实现路径下状态机不会再入式调用 receive，标志位为死代码 |
+
+### 9.3 Transport 抽象（后置扩展）
+
+为了对比两种 socket 库的行为差异，新增了一层薄抽象：
+
+- `TVUIRLTransportListener` / `TVUIRLTransportConnection` 协议
+- `TVUIRLNetworkListener` / `TVUIRLNetworkConnection`：包装 `nw_listener_t` / `nw_connection_t`
+- `TVUIRLAsyncSocketListener` + 内部 `TVUIRLAsyncSocketConnection`：包装 `GCDAsyncSocket`
+- `TVUIRLTransportFactory listenerForBackend:` 工厂方法
+- `TVUIRLStreamingServer initWithConfig:backend:` 显式注入后端
+- 启动日志打印 `rtmp-server[Network.framework]:` / `rtmp-server[GCDAsyncSocket]:` 前缀
+
+`TVUIRLStreamConnection` 不再持有 `nw_connection_t`，改为持有 `id<TVUIRLTransportConnection>`，状态机逻辑保持不变。
+
+### 9.4 Swift → ObjC 集成层替换
+
+原来的 Swift `RTMPIngestController.swift` 被替换为 ObjC `.h/.m`：
+
+- 公开 API 全部保留（`shared`、`previewView`、`latency`、`noDelay`、`frameQueueSize`、`startWithPort:streamKey:`、`stop`、`isRunning`、`delegate`），调用方 `ViewController.m` 只新增一行 `#import "RTMPIngestController.h"`
+- 新增 `@property TVUIRLTransportBackend backend`，可在 `start` 之前切换 socket 后端做对比
+- `MetalPreviewView` 保留为 Swift（仅渲染，无 RTMP 逻辑），加 `@objc public final class` 后 ObjC 通过 `DJIStreamDemo-Swift.h` 调用
+- `RTMPIngestControllerDelegate` 改为 ObjC `@protocol`；命名兼容旧 Swift `@objc` 自动桥接产生的 `…WithStreamKey:` 风格
+
+---
+
+## 十、未解决问题与已知风险
+
+### 10.1 运行时未验证
+
+代码已编译通过（0 error、0 warning），但**未与真机/真推流端做端到端联调**。下列路径需要在实机上验证：
+
+| 路径 | 风险点 |
+|---|---|
+| RTMP 握手 | S0+S1+S2 是否被某些客户端视为单包；Wireshark 抓包确认 |
+| AMF 命令往返 | DJI Action 5 Pro 是否走 `connect`→`_result` 标准流程；某些固件可能省略 `createStream` |
+| H.264 解码 | `TVUIRLVideoConfigAvc.makeFormatDescription` 在 SPS/PPS 多于一组时只保留最后一组（与 Moblin 一致），但未验证多 SPS/PPS 实流 |
+| H.265 解码 | DJI Action 5 Pro 实际使用的 FLV 扩展头是 `hvc1` 还是其他变体未确认 |
+| AAC → PCM | `AVAudioConverter` 在第一次 `convertToBuffer:withInputFromBlock:` 时可能产生 0 帧输出（priming），未做空输出保护 |
+| `nw_connection_receive` 反压 | 当前 transport 用 `min=1, max=65536`；与原 Swift 的 `min=receiveSize` 行为不完全一致，高码率下可能更频繁唤醒队列 |
+| `GCDAsyncSocket` 后端的 TCP_NODELAY | 通过 `performBlock:` 设置，已知 GCDAsyncSocket 内部并未公开此 API；若失败只是回退到 Nagle 启用，不会致命 |
+
+### 10.2 已识别的代码隐患
+
+1. **`TVUIRLMediaPacket.encodeChunk` 仅支持 Type 0**
+   服务器目前所有发送的 chunk 都用 `TVUIRLPacketTypeZero`（完整消息头），所以这条路径正确。但 `splitWithMaximumSize:` 拆分时假设 Type 0 头长度为 11，若将来支持发送 Type 1/2/3 需要修复。
+
+2. **`AudioBufferList *` 常量丢弃**
+   `TVUIRLAudioDecoder.makeSampleBufferFrom:pts:` 中将 `pcm.audioBufferList` (返回 `const AudioBufferList *`) 直接传给 `CMSampleBufferSetDataBufferFromAudioBufferList`（接受 `const AudioBufferList *`，编译通过）。当前用 `const` 限定符正确，但如果苹果未来改 API 签名需重审。
+
+3. **HardwareDecoder 输出双路径**
+   `TVUIRLHardwareDecoder` 在每个解码帧上**同时**触发 delegate 的 `didDecodeImageBuffer:`（zero-copy）和 `didDecodeSampleBuffer:`（重新打包 CMSampleBuffer）。Pipeline 把两者都转发到 connection 再到 server。`RTMPIngestController` 同时实现了两个 delegate 方法，意味着每帧 `MetalPreviewView.updateFrame` 会被调用两次。**当前不影响渲染（最新一帧覆盖前一帧），但有 ~2x 无谓 CPU 开销**，应只走 image buffer 路径。
+
+4. **`CMVideoFormatDescription` 引用计数**
+   `TVUIRLMediaPipeline.videoFormatDescription` 为 `assign` 属性，在 `dealloc` 中 `CFRelease`，赋新值时旧值也 `CFRelease`。逻辑正确但脆弱，建议改为辅助 setter 集中管理。
+
+5. **`TVUIRLBandwidthMeter` 平滑公式**
+   `latestSpeed = (rate * speed + (100-rate) * latestSpeed) / 100` 直接照搬 Moblin。当 `speedChangeRate=100` 时退化为非平滑（即时差值），不是预期的 EMA。Moblin 默认就是 100，此处行为一致但与"speed change rate"字面意思相反。
+
+6. **`MetalPreviewView` 的 SourceKit 误报**
+   静态索引偶尔报 `backgroundColor` 不可用，实际编译通过。属于 Xcode 索引器在 `@objc public final class : MTKView` 上的间歇性 bug，不影响构建。
+
+### 10.3 项目集成层面
+
+1. **CocoaAsyncSocket Pod 拷贝阶段曾因 sandbox 失败**
+   早期一次构建报 `rsync mkstempat: Operation not permitted` （`User Script Sandboxing` 启用导致）。后续构建恢复正常，原因不明。如果再次出现，方案是关闭目标的 `ENABLE_USER_SCRIPT_SANDBOXING`，或改用 SPM 引入 CocoaAsyncSocket。
+
+2. **死代码未清理**
+   下述 Swift 文件在替换后已无人引用，但仍被编译进 app（增加包体 ~XX KB）：
+   ```
+   Ingest/RtmpServer/RtmpServer.swift
+   Ingest/RtmpServer/RtmpServerClient.swift
+   Ingest/RtmpServer/RtmpServerChunkStream.swift
+   Ingest/RtmpServer/SettingsRtmpServer.swift
+   Ingest/HaishinKit/Codec/VideoDecoder.swift
+   Ingest/HaishinKit/Extension/*.swift
+   Ingest/HaishinKit/Flv/Flv.swift
+   Ingest/HaishinKit/Media/TargetLatenciesSynchronizer.swift
+   Ingest/HaishinKit/Mpeg/**
+   Ingest/HaishinKit/Rtmp/**
+   Ingest/HaishinKit/Util/{BitrateStats,ByteReader,ByteWriter}.swift
+   ```
+   `MetalPreviewView.swift` + `Shader.metal` 必须保留（仍被使用）。
+
+3. **`frameQueueSize` 字段是死字段**
+   `RTMPIngestController.frameQueueSize` 仅为兼容旧 API 保留，不再有任何效果。建议在下一个版本标记 `__attribute__((deprecated))` 或直接删除。
+
+### 10.4 性能与延迟（待测量）
+
+- `Network.framework` vs `GCDAsyncSocket` 在同一推流条件下的吞吐 / 延迟差异：未测
+- 解码到屏幕的端到端延迟：未测
+- `noDelay=YES` 的实际降延效果：未测
+
+---
+
+*生成时间：2026-04-27*
+*修订：2026-04-28（初次成稿）*
+*二次修订：2026-04-28（迁移完成记录）*
 *参考：Moblin RTMPServer (MIT License, eerimoq/moblin)*
