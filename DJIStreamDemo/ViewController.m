@@ -49,6 +49,8 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 @property (nonatomic, strong) UIView *batteryLevel;
 @property (nonatomic, strong) UILabel *batteryLabel;
 @property (nonatomic, strong) NSTimer *batteryTimer;
+@property (nonatomic, strong) UILabel *bitrateStatsLabel;
+@property (nonatomic, strong) NSTimer *bitrateStatsTimer;
 
 @property (nonatomic, strong) NSMutableArray<TVUIRLDJIDiscoveredPeripheral *> *devices;
 @property (nonatomic, strong) TVUIRLDJIDiscoveredPeripheral *selected;
@@ -166,6 +168,14 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 
     self.statusLabel = [self makeLabel:@"Status: idle" y:y];
     y += 28;
+
+    self.bitrateStatsLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin, y, self.view.bounds.size.width - margin * 2, 22)];
+    self.bitrateStatsLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.bitrateStatsLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightMedium];
+    self.bitrateStatsLabel.textColor = [UIColor secondaryLabelColor];
+    self.bitrateStatsLabel.text = @"Bitrate: -- Mbps";
+    [self.view addSubview:self.bitrateStatsLabel];
+    y += 26;
 
     self.ssidField = [self makeField:@"iPhone Personal Hotspot SSID" y:y];
     y += 40;
@@ -565,6 +575,12 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     dispatch_async(dispatch_get_main_queue(), ^{
         self.statusLabel.text = [NSString stringWithFormat:@"Status: publishing (%@)", streamKey];
         self.statusLabel.textColor = [UIColor systemGreenColor];
+        [self.bitrateStatsTimer invalidate];
+        self.bitrateStatsTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                                  target:self
+                                                                selector:@selector(updateBitrateStatsDisplay)
+                                                                userInfo:nil
+                                                                 repeats:YES];
     });
 }
 
@@ -572,8 +588,21 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     dispatch_async(dispatch_get_main_queue(), ^{
         self.statusLabel.text = [NSString stringWithFormat:@"Status: publish stopped (%@)", reason];
         self.statusLabel.textColor = [UIColor secondaryLabelColor];
+        [self.bitrateStatsTimer invalidate];
+        self.bitrateStatsTimer = nil;
+        self.bitrateStatsLabel.text = @"Bitrate: -- Mbps";
         [self refreshControlState];
     });
+}
+
+- (void)updateBitrateStatsDisplay {
+    if (![RTMPIngestController.shared isRunning]) {
+        self.bitrateStatsLabel.text = @"Bitrate: -- Mbps";
+        return;
+    }
+    TVUIRLBandwidthSnapshot snap = [RTMPIngestController.shared updateStats];
+    double mbps = (snap.speed * 8.0) / 1000000.0;
+    self.bitrateStatsLabel.text = [NSString stringWithFormat:@"Bitrate: %.2f Mbps", mbps];
 }
 
 #pragma mark - UITableView

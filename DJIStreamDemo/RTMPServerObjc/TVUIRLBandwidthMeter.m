@@ -15,7 +15,7 @@
 @implementation TVUIRLBandwidthMeter
 
 - (instancetype)init {
-    return [self initWithSpeedChangeRate:100];
+    return [self initWithSpeedChangeRate:10];
 }
 
 - (instancetype)initWithSpeedChangeRate:(uint64_t)speedChangeRate {

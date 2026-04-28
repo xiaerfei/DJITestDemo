@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "TVUIRLTransport.h"
+#import "TVUIRLBandwidthMeter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startWithPort:(uint16_t)port streamKey:(NSString *)streamKey;
 - (void)stop;
 - (BOOL)isRunning;
+- (TVUIRLBandwidthSnapshot)updateStats;
 
 @end
 

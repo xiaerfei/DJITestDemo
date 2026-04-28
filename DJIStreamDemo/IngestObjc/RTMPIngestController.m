@@ -61,6 +61,14 @@
     return self.server != nil;
 }
 
+- (TVUIRLBandwidthSnapshot)updateStats {
+    if (!self.server) {
+        TVUIRLBandwidthSnapshot empty = {0, 0};
+        return empty;
+    }
+    return [self.server updateStats];
+}
+
 #pragma mark - TVUIRLStreamingServerDelegate
 
 - (void)server:(TVUIRLStreamingServer *)server didStartPublishingStream:(NSString *)streamKey {
