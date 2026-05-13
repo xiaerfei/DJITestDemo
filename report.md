@@ -1542,3 +1542,676 @@ AVSampleBufferDisplayLayer
     ▼
 iPhone 屏幕预览
 ```
+
+---
+
+## 第二十章 CPU 使用率优化分析
+
+> 测试数据显示，当前实现相比基准会增加 10%+ 的 CPU 使用率。以下对各热点逐项分析，按影响程度排序。
+
+### 20.1 P0-1：MTKView 持续 60fps 重绘（最大浪费点）
+
+**代码位置**：`TVUIRLPreviewController.m`
+
+```objc
+// 初始化时设置了 paused = NO，导致每秒 60 次调用 drawInMTKView:
+self.paused = NO;
+```
+
+**问题**：DJI 推流为 30fps，但 MTKView 以 60fps 持续重绘。每秒多出 30 次无效渲染，每次都要：
+- `frameLock` 加锁/解锁
+- Retain/Release `CVPixelBufferRef`
+- 创建 Metal texture（Y + CbCr 两个平面）
+- 提交 command buffer
+
+**优化方案**：
+
+```objc
+// 初始化时改为按需渲染模式
+self.enableSetNeedsDisplay = YES;
+self.paused = YES;
+
+// updateFrame: 中触发重绘
+- (void)updateFrame:(CVPixelBufferRef)pixelBuffer {
+    [self.frameLock lock];
+    if (_latestPixelBuffer) CFRelease(_latestPixelBuffer);
+    _latestPixelBuffer = pixelBuffer;
+    if (_latestPixelBuffer) CFRetain(_latestPixelBuffer);
+    [self.frameLock unlock];
+    [self setNeedsDisplay];  // 仅在有新帧时触发一次绘制
+}
+```
+
+**预估 CPU 节省**：3~4%
+
+---
+
+### 20.2 P0-2：解码回调双路径（每帧渲染两次）
+
+**代码位置**：`TVUIRLHardwareDecoder.m` → `decompressionOutputCallback`
+
+```objc
+static void decompressionOutputCallback(...) {
+    // 路径1：直接传 imageBuffer（zero-copy，轻量）
+    if ([delegate respondsToSelector:@selector(hardwareDecoder:didDecodeImageBuffer:)]) {
+        [delegate hardwareDecoder:decoder didDecodeImageBuffer:imageBuffer];
+    }
+
+    // 路径2：又从 imageBuffer 重新创建 CMSampleBuffer（代价高）
+    if ([delegate respondsToSelector:@selector(hardwareDecoder:didDecodeSampleBuffer:)]) {
+        CMVideoFormatDescriptionCreateForImageBuffer(NULL, imageBuffer, &desc);  // 分配+拷贝
+        CMSampleBufferCreateForImageBuffer(NULL, imageBuffer, true, NULL, NULL,
+                                            desc, &sampleTiming, &out);           // 分配+拷贝
+        [delegate hardwareDecoder:decoder didDecodeSampleBuffer:out];
+        CFRelease(out);
+        CFRelease(desc);
+    }
+}
+```
+
+**问题**：每帧解码后走两条完整路径。而 `RTMPIngestController` 同时实现了两个 delegate 方法：
+
+```objc
+// RTMPIngestController.m
+- (void)server:(TVUIRLStreamingServer *)server didReceiveVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    if (pixelBuffer) {
+        [self.previewController updateFrame:pixelBuffer];  // 从 sampleBuffer 取 pixelBuffer 渲染
+    }
+}
+
+- (void)server:(TVUIRLStreamingServer *)server didReceiveVideoImageBuffer:(CVImageBufferRef)imageBuffer {
+    [self.previewController updateFrame:imageBuffer];  // 直接用 imageBuffer 渲染
+}
+```
+
+两个方法都调用 `updateFrame:`，**等于每帧渲染了两次**。加上 MTKView 60fps 重绘，实际每秒 120 次纹理创建。
+
+**优化方案**：当前 Metal 渲染只需要 `CVPixelBufferRef`，删除 `didDecodeSampleBuffer` 路径及关联的 `CMVideoFormatDescriptionCreateForImageBuffer` / `CMSampleBufferCreateForImageBuffer` 开销。如果未来需要 `CMSampleBuffer`（如录制回放），可在 `RTMPIngestController` 中从 `imageBuffer` 按需创建。
+
+**预估 CPU 节省**：2~3%
+
+---
+
+### 20.3 P1-1：`processReceivedData` 三次数据拷贝
+
+**代码位置**：`TVUIRLStreamConnection.m`
+
+```objc
+- (void)processReceivedData:(NSData *)data {
+    self.totalBytesReceived += data.length;
+    [self.server.bandwidthMeter addBytesTransferred:(NSInteger)data.length];
+    self.latestReceiveTime = [NSDate date];    // 每包创建 NSDate（见 20.5）
+    [self.inputBuffer appendData:data];         // 拷贝1：追加到 inputBuffer
+    NSInteger offset = 0;
+    while ((NSInteger)self.inputBuffer.length - offset >= self.receiveSize) {
+        NSData *slice = [self.inputBuffer subdataWithRange:NSMakeRange(offset, self.receiveSize)];
+                                                // 拷贝2：为每个 RTMP chunk 创建新 NSData
+        offset += self.receiveSize;
+        [self handleData:slice];
+    }
+    if (offset > 0) {
+        [self.inputBuffer replaceBytesInRange:NSMakeRange(0, offset) withBytes:NULL length:0];
+                                                // 拷贝3：memmove 移动剩余数据
+    }
+}
+```
+
+**问题**：在 4~8 Mbps 码率下，每秒数百 KB 数据经过此路径，三次拷贝开销不容忽视。
+
+**优化方案**：
+
+1. 用**环形缓冲区**替代 `NSMutableData`，维护 read/write offset 避免数据搬移
+2. 子数据用 `NSData` 的 `initWithBytesNoCopy:length:freeWhenDone:NO` 零拷贝引用
+3. 或直接在 inputBuffer 上用指针偏移解析，避免创建中间 NSData
+
+```objc
+// 零拷贝子数据示例
+NSData *slice = [self.inputBuffer subdataWithRange:NSMakeRange(offset, self.receiveSize)];
+// 改为：
+NSData *slice = [NSData dataWithBytesNoCopy:(uint8_t *)self.inputBuffer.bytes + offset
+                                     length:self.receiveSize
+                               freeWhenDone:NO];
+```
+
+**预估 CPU 节省**：1~2%
+
+---
+
+### 20.4 P1-2：`emitVideoFrame` 的 CMBlockBuffer 二次拷贝
+
+**代码位置**：`TVUIRLMediaPipeline.m`
+
+```objc
+CMBlockBufferRef blockBuffer = NULL;
+OSStatus s = CMBlockBufferCreateWithMemoryBlock(
+    kCFAllocatorDefault, NULL, length, kCFAllocatorDefault, NULL, 0, length,
+    kCMBlockBufferAssureMemoryNowFlag, &blockBuffer);
+if (s != noErr || !blockBuffer) return;
+CMBlockBufferReplaceDataBytes((const uint8_t *)self.messageBody.bytes + dataOffset,
+                              blockBuffer, 0, length);  // 又一次内存拷贝
+```
+
+**问题**：视频数据先在 `messageBody` 里攒好，再整体拷贝到新分配的 `CMBlockBuffer`。30fps 的 1080p HEVC 流，关键帧可达 50~100KB，每秒额外拷贝 1~3MB。
+
+**优化方案**：使用 `CMBlockBufferCreateWithMemoryBlock` 配合自定义 allocator 让 `CMBlockBuffer` 直接引用 `messageBody` 内存（需保证生命周期直到 `CMSampleBuffer` 被消费），避免中间拷贝。
+
+**预估 CPU 节省**：~1%
+
+---
+
+### 20.5 P2-1：每 TCP 包创建 NSDate 对象
+
+**代码位置**：`TVUIRLStreamConnection.m`
+
+```objc
+self.latestReceiveTime = [NSDate date];  // 每收到一个 TCP 包就创建 NSDate
+```
+
+**问题**：4 Mbps 码率、chunk size 128 字节时，每秒约 4000 个 TCP 包，即每秒创建 4000 个 `NSDate` 对象，给 ObjC 运行时和 ARC 增加压力。
+
+**优化方案**：
+
+```objc
+// 改用 CFAbsoluteTime
+@property (nonatomic, assign) CFAbsoluteTime latestReceiveTime;
+self.latestReceiveTime = CFAbsoluteTimeGetCurrent();
+```
+
+**预估 CPU 节省**：0.5~1%
+
+---
+
+### 20.6 P2-2：NSLock 加锁频率过高
+
+**代码位置**：`TVUIRLPreviewController.m`
+
+```objc
+- (void)updateFrame:(CVPixelBufferRef)pixelBuffer {
+    [self.frameLock lock];    // 30fps 入帧加锁
+    // ...
+    [self.frameLock unlock];
+}
+
+- (void)drawInMTKView:(MTKView *)view {
+    [self.frameLock lock];    // 60fps 渲染加锁
+    // ...
+    [self.frameLock unlock];
+}
+```
+
+**问题**：`NSLock` 封装了 pthread mutex，每次加解锁约 100~200ns。60fps + 30fps = 每秒 90 次锁操作，与 MTKView 无效重绘叠加后浪费明显。
+
+**优化方案**：
+
+```objc
+// 改为 os_unfair_lock（更低开销，约 20~30ns）
+@property (nonatomic, assign) os_unfair_lock frameLock;
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _frameLock = OS_UNFAIR_LOCK_INIT;
+    }
+    return self;
+}
+
+- (void)updateFrame:(CVPixelBufferRef)pixelBuffer {
+    os_unfair_lock_lock(&_frameLock);
+    // ...
+    os_unfair_lock_unlock(&_frameLock);
+}
+```
+
+**预估 CPU 节省**：0.3~0.5%（配合 P0-1 按需渲染效果更佳）
+
+---
+
+### 20.7 P3-1：TextureCache 配合按需渲染
+
+**代码位置**：`TVUIRLTextureCache.m`
+
+```objc
+CVMetalTextureRef cvTexture = NULL;
+CVReturn status = CVMetalTextureCacheCreateTextureFromImage(
+    kCFAllocatorDefault, self.textureCache, pixelBuffer, NULL,
+    pixelFormat, width, height, planeIndex, &cvTexture);
+```
+
+**问题**：虽然使用了 `CVMetalTextureCache`，但每次 `drawInMTKView:` 都为同一 pixelBuffer 创建 Y + CbCr 两个新 texture。MTKView 60fps 重绘时，每秒 120 次纹理创建。
+
+**优化方案**：配合 P0-1 按需渲染后频率降为每秒 30 次，基本可接受。如需进一步优化，可缓存当前帧的 texture 引用，同一 pixelBuffer 复用。
+
+**预估 CPU 节省**：0.5%（需配合 P0-1）
+
+---
+
+### 20.8 P3-2：`messageBody` 预分配容量
+
+**代码位置**：`TVUIRLMediaPipeline.m`
+
+```objc
+[self.messageBody appendData:data];       // 可能触发 realloc
+if ([self remainingMessageBytes] == 0) {
+    [self processMessage];
+    [self.messageBody setLength:0];       // 清零但保留 capacity
+}
+```
+
+**问题**：`NSMutableData` 的 `appendData:` 在 capacity 不足时触发 realloc 拷贝。视频关键帧可达 64KB+，可能多次 realloc。
+
+**优化方案**：
+
+```objc
+// init 时预分配
+self.messageBody = [NSMutableData dataWithCapacity:256 * 1024];  // 256KB
+```
+
+**预估 CPU 节省**：~0.2%
+
+---
+
+### 20.9 P3-3：AMF 解码器对象分配
+
+**代码位置**：`TVUIRLMediaPipeline.m`
+
+```objc
+- (void)processAmf0Command {
+    TVUIRLAmfDecoder *decoder = [[TVUIRLAmfDecoder alloc] initWithData:self.messageBody];
+    // ...
+}
+```
+
+**问题**：AMF 命令仅在连接建立阶段出现（connect/createStream/publish），频率不高，影响有限。
+
+**优化方案**：如需优化，可复用 decoder 实例。优先级低。
+
+**预估 CPU 节省**：<0.1%
+
+---
+
+### 20.10 优化优先级总览
+
+| 优先级 | 优化点 | 预估 CPU 节省 | 改动量 |
+|--------|--------|-------------|--------|
+| **P0** | MTKView 60fps → 按需渲染 | 3~4% | 小 |
+| **P0** | 解码回调双路径 → 只走 imageBuffer | 2~3% | 小 |
+| **P1** | `processReceivedData` 三次拷贝 → 环形缓冲/零拷贝 | 1~2% | 中 |
+| **P1** | `emitVideoFrame` CMBlockBuffer 拷贝 → zero-copy | ~1% | 中 |
+| **P2** | `NSDate` 每包创建 → `CFAbsoluteTime` | 0.5~1% | 小 |
+| **P2** | NSLock → `os_unfair_lock` | 0.3~0.5% | 小 |
+| **P3** | TextureCache 配合按需渲染 | 0.5% | 需配合P0 |
+| **P3** | messageBody 预分配 | ~0.2% | 小 |
+| **P3** | AMF decoder 复用 | <0.1% | 小 |
+
+### 20.11 核心优化思路
+
+1. **不做无用的渲染**：60fps 渲染 30fps 的流，一半是浪费
+2. **不做重复的工作**：每帧解码走两条路径，最终都是拿 CVPixelBuffer 渲染，等于渲染两次
+3. **减少内存拷贝**：TCP 收包 → RTMP 解析 → 视频帧输出链路中存在多次 NSData 拷贝，可用零拷贝或环形缓冲替代
+
+**P0 两个优化合计可省 5~7% CPU，加上 P1 数据拷贝优化，基本覆盖 10%+ 的额外开销。**
+
+---
+
+## 第二十一章 非 Metal 渲染的极限优化分析
+
+> 抛开 Metal 渲染部分，聚焦 RTMP 数据接收 → Chunk 解析 → 视频帧构建 → 硬件解码整条链路的极限优化。核心瓶颈是**数据链路上的多次内存拷贝和 ObjC 对象分配**。
+
+### 21.1 P0-1：解码回调双路径 — 每帧创建 CMSampleBuffer 完全多余
+
+**代码位置**：`TVUIRLHardwareDecoder.m` → `decompressionOutputCallback`
+
+```objc
+// 路径2：每帧解码后从 imageBuffer 重新创建 CMSampleBuffer
+if ([delegate respondsToSelector:@selector(hardwareDecoder:didDecodeSampleBuffer:)]) {
+    CMVideoFormatDescriptionCreateForImageBuffer(kCFAllocatorDefault, imageBuffer, &desc);
+    CMSampleBufferCreateForImageBuffer(kCFAllocatorDefault, imageBuffer, true, NULL, NULL,
+                                       desc, &timing, &out);
+    [delegate hardwareDecoder:decoder didDecodeSampleBuffer:out];
+    CFRelease(out);
+    CFRelease(desc);
+}
+```
+
+**问题**：`RTMPIngestController` 同时实现 `didReceiveVideoSampleBuffer:` 和 `didReceiveVideoImageBuffer:`，两个方法最终都调用 `updateFrame:` 传入 `CVPixelBufferRef`。每帧多创建一个 `CMSampleBuffer`（含 `CMVideoFormatDescription` + `CMSampleBuffer` 分配），在 30fps 下每秒 30 次无效的 CoreMedia 对象创建/销毁。
+
+**极限优化**：删除 `didDecodeSampleBuffer` 路径。如果 `StreamingServer` 的 `forwardVideoSampleBuffer:` 没有消费者（当前 demo 不处理音频以外的 `sampleBuffer`），直接删掉整个链路，包括 `MediaPipeline` 中的 `pipelineDidProduceVideoSampleBuffer:` 和 `StreamingServer` 中的 `forwardVideoSampleBuffer:`。
+
+**预估 CPU 节省**：2~3%
+
+---
+
+### 21.2 P0-2：RTMP Chunk 解析从"拉模式"改为"推模式"
+
+**代码位置**：`TVUIRLStreamConnection.m` → `processReceivedData` / `handleData`
+
+**当前架构（拉模式）**：
+
+```
+TCP数据 → processReceivedData
+             │ appendData: (拷贝1)
+             │ subdataWithRange: (拷贝2)
+             │ replaceBytesInRange: (拷贝3/memmove)
+             ▼
+         handleData:(NSData *)data    ← 每步创建新 NSData
+             │ 状态机走一步
+             ▼
+         返回 processReceivedData 继续循环
+```
+
+每个 RTMP chunk 都要经历：`NSData` 分配 → ObjC 方法调用 → 状态机一步 → 返回 → 再分配 → 再调用。
+
+在 4Mbps 码率、128 字节 chunk size 下：**每秒约 4000 次 ObjC 方法调用 + 4000 次 NSData 分配 + 3 次内存拷贝**。
+
+**极限优化 — 推模式 + C 指针解析**：
+
+```c
+typedef struct {
+    uint8_t *buf;       // 环形缓冲区基址
+    size_t   capacity;   // 缓冲区容量
+    size_t   read_pos;   // 读偏移
+    size_t   write_pos;  // 写偏移
+    int      state;      // 解析状态
+    // ... RTMP chunk parser fields
+} RTMPChunkParser;
+
+// 一次性把 TCP 数据喂给状态机，内部循环驱动
+void rtmp_parser_feed(RTMPParser *p, const uint8_t *data, size_t len) {
+    // 将数据写入环形缓冲区
+    ringbuf_write(&p->buf, data, len);
+    // 内部 while 循环直接推进状态机
+    while (ringbuf_available(&p->buf) >= p->need_bytes) {
+        const uint8_t *ptr = ringbuf_read_ptr(&p->buf);
+        switch (p->state) {
+            case STATE_BASIC_HEADER:
+                rtmp_parse_basic_header(p, ptr);
+                ringbuf_advance(&p->buf, 1);
+                break;
+            case STATE_MSG_HEADER_TYPE0:
+                rtmp_parse_msg_header_type0(p, ptr);
+                ringbuf_advance(&p->buf, 11);
+                break;
+            // ... 其他状态
+        }
+    }
+}
+```
+
+**关键收益**：
+
+- **零 NSData 分配**：直接操作 `uint8_t *` 指针
+- **零 ObjC 方法调用**：状态机用纯 C 函数驱动
+- **零内存拷贝**：环形缓冲 + read pointer 前进，不需要 memmove
+- **零中间对象**：pipeline 可以用 C 结构体 + ObjC 对象的混合方式
+
+当消息体完整时，再桥接到 ObjC 层（创建 `TVUIRLMediaPipeline` 的 `messageBody`），此时才做唯一一次拷贝。
+
+**预估 CPU 节省**：2~3%
+
+---
+
+### 21.3 P1-1：`emitVideoFrame` 的 CMBlockBuffer 真正 zero-copy
+
+**代码位置**：`TVUIRLMediaPipeline.m`
+
+```objc
+// 当前：先分配新内存，再拷贝数据进去
+CMBlockBufferRef blockBuffer = NULL;
+CMBlockBufferCreateWithMemoryBlock(
+    kCFAllocatorDefault, NULL, length, kCFAllocatorDefault, NULL, 0, length,
+    kCMBlockBufferAssureMemoryNowFlag, &blockBuffer);
+CMBlockBufferReplaceDataBytes((const uint8_t *)self.messageBody.bytes + dataOffset,
+                              blockBuffer, 0, length);  // ← 拷贝
+```
+
+对于 HEVC 关键帧（50~100KB），每秒额外拷贝 1~3MB。
+
+**极限优化 — 自定义 allocator 让 CMBlockBuffer 直接引用 messageBody**：
+
+```objc
+// 1. 自定义 CFAllocator，持有 messageBody 的引用防止过早释放
+typedef struct {
+    CFAllocatorRef super;
+    __strong NSMutableData *messageBody;  // ARC 持有
+} MessageBodyAllocator;
+
+// 2. 让 CMBlockBuffer 直接指向 messageBody 的数据区域
+CMBlockBufferRef blockBuffer = NULL;
+CMBlockBufferCreateWithMemoryBlock(
+    kCFAllocatorDefault,
+    (void *)((uint8_t *)self.messageBody.bytes + dataOffset),  // 直接指向源数据
+    length,
+    customAllocator,   // 自定义 allocator 持有 messageBody
+    NULL, 0, length,
+    0,                  // 不需要 AssureMemoryNow（内存已在）
+    &blockBuffer);
+```
+
+**注意**：`messageBody` 在 `processMessage` 后会 `setLength:0`，所以 allocator 必须延长其生命周期，或者改为在 `appendChunkData:` 时不复用同一 `messageBody`。
+
+**替代方案**（更简单）：将视频帧数据拷贝到单独的 `NSData` 中（只此一次拷贝），然后让 `CMBlockBuffer` 引用这个 `NSData`：
+
+```objc
+NSData *frameData = [self.messageBody subdataWithRange:NSMakeRange(dataOffset, length)];
+CMBlockBufferRef blockBuffer = NULL;
+CMBlockBufferCreateWithMemoryBlock(
+    kCFAllocatorDefault,
+    (void *)frameData.bytes,
+    length,
+    kCFAllocatorDefault,
+    NULL, 0, length,
+    0, &blockBuffer);
+// frameData 必须在 blockBuffer 生命周期内保持存活
+```
+
+**预估 CPU 节省**：~1%
+
+---
+
+### 21.4 P1-2：AudioDecoder 缓存 `CMAudioFormatDescription`
+
+**代码位置**：`TVUIRLAudioDecoder.m` → `makeSampleBufferFrom:pts:`
+
+```objc
+- (CMSampleBufferRef)makeSampleBufferFrom:(AVAudioPCMBuffer *)pcm pts:(CMTime)pts {
+    CMAudioFormatDescriptionRef formatDesc = NULL;
+    // 每帧都创建！AAC ~46fps，每秒创建/销毁 46 次
+    CMAudioFormatDescriptionCreate(
+        kCFAllocatorDefault, asbd, 0, NULL, 0, NULL, NULL, &formatDesc);
+    // ...
+    CFRelease(formatDesc);
+}
+```
+
+**极限优化**：格式在 `configureWithAudioConfig:` 后不会变，缓存 `CMAudioFormatDescriptionRef`：
+
+```objc
+@property (nonatomic, assign) CMAudioFormatDescriptionRef cachedFormatDescription;
+
+- (BOOL)configureWithAudioConfig:(TVUIRLAudioConfig *)config {
+    // ...
+    CMAudioFormatDescriptionRef desc = NULL;
+    CMAudioFormatDescriptionCreate(kCFAllocatorDefault, asbd, 0, NULL, 0, NULL, NULL, &desc);
+    if (desc) {
+        if (self.cachedFormatDescription) CFRelease(self.cachedFormatDescription);
+        self.cachedFormatDescription = desc;
+    }
+    // ...
+}
+
+- (CMSampleBufferRef)makeSampleBufferFrom:(AVAudioPCMBuffer *)pcm pts:(CMTime)pts {
+    CMAudioFormatDescriptionRef formatDesc = self.cachedFormatDescription;
+    CFRetain(formatDesc);  // 给 CMSampleBuffer 持有
+    // ... 后续使用 formatDesc
+}
+```
+
+**预估 CPU 节省**：0.3~0.5%
+
+---
+
+### 21.5 P1-3：`pipelineSlots[C]` 替代 `NSMutableDictionary<NSNumber *, Pipeline *>`
+
+**代码位置**：`TVUIRLStreamConnection.m`
+
+```objc
+NSNumber *key = @(chunkStreamId);        // 每 chunk 都 box 一个 NSNumber
+TVUIRLMediaPipeline *p = self.pipelines[key];  // 字典哈希查找
+```
+
+RTMP chunk stream ID 实际范围很小（DJI 通常只用 2~6），但每秒 4000 次 `NSNumber` box + 字典查找。
+
+**极限优化**：用 C 数组直接索引：
+
+```objc
+@interface TVUIRLStreamConnection ()
+@property (nonatomic, assign) TVUIRLMediaPipeline *pipelineSlots[16];  // 覆盖 csid 0~15
+@end
+
+// handleBasicHeaderFirstByte 中：
+TVUIRLMediaPipeline *p = self->pipelineSlots[chunkStreamId];
+if (!p) {
+    p = [[TVUIRLMediaPipeline alloc] initWithConnection:self chunkStreamId:chunkStreamId];
+    self->pipelineSlots[chunkStreamId] = p;
+}
+self.currentPipeline = p;
+```
+
+如果需要支持 csid > 15，可用 `NSMapTable` + `uint16_t` 指针 key 替代 `NSMutableDictionary`。
+
+**预估 CPU 节省**：0.2~0.3%
+
+---
+
+### 21.6 P2-1：`writeData:` 中 `dispatch_data_create` 的多余拷贝
+
+**代码位置**：`TVUIRLNetworkTransport.m`
+
+```objc
+- (void)writeData:(NSData *)data {
+    dispatch_data_t dd = dispatch_data_create(data.bytes, data.length, NULL,
+                                               DISPATCH_DATA_DESTRUCTOR_DEFAULT);
+    nw_connection_send(self.connection, dd, ...);
+}
+```
+
+`dispatch_data_create` 会拷贝 `data.bytes`。而 `GCDAsyncSocket` 路径是 `[socket writeData:data]` 直接写，无此开销。
+
+**极限优化**：
+
+```objc
+- (void)writeData:(NSData *)data {
+    if (data.length == 0 || self.cancelled) return;
+    // 利用 NSData 的 bytesNoCopy 让 dispatch_data 直接引用，避免拷贝
+    // 方法1：如果 NSData 是 contiguous 的（大多数情况）
+    dispatch_data_t dd = dispatch_data_create(
+        data.bytes, data.length,
+        NULL,  // 不指定 queue
+        ^(void) { /* NSData 被 ARC 释放时此 block 被调用 */ }
+    );
+    // 但需要保证 data 在 send 完成前不被释放
+    // 方法2（更安全）：桥接
+    NSData *retained = data;  // ARC strong reference
+    dispatch_data_t dd = dispatch_data_create(
+        data.bytes, data.length,
+        dispatch_get_main_queue(),
+        ^{ (void)retained; }  // block 持有 data，send 完成后释放
+    );
+    nw_connection_send(self.connection, dd, ...);
+}
+```
+
+**预估 CPU 节省**：0.1~0.2%（仅在 Network backend 下有影响）
+
+---
+
+### 21.7 P2-2：`processAacRaw` 去掉中间 NSData
+
+**代码位置**：`TVUIRLMediaPipeline.m`
+
+```objc
+NSData *aac = [self.messageBody subdataWithRange:NSMakeRange(kFlvAudioHeaderSize, length)];
+[self.audioDecoder decodeAacFrame:aac presentationTimeStamp:...];
+```
+
+`subdataWithRange` 创建 NSData 副本，`decodeAacFrame:` 内部又 `memcpy` 到 `compressedBuffer`。**两次拷贝**。
+
+**极限优化**：改为传指针 + 长度：
+
+```objc
+// TVUIRLAudioDecoder 新增方法
+- (void)decodeAacFrameBytes:(const uint8_t *)bytes
+                      length:(NSInteger)length
+         presentationTimeStamp:(CMTime)pts {
+    if (length > self.compressedBuffer.maximumPacketSize) return;
+    // 直接拷贝到 compressedBuffer，省掉中间 NSData
+    memcpy(self.compressedBuffer.data, bytes, (size_t)length);
+    // ... 后续转换逻辑不变
+}
+
+// TVUIRLMediaPipeline 调用
+const uint8_t *aacPtr = (const uint8_t *)self.messageBody.bytes + kFlvAudioHeaderSize;
+[self.audioDecoder decodeAacFrameBytes:aacPtr
+                                length:length
+                   presentationTimeStamp:CMTimeMake(pts, 1000)];
+```
+
+同样，`processAvcSequenceStart` 和 `processHevcSequenceStart` 中的 `subdataWithRange` 也可以改为传指针 + 长度。
+
+**预估 CPU 节省**：~0.1%
+
+---
+
+### 21.8 P2-3：`latestReceiveTime` → `CFAbsoluteTime`（跨第二十章优化点5）
+
+**代码位置**：`TVUIRLStreamConnection.m` + `TVUIRLStreamingServer.m`
+
+```objc
+// StreamConnection 中
+self.latestReceiveTime = [NSDate date];  // 每包创建
+
+// StreamingServer 的 periodicTick 中
+NSDate *now = [NSDate date];
+[now timeIntervalSinceDate:c.latestReceiveTime];  // 又创建一个 NSDate
+```
+
+4Mbps/128B = 每秒 4000 个 `NSDate`。periodicTick 每 3 秒一次，但超时检测也创建 `NSDate`。
+
+**极限优化**：
+
+```objc
+// StreamConnection
+@property (nonatomic, assign) CFAbsoluteTime latestReceiveTime;
+self.latestReceiveTime = CFAbsoluteTimeGetCurrent();  // 一个 double 赋值
+
+// StreamingServer periodicTick
+CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
+if (now - c.latestReceiveTime > 10.0) { ... }
+```
+
+**预估 CPU 节省**：0.5~1%
+
+---
+
+### 21.9 极限优化总览
+
+| 优先级 | 优化点 | 预估 CPU 节省 | 改动量 | 类型 |
+|--------|--------|-------------|--------|------|
+| **P0** | 解码回调删双路径 | 2~3% | 小 | 删代码 |
+| **P0** | Chunk 解析推模式 + C 指针 | 2~3% | 大 | 架构重构 |
+| **P1** | CMBlockBuffer zero-copy | ~1% | 中 | 内存管理 |
+| **P1** | AudioDecoder 缓存 formatDesc | 0.3~0.5% | 小 | 缓存复用 |
+| **P1** | pipelineSlots[C] 替代字典 | 0.2~0.3% | 小 | 数据结构 |
+| **P2** | `writeData:` dispatch_data 零拷贝 | 0.1~0.2% | 小 | 内存 |
+| **P2** | `processAacRaw` 去掉中间 NSData | ~0.1% | 小 | 内存 |
+| **P2** | `latestReceiveTime` → CFAbsoluteTime | 0.5~1% | 小 | 对象消除 |
+
+### 21.10 极限优化的核心思路
+
+1. **零拷贝**：数据从 TCP 收包到 VideoToolbox 解码输入，理想情况下只应有 1 次拷贝（内核态 → 用户态）。当前链路有 3~4 次多余拷贝
+2. **零分配**：热路径上避免一切 `NSData` / `NSNumber` / `NSDate` / `NSError` 的 ObjC 对象分配。用 C 指针、栈变量、`CFAbsoluteTime` 替代
+3. **零方法调用**：RTMP chunk 解析状态机每秒被驱动 4000+ 次，从 ObjC 方法调用降为 C 函数调用，消除消息派发开销
+4. **不做重复工作**：解码回调双路径是最典型的"重复工作"——同一个 `CVImageBufferRef` 被包装成两种形式传给同一个消费者
+
+**非渲染链路上的极限优化合计可节省 5~7% CPU**。与第二十章的 Metal 渲染优化（5~7%）叠加，总优化空间可达 10~14%。
