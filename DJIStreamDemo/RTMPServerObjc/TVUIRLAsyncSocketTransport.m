@@ -4,6 +4,7 @@
 //
 
 #import "TVUIRLAsyncSocketTransport.h"
+#import "TVUIRLDJILog.h"
 #import <CocoaAsyncSocket/GCDAsyncSocket.h>
 #import <netinet/tcp.h>
 #import <netinet/in.h>
@@ -21,6 +22,10 @@
 @property (nonatomic, copy, nullable) void (^receiveHandler)(NSData *data);
 @property (nonatomic, copy, nullable) void (^failureHandler)(NSError * _Nullable);
 @property (nonatomic, assign) BOOL cancelled;
+/// 每秒回调统计
+@property (nonatomic, assign) NSUInteger statsCallbackCount;
+@property (nonatomic, assign) NSUInteger statsBytesCount;
+@property (nonatomic, assign) CFAbsoluteTime statsWindowStart;
 @end
 
 @implementation TVUIRLAsyncSocketConnection
@@ -28,6 +33,7 @@
 - (instancetype)initWithSocket:(GCDAsyncSocket *)socket {
     if (self = [super init]) {
         _socket = socket;
+        _statsWindowStart = CFAbsoluteTimeGetCurrent();
     }
     return self;
 }
@@ -57,8 +63,21 @@
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
     (void)tag;
     if (self.cancelled) return;
-    if (data.length > 0 && self.receiveHandler) {
-        self.receiveHandler(data);
+    if (data.length > 0) {
+        self.statsCallbackCount += 1;
+        self.statsBytesCount += data.length;
+        CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
+        CFAbsoluteTime elapsed = now - self.statsWindowStart;
+        if (elapsed >= 1.0) {
+            TVUIRLDJILog(@"[nw_recv] callbacks=%lu  bytes=%lu  (%.1f KB/s)",
+                         (unsigned long)self.statsCallbackCount,
+                         (unsigned long)self.statsBytesCount,
+                         self.statsBytesCount / elapsed / 1024.0);
+            self.statsCallbackCount = 0;
+            self.statsBytesCount = 0;
+            self.statsWindowStart = now;
+        }
+        if (self.receiveHandler) self.receiveHandler(data);
     }
     [sock readDataWithTimeout:-1 tag:0];
 }

@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 单个 chunk data 长度 = min(chunkSizeFromClient, remaining)
 - (NSInteger)nextChunkDataSize;
 /// 接收到的 chunk data 追加到消息体；满消息时触发 process。
-- (void)appendChunkData:(NSData *)data;
+- (void)appendChunkRawBytes:(const uint8_t *)bytes length:(NSInteger)length;
 
 @end
 

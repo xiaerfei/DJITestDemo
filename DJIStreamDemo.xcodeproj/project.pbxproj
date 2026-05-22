@@ -54,8 +54,6 @@
 		2C8D95102FA07BA90037014A /* TVUIRLAsyncSocketTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D950F2FA07BA90037014A /* TVUIRLAsyncSocketTransport.m */; };
 		2C8D95122FA07BB30037014A /* TVUIRLTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95112FA07BB30037014A /* TVUIRLTransport.m */; };
 		2C8D95152FA07FBF0037014A /* RTMPIngestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95142FA07FBF0037014A /* RTMPIngestController.m */; };
-		2C8D954F2FA090BF0037014A /* TVUIRLShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95472FA090BF0037014A /* TVUIRLShaderProgram.m */; };
-		2C8D95512FA090BF0037014A /* TVUIRLTextureCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D954B2FA090BF0037014A /* TVUIRLTextureCache.m */; };
 		2C8D95532FA090BF0037014A /* TVUIRLPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */; };
 		3223E841F5B4CA77814944C6 /* Pods_DJIStreamDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1C3CA46F5DB5217E658BC3E /* Pods_DJIStreamDemoTests.framework */; };
 		AA8C4DEAAC03EA9D79DD8D11 /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A72C08608C59BBF286C162A /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework */; };
@@ -98,7 +96,6 @@
 		2C8D860D2F9A21C90037014A /* DJIStreamDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoTests.m; sourceTree = "<group>"; };
 		2C8D86102F9A21CC0037014A /* DJIStreamDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoUITests.m; sourceTree = "<group>"; };
 		2C8D86112F9A21CC0037014A /* DJIStreamDemoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJIStreamDemoUITestsLaunchTests.m; sourceTree = "<group>"; };
-		2C8D8D102F9A2D120037014A /* Shader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
 		2C8D94A32F9F545F0037014A /* TVUIRLByteIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLByteIO.h; sourceTree = "<group>"; };
 		2C8D94A42F9F545F0037014A /* TVUIRLByteIO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLByteIO.m; sourceTree = "<group>"; };
 		2C8D94A52F9F545F0037014A /* TVUIRLDJICrc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJICrc.h; sourceTree = "<group>"; };
@@ -176,10 +173,6 @@
 		2C8D95142FA07FBF0037014A /* RTMPIngestController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMPIngestController.m; sourceTree = "<group>"; };
 		2C8D95422FA090BF0037014A /* TVUIRLPreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLPreviewController.h; sourceTree = "<group>"; };
 		2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLPreviewController.m; sourceTree = "<group>"; };
-		2C8D95462FA090BF0037014A /* TVUIRLShaderProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLShaderProgram.h; sourceTree = "<group>"; };
-		2C8D95472FA090BF0037014A /* TVUIRLShaderProgram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLShaderProgram.m; sourceTree = "<group>"; };
-		2C8D954A2FA090BF0037014A /* TVUIRLTextureCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLTextureCache.h; sourceTree = "<group>"; };
-		2C8D954B2FA090BF0037014A /* TVUIRLTextureCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLTextureCache.m; sourceTree = "<group>"; };
 		32D45325092FFCE21D500478 /* Pods-DJIStreamDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemoTests/Pods-DJIStreamDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6BB6B34982B433D6E77DCB0E /* Pods-DJIStreamDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemoTests.release.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemoTests/Pods-DJIStreamDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		7BBB5707B7BE8B4AB2C5BDAD /* Pods_DJIStreamDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +181,7 @@
 		8A72C08608C59BBF286C162A /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemo_DJIStreamDemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1C3CA46F5DB5217E658BC3E /* Pods_DJIStreamDemoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E109A146404C5E1E72442540 /* Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemo-DJIStreamDemoUITests/Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
+		F56BDBB273FB7A513C5492B2 /* TVUIRLDJILog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJILog.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -382,6 +376,7 @@
 				2C8D950E2FA07B920037014A /* TVUIRLAsyncSocketTransport.h */,
 				2C8D950F2FA07BA90037014A /* TVUIRLAsyncSocketTransport.m */,
 				2C8D95112FA07BB30037014A /* TVUIRLTransport.m */,
+				F56BDBB273FB7A513C5492B2 /* TVUIRLDJILog.h */,
 			);
 			path = RTMPServerObjc;
 			sourceTree = "<group>";
@@ -391,13 +386,8 @@
 			children = (
 				2C8D95132FA07F930037014A /* RTMPIngestController.h */,
 				2C8D95142FA07FBF0037014A /* RTMPIngestController.m */,
-				2C8D8D102F9A2D120037014A /* Shader.metal */,
 				2C8D95422FA090BF0037014A /* TVUIRLPreviewController.h */,
 				2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */,
-				2C8D95462FA090BF0037014A /* TVUIRLShaderProgram.h */,
-				2C8D95472FA090BF0037014A /* TVUIRLShaderProgram.m */,
-				2C8D954A2FA090BF0037014A /* TVUIRLTextureCache.h */,
-				2C8D954B2FA090BF0037014A /* TVUIRLTextureCache.m */,
 			);
 			path = IngestObjc;
 			sourceTree = "<group>";
@@ -671,8 +661,6 @@
 				2C8D95152FA07FBF0037014A /* RTMPIngestController.m in Sources */,
 				2C8D95092FA077F60037014A /* TVUIRLAudioDecoder.m in Sources */,
 				2C8D94E72FA05F9B0037014A /* TVUIRLCommandMessage.m in Sources */,
-				2C8D954F2FA090BF0037014A /* TVUIRLShaderProgram.m in Sources */,
-				2C8D95512FA090BF0037014A /* TVUIRLTextureCache.m in Sources */,
 				2C8D95532FA090BF0037014A /* TVUIRLPreviewController.m in Sources */,
 				2C8D94D82FA05F3F0037014A /* TVUIRLProtocolMessage.m in Sources */,
 				2C8D94F92FA060C40037014A /* TVUIRLMediaClock.m in Sources */,

@@ -33,6 +33,7 @@
         _noDelay = YES;
         _frameQueueSize = 3;
         _backend = TVUIRLTransportBackendNetwork;
+        _previewEnabled = YES;
     }
     return self;
 }
@@ -47,7 +48,7 @@
     server.delegate = self;
     self.server = server;
     [server start];
-    NSLog(@"rtmp-ingest: listening on port %u for key '%@' (Metal renderer, backend=%@)",
+    NSLog(@"rtmp-ingest: listening on port %u for key '%@' (display layer, backend=%@)",
           port, streamKey, [TVUIRLTransportFactory nameForBackend:self.backend]);
 }
 
@@ -69,6 +70,16 @@
     return [self.server updateStats];
 }
 
+// previewEnabled 关闭瞬间立即清屏, 避免显示一张冻结帧.
+// BOOL 写入本身字节原子, 不需要额外锁; setter 由 UI 主线程触发, 与 server 回调线程并发安全.
+- (void)setPreviewEnabled:(BOOL)enabled {
+    BOOL wasEnabled = _previewEnabled;
+    _previewEnabled = enabled;
+    if (wasEnabled && !enabled) {
+        [self.previewController clearFrame];
+    }
+}
+
 #pragma mark - TVUIRLStreamingServerDelegate
 
 - (void)server:(TVUIRLStreamingServer *)server didStartPublishingStream:(NSString *)streamKey {
@@ -86,14 +97,14 @@
 }
 
 - (void)server:(TVUIRLStreamingServer *)server didReceiveVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
-    // 优先使用 zero-copy image buffer 路径；这里收到 CMSampleBuffer 时再 fallback 解出 CVPixelBuffer
-    CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    if (pixelBuffer) {
-        [self.previewController updateFrame:pixelBuffer];
-    }
+    // preview 关闭时直接 return, 跳过整条渲染链路, 便于隔离测 RTMP server + 解码的纯开销.
+    if (!self.previewEnabled) return;
+    // sampleBuffer 直送 display layer, 避免 image buffer 二次封包.
+    [self.previewController updateSampleBuffer:sampleBuffer];
 }
 
 - (void)server:(TVUIRLStreamingServer *)server didReceiveVideoImageBuffer:(CVImageBufferRef)imageBuffer {
+    if (!self.previewEnabled) return;
     [self.previewController updateFrame:imageBuffer];
 }
 

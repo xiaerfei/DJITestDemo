@@ -4,6 +4,7 @@
 //
 
 #import "TVUIRLDJIDeviceScanner.h"
+#import "TVUIRLDJILog.h"
 #import "TVUIRLDJIDeviceModel.h"
 #import "TVUIRLDJIMessage.h"  // for TVUIRLDJIHexString
 
@@ -62,14 +63,24 @@
     return [_mutableDiscoveredDevices copy];
 }
 
+- (BOOL)isScanning {
+    /// stopScanningForDevices 时会把 centralManager 置 nil; 用是否持有 CBCentralManager 作为
+    /// "扫描请求是否在线" 的判定 (即使蓝牙还没 poweredOn, 此时也认为扫描已被请求, 避免重复创建)
+    return self.centralManager != nil;
+}
+
 - (void)startScanningForDevices {
     // 清空上一次扫描结果
     [_mutableDiscoveredDevices removeAllObjects];
 
     // 创建 CBCentralManager；蓝牙打开后会回调 centralManagerDidUpdateState:
-    // 那里再触发实际的 scanForPeripherals
+    // 那里再触发实际的 scanForPeripherals.
+    // CBCentralManagerOptionShowPowerAlertKey = YES: 当蓝牙处于 OFF 时, 由 iOS 弹出原生
+    // "Bluetooth is off" 弹窗引导用户打开 (用户在系统层级可记忆是否再提示), 不需要 app 自行做 UI.
+    NSDictionary *options = @{ CBCentralManagerOptionShowPowerAlertKey: @YES };
     self.centralManager = [[CBCentralManager alloc] initWithDelegate:self
-                                                               queue:dispatch_get_main_queue()];
+                                                               queue:dispatch_get_main_queue()
+                                                             options:options];
 }
 
 - (void)stopScanningForDevices {
@@ -106,7 +117,7 @@
 
     // ── 4) 解析机型 ──
     TVUIRLDJIDeviceModel model = [TVUIRLDJIDeviceModelDetector modelFromManufacturerData:manufacturerData];
-    NSLog(@"dji-scanner: Manufacturer data %@ for peripheral id %@ and model %@",
+    TVUIRLDJILog(@"dji-scanner: Manufacturer data %@ for peripheral id %@ and model %@",
           TVUIRLDJIHexString(manufacturerData),
           peripheral.identifier.UUIDString,
           TVUIRLDJIDeviceModelDescription(model));

@@ -60,11 +60,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)manager;
 
+#pragma mark 观察者(可与主 delegate 并存, 弱引用)
+
+/// 注册一个事件观察者. 与 delegate 不同, 同时存在多个观察者也不会互相覆盖,
+/// 适用于 ControlBS 之外需要监听 BLE 事件的模块(例如 Module 转发 TVUIRLEvent).
+- (void)addObserver:(id<TVUIRLDJIStreamManagerDelegate>)observer;
+- (void)removeObserver:(id<TVUIRLDJIStreamManagerDelegate>)observer;
+
 #pragma mark 扫描
 
 - (void)startScan;
 - (void)stopScan;
 - (NSArray<TVUIRLDJIDiscoveredPeripheral *> *)discoveredPeripherals;
+
+/// 当前 BLE 扫描是否在线. 用于判断是否需要重启扫描.
+- (BOOL)isScanning;
 
 #pragma mark 推流
 

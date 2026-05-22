@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
 #import <CoreVideo/CoreVideo.h>
-
+#import "TVUIRLStreamConnection.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @class TVUIRLHardwareDecoder;
@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TVUIRLHardwareDecoder : NSObject
 
 @property (nonatomic, weak, nullable) id<TVUIRLHardwareDecoderDelegate> delegate;
+/// 解码出口 PTS 重锚委托。设置后，VT 回调里产出的 sampleBuffer 的 PTS 会被重写为 host time 域。
+@property (nonatomic, weak, nullable) id<TVUIRLDecodedPtsAnchor> ptsAnchor;
 
 - (instancetype)initWithQueue:(dispatch_queue_t)queue NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;

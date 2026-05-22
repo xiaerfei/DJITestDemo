@@ -50,6 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前扫描期内已发现的设备列表（已去重，按发现顺序）
 @property (nonatomic, strong, readonly) NSArray<TVUIRLDJIDiscoveredDevice *> *discoveredDevices;
 
+/// 当前是否处于扫描中。stopScanningForDevices 之后会变为 NO。
+/// 调用方通常用它来判断是否需要重启扫描，避免重复创建 CBCentralManager。
+@property (nonatomic, assign, readonly) BOOL isScanning;
+
 /// 单例。BLE 扫描进程内只允许一个，否则两个 CBCentralManager 会互相挤掉。
 + (instancetype)sharedScanner;
 

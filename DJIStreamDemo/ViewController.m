@@ -26,6 +26,81 @@ static const uint32_t kBitrateOptions[] = {
 // Fallback IP (172.20.10.1) is used when the iPhone acts as a Personal Hotspot.
 static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 
+#pragma mark - PreviewFullscreenVC
+
+/// 模态展示, 把 RTMPIngestController 的 previewView 临时 reparent 到本 VC 占满全屏,
+/// 锁定横屏方向. dismiss 时把 previewView 归还给原 parent (通常是 ViewController.previewContainer).
+@interface PreviewFullscreenVC : UIViewController
+@property (nonatomic, weak) UIView *previewView;
+@property (nonatomic, weak) UIView *originalPreviewParent;
+@end
+
+@implementation PreviewFullscreenVC
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationLandscapeRight;
+}
+
+- (BOOL)prefersStatusBarHidden { return YES; }
+
+- (BOOL)prefersHomeIndicatorAutoHidden { return YES; }
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor blackColor];
+
+    UIView *preview = self.previewView;
+    if (preview) {
+        preview.frame = self.view.bounds;
+        preview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.view addSubview:preview];
+    }
+
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    UIImage *icon = [UIImage systemImageNamed:@"xmark.circle.fill"];
+    [closeBtn setImage:icon forState:UIControlStateNormal];
+    closeBtn.tintColor = [UIColor whiteColor];
+    closeBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.35];
+    closeBtn.layer.cornerRadius = 20;
+    closeBtn.frame = CGRectMake(20, 20, 40, 40);
+    closeBtn.autoresizingMask = UIViewAutoresizingFlexibleRightMargin
+                              | UIViewAutoresizingFlexibleBottomMargin;
+    [closeBtn addTarget:self action:@selector(onCloseTap)
+       forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:closeBtn];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    // iOS 16+: 主动请求横屏 geometry, 避免某些机型 / 设备状态下仅靠
+    // supportedInterfaceOrientations 不触发旋转.
+    UIWindowScene *scene = self.view.window.windowScene
+                        ?: self.presentingViewController.view.window.windowScene;
+    UIWindowSceneGeometryPreferencesIOS *prefs =
+        [[UIWindowSceneGeometryPreferencesIOS alloc]
+            initWithInterfaceOrientations:UIInterfaceOrientationMaskLandscape];
+    [scene requestGeometryUpdateWithPreferences:prefs errorHandler:nil];
+}
+
+- (void)onCloseTap {
+    UIView *preview = self.previewView;
+    UIView *origParent = self.originalPreviewParent;
+    if (preview && origParent) {
+        preview.frame = origParent.bounds;
+        preview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [origParent addSubview:preview];
+        // preview 应当在容器内最底层, 不挡 battery / preview switch / fullscreen 按钮等浮层.
+        [origParent sendSubviewToBack:preview];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+@end
+
 @interface ViewController () <TVUIRLDJIStreamManagerDelegate, RTMPIngestControllerDelegate,
                               UITableViewDataSource, UITableViewDelegate>
 
@@ -40,17 +115,21 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 @property (nonatomic, strong) UITextField *ssidField;
 @property (nonatomic, strong) UITextField *passwordField;
 @property (nonatomic, strong) UITextField *rtmpField;
-@property (nonatomic, strong) UITextField *latencyField;
-@property (nonatomic, strong) UISwitch *noDelaySwitch;
 @property (nonatomic, strong) UISegmentedControl *resolutionControl;
 @property (nonatomic, strong) UISegmentedControl *bitrateControl;
 @property (nonatomic, strong) UIView *batteryContainer;
 @property (nonatomic, strong) UIView *batteryBody;
 @property (nonatomic, strong) UIView *batteryLevel;
+@property (nonatomic, strong) UIView *batteryTip;
 @property (nonatomic, strong) UILabel *batteryLabel;
+@property (nonatomic, strong) UIButton *fullscreenButton;
 @property (nonatomic, strong) NSTimer *batteryTimer;
 @property (nonatomic, strong) UILabel *bitrateStatsLabel;
 @property (nonatomic, strong) NSTimer *bitrateStatsTimer;
+@property (nonatomic, strong) UISwitch *previewSwitch;
+@property (nonatomic, strong) UILabel *previewSwitchLabel;
+/// 当前生效的 RTMP server endpoint (rtmp://ip:port/app/key), 用于 statusLabel 点击复制.
+@property (nonatomic, copy, nullable) NSString *currentServerFullUrl;
 
 @property (nonatomic, strong) NSMutableArray<TVUIRLDJIDiscoveredPeripheral *> *devices;
 @property (nonatomic, strong) TVUIRLDJIDiscoveredPeripheral *selected;
@@ -134,6 +213,25 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     preview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.previewContainer addSubview:preview];
 
+    // Preview 开关 — 覆盖在 preview 容器左上角, 实时关掉/打开渲染链路.
+    // 关掉时 RTMPIngestController.previewEnabled=NO, server 解码后帧不再喂给 display layer,
+    // 同时清屏避免显示一张冻结帧, 用于隔离测 RTMP server+解码 的纯 CPU 开销.
+    self.previewSwitchLabel = [[UILabel alloc] init];
+    self.previewSwitchLabel.text = @"Preview";
+    self.previewSwitchLabel.font = [UIFont systemFontOfSize:10 weight:UIFontWeightMedium];
+    self.previewSwitchLabel.textColor = [UIColor whiteColor];
+    self.previewSwitchLabel.textAlignment = NSTextAlignmentCenter;
+    [self.previewContainer addSubview:self.previewSwitchLabel];
+
+    self.previewSwitch = [[UISwitch alloc] init];
+    self.previewSwitch.on = RTMPIngestController.shared.previewEnabled;
+    // 缩放 0.65 让开关在 preview 容器内更紧凑.
+    self.previewSwitch.transform = CGAffineTransformMakeScale(0.65, 0.65);
+    [self.previewSwitch addTarget:self
+                           action:@selector(onPreviewSwitchChanged:)
+                 forControlEvents:UIControlEventValueChanged];
+    [self.previewContainer addSubview:self.previewSwitch];
+
     self.batteryContainer = [[UIView alloc] init];
     self.batteryContainer.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.8];
     self.batteryContainer.layer.cornerRadius = 5;
@@ -151,10 +249,10 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.batteryLevel.layer.cornerRadius = 1;
     [self.batteryBody addSubview:self.batteryLevel];
 
-    UIView *batteryTip = [[UIView alloc] init];
-    batteryTip.backgroundColor = [UIColor whiteColor];
-    batteryTip.layer.cornerRadius = 1.5;
-    [self.previewContainer addSubview:batteryTip];
+    self.batteryTip = [[UIView alloc] init];
+    self.batteryTip.backgroundColor = [UIColor whiteColor];
+    self.batteryTip.layer.cornerRadius = 1.5;
+    [self.previewContainer addSubview:self.batteryTip];
 
     self.batteryLabel = [[UILabel alloc] init];
     self.batteryLabel.font = [UIFont systemFontOfSize:10 weight:UIFontWeightMedium];
@@ -162,11 +260,29 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.batteryLabel.textAlignment = NSTextAlignmentCenter;
     [self.previewContainer addSubview:self.batteryLabel];
 
+    // 全屏按钮 — preview 容器右下角. 点击进入 PreviewFullscreenVC, 强制横屏显示.
+    self.fullscreenButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    UIImage *icon = [UIImage systemImageNamed:@"arrow.up.left.and.arrow.down.right"];
+    [self.fullscreenButton setImage:icon forState:UIControlStateNormal];
+    self.fullscreenButton.tintColor = [UIColor whiteColor];
+    self.fullscreenButton.backgroundColor = [UIColor colorWithWhite:0 alpha:0.45];
+    self.fullscreenButton.layer.cornerRadius = 4;
+    [self.fullscreenButton addTarget:self action:@selector(onFullscreenTap)
+                    forControlEvents:UIControlEventTouchUpInside];
+    [self.previewContainer addSubview:self.fullscreenButton];
+
     [self layoutBatteryUI];
 
     y += previewHeight + 8;
 
     self.statusLabel = [self makeLabel:@"Status: idle" y:y];
+    // statusLabel 默认 UILabel 不接 touch; 启用后挂 tap gesture 复制 server URL.
+    // 单行 22pt 高度, URL 过长时自然 truncate, 但 tap 复制的是 currentServerFullUrl 完整字符串.
+    self.statusLabel.userInteractionEnabled = YES;
+    self.statusLabel.adjustsFontSizeToFitWidth = YES;  // 自动缩字号避免 truncate, 在大多数设备上能放下完整 URL
+    self.statusLabel.minimumScaleFactor = 0.75;
+    [self.statusLabel addGestureRecognizer:
+        [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onStatusLabelTap)]];
     y += 28;
 
     self.bitrateStatsLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin, y, self.view.bounds.size.width - margin * 2, 22)];
@@ -183,36 +299,6 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.passwordField.secureTextEntry = YES;
     y += 40;
     self.rtmpField = [self makeField:@"rtmp://172.20.10.1:1935/live/dji  OR  srt://…" y:y];
-    y += 44;
-
-    // Buffer latency (left) + TCP No-Delay switch (right) — same row
-    UILabel *latLbl = [[UILabel alloc] initWithFrame:CGRectMake(margin, y + 6, 84, 22)];
-    latLbl.text = @"Buffer (ms)";
-    latLbl.font = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
-    latLbl.textColor = [UIColor secondaryLabelColor];
-    [self.view addSubview:latLbl];
-
-    self.latencyField = [[UITextField alloc] initWithFrame:CGRectMake(margin + 88, y, 70, 34)];
-    self.latencyField.borderStyle = UITextBorderStyleRoundedRect;
-    self.latencyField.text = @"1000";
-    self.latencyField.keyboardType = UIKeyboardTypeNumberPad;
-    self.latencyField.font = [UIFont systemFontOfSize:14];
-    self.latencyField.textAlignment = NSTextAlignmentCenter;
-    self.latencyField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.latencyField.inputAccessoryView = [self makeDoneToolbar];
-    [self.view addSubview:self.latencyField];
-
-    self.noDelaySwitch = [[UISwitch alloc] initWithFrame:CGRectMake(w - margin - 51, y + 2, 51, 31)];
-    self.noDelaySwitch.on = NO;
-    [self.view addSubview:self.noDelaySwitch];
-
-    UILabel *ndLbl = [[UILabel alloc] initWithFrame:CGRectMake(w - margin - 51 - 90, y + 6, 88, 22)];
-    ndLbl.text = @"TCP No-Delay";
-    ndLbl.font = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
-    ndLbl.textColor = [UIColor secondaryLabelColor];
-    ndLbl.textAlignment = NSTextAlignmentRight;
-    [self.view addSubview:ndLbl];
-
     y += 44;
 
     self.ssidField.text = @"TVU-U6-2";
@@ -349,8 +435,6 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     self.ssidField.enabled = djiIdle;
     self.passwordField.enabled = djiIdle;
     self.rtmpField.enabled = djiIdle && !serverRunning;
-    self.latencyField.enabled = djiIdle && !serverRunning;
-    self.noDelaySwitch.enabled = djiIdle && !serverRunning;
 
     if (djiStreaming || serverRunning) {
         self.statusLabel.textColor = [UIColor systemGreenColor];
@@ -373,6 +457,12 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     CGFloat tipH = 6;
     CGFloat padding = 3;
 
+    // Preview 开关 — 容器左上角, switch 在上, label 在下.
+    CGFloat switchW = 51 * 0.65;
+    CGFloat switchH = 31 * 0.65;
+    self.previewSwitch.frame = CGRectMake(8, 6, switchW, switchH);
+    self.previewSwitchLabel.frame = CGRectMake(8 - 6, 6 + switchH, switchW + 12, 12);
+
     CGFloat containerX = self.previewContainer.bounds.size.width - containerW - 8;
     CGFloat containerY = 8;
     self.batteryContainer.frame = CGRectMake(containerX, containerY, containerW, containerH);
@@ -381,12 +471,17 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     CGFloat bodyY = (containerH - bodyH) / 2.0;
     self.batteryBody.frame = CGRectMake(bodyX, bodyY, bodyW, bodyH);
 
-    UIView *batteryTip = self.batteryContainer.superview.subviews.lastObject;
-    if (batteryTip && batteryTip != self.batteryLabel) {
-        batteryTip.frame = CGRectMake(containerX + containerW, containerY + (containerH - tipH) / 2.0, tipW, tipH);
-    }
+    self.batteryTip.frame = CGRectMake(containerX + containerW,
+                                       containerY + (containerH - tipH) / 2.0,
+                                       tipW, tipH);
 
     self.batteryLabel.frame = CGRectMake(containerX, containerY + containerH + 2, containerW, 12);
+
+    CGFloat fsBtnSize = 32;
+    CGRect pcb = self.previewContainer.bounds;
+    self.fullscreenButton.frame = CGRectMake(pcb.size.width - fsBtnSize - 8,
+                                              pcb.size.height - fsBtnSize - 8,
+                                              fsBtnSize, fsBtnSize);
 
     [self updateBatteryDisplay];
 }
@@ -420,6 +515,20 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
 
 #pragma mark - RTMP Server Actions
 
+/// 启动 server 后统一打印 endpoint 信息. 返回完整 URL (含 IP + port + app + streamKey),
+/// 上层据此更新 UI / 剪贴板.
+- (NSString *)logRtmpEndpointWithPort:(uint16_t)port streamKey:(NSString *)streamKey {
+    NSString *ip = [self currentLocalIP];
+    NSString *serverBase = [NSString stringWithFormat:@"rtmp://%@:%u/live", ip, port];
+    NSString *fullUrl = [NSString stringWithFormat:@"%@/%@", serverBase, streamKey];
+    NSLog(@"================ RTMP Server Endpoint ================");
+    NSLog(@"  Full URL  : %@", fullUrl);
+    NSLog(@"  OBS Server: %@", serverBase);
+    NSLog(@"  Stream Key: %@", streamKey);
+    NSLog(@"======================================================");
+    return fullUrl;
+}
+
 - (void)onStartServerTap {
     NSString *url = self.rtmpField.text ?: @"";
     if ([self isSrtUrl:url]) {
@@ -429,17 +538,55 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     uint16_t port = 1935;
     NSString *streamKey = @"dji";
     [self parseRtmpUrl:url port:&port streamKey:&streamKey];
-    RTMPIngestController.shared.latency = (int32_t)[self.latencyField.text integerValue];
-    RTMPIngestController.shared.noDelay = self.noDelaySwitch.isOn;
     [RTMPIngestController.shared startWithPort:port streamKey:streamKey];
-    self.statusLabel.text = @"Status: RTMP server listening";
+
+    NSString *fullUrl = [self logRtmpEndpointWithPort:port streamKey:streamKey];
+    self.currentServerFullUrl = fullUrl;
+    self.statusLabel.text = fullUrl;
     [self refreshControlState];
 }
 
 - (void)onStopServerTap {
     [RTMPIngestController.shared stop];
+    self.currentServerFullUrl = nil;
     self.statusLabel.text = @"Status: RTMP server stopped";
     [self refreshControlState];
+}
+
+/// statusLabel 点击 → 复制 currentServerFullUrl 到剪贴板, 1.2s 闪现 "Copied" 提示.
+- (void)onStatusLabelTap {
+    NSString *url = self.currentServerFullUrl;
+    if (url.length == 0) return;
+    [UIPasteboard generalPasteboard].string = url;
+    NSString *previous = self.statusLabel.text;
+    self.statusLabel.text = @"Copied to clipboard";
+    self.statusLabel.textColor = [UIColor systemGreenColor];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        if ([self.statusLabel.text isEqualToString:@"Copied to clipboard"]) {
+            self.statusLabel.text = previous;
+            [self refreshControlState];   // 恢复 textColor
+        }
+    });
+}
+
+#pragma mark - Preview Switch
+
+- (void)onPreviewSwitchChanged:(UISwitch *)sw {
+    RTMPIngestController.shared.previewEnabled = sw.isOn;
+}
+
+- (void)onFullscreenTap {
+    PreviewFullscreenVC *vc = [[PreviewFullscreenVC alloc] init];
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
+    vc.previewView = RTMPIngestController.shared.previewView;
+    vc.originalPreviewParent = self.previewContainer;
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+// 主 VC 锁定为竖屏; 仅 PreviewFullscreenVC 横屏. 这样 dismiss 时 iOS 会自动转回竖屏.
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - DJI Stream Actions
@@ -486,9 +633,9 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
             uint16_t port = 1935;
             NSString *streamKey = @"dji";
             [self parseRtmpUrl:url port:&port streamKey:&streamKey];
-            RTMPIngestController.shared.latency = (int32_t)[self.latencyField.text integerValue];
-            RTMPIngestController.shared.noDelay = self.noDelaySwitch.isOn;
             [RTMPIngestController.shared startWithPort:port streamKey:streamKey];
+            // 自动启动场景也打印一遍 endpoint, 但 statusLabel 后续会被 DJI 状态覆盖, 这里仅更新 currentServerFullUrl 供后续复制.
+            self.currentServerFullUrl = [self logRtmpEndpointWithPort:port streamKey:streamKey];
         }
     }
 
@@ -626,17 +773,6 @@ static NSString * const kRtmpUrlTemplate = @"rtmp://%@:1935/live/dji";
     [tableView reloadData];
     [TVUIRLDJIStreamManager.manager stopScan];
     [self refreshControlState];
-}
-
-- (UIToolbar *)makeDoneToolbar {
-    UIToolbar *bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
-    UIBarButtonItem *flex = [[UIBarButtonItem alloc]
-        initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *done = [[UIBarButtonItem alloc]
-        initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                             target:self action:@selector(dismissKeyboard)];
-    bar.items = @[flex, done];
-    return bar;
 }
 
 @end

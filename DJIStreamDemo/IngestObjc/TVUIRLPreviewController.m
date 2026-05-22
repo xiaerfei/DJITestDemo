@@ -1,192 +1,38 @@
+//
+//  TVUIRLPreviewController.m
+//  DJIStreamDemo
+//
+
 #import "TVUIRLPreviewController.h"
-#import "TVUIRLTextureCache.h"
-#import "TVUIRLShaderProgram.h"
-#import <MetalKit/MetalKit.h>
+#import <AVFoundation/AVFoundation.h>
 
-static NSString *const kShaderSource = @"\n"
-"#include <metal_stdlib>\n"
-"using namespace metal;\n"
-"\n"
-"typedef struct {\n"
-"    float4 position [[position]];\n"
-"    float2 texCoord;\n"
-"} VertexOut;\n"
-"\n"
-"typedef struct {\n"
-"    float2 scale;\n"
-"} AspectUniforms;\n"
-"\n"
-"vertex VertexOut vertex_main(uint vid [[vertex_id]], constant AspectUniforms& uniforms [[buffer(0)]]) {\n"
-"    float2 positions[6] = {\n"
-"        float2(-1, -1), float2(1, -1), float2(-1, 1),\n"
-"        float2(-1,  1), float2(1, -1), float2( 1, 1)\n"
-"    };\n"
-"    float2 texCoords[6] = {\n"
-"        float2(0, 1), float2(1, 1), float2(0, 0),\n"
-"        float2(0, 0), float2(1, 1), float2(1, 0)\n"
-"    };\n"
-"    VertexOut out;\n"
-"    out.position = float4(positions[vid].x * uniforms.scale.x,\n"
-"                          positions[vid].y * uniforms.scale.y, 0, 1);\n"
-"    out.texCoord = texCoords[vid];\n"
-"    return out;\n"
-"}\n"
-"\n"
-"fragment float4 fragment_main(\n"
-"    VertexOut in [[stage_in]],\n"
-"    texture2d<float, access::sample> yTexture [[texture(0)]],\n"
-"    texture2d<float, access::sample> cbCrTexture [[texture(1)]]\n"
-") {\n"
-"    constexpr sampler s(coord::normalized, filter::linear, address::clamp_to_edge);\n"
-"    float y  = yTexture.sample(s, in.texCoord).r;\n"
-"    float2 cbcr = cbCrTexture.sample(s, in.texCoord).rg;\n"
-"    float cb = cbcr.r - 0.5;\n"
-"    float cr = cbcr.g - 0.5;\n"
-"    float r = y                + 1.402    * cr;\n"
-"    float g = y - 0.344136 * cb - 0.714136 * cr;\n"
-"    float b = y + 1.772    * cb;\n"
-"    return float4(r, g, b, 1.0);\n"
-"}\n";
+#pragma mark - DisplayLayerView
 
-@interface TVUIRLPreviewMetalView : MTKView <MTKViewDelegate>
-@property (nonatomic, strong) TVUIRLTextureCache *textureCache;
-@property (nonatomic, strong) TVUIRLShaderProgram *shaderProgram;
-@property (nonatomic, strong) id<MTLCommandQueue> commandQueue;
-@property (nonatomic, strong) NSLock *frameLock;
+/// 承载 AVSampleBufferDisplayLayer 的 UIView. 用 +layerClass 让 view.layer 本身
+/// 就是 display layer, 省一次 sublayer 添加和 frame 同步, 也避免 layoutSubviews 时
+/// 漏 sync sublayer.frame 导致黑屏.
+@interface TVUIRLPreviewDisplayView : UIView
+@property (nonatomic, readonly) AVSampleBufferDisplayLayer *displayLayer;
 @end
 
-@implementation TVUIRLPreviewMetalView {
-    CVPixelBufferRef _latestPixelBuffer;
+@implementation TVUIRLPreviewDisplayView
+
++ (Class)layerClass {
+    return [AVSampleBufferDisplayLayer class];
+}
+
+- (AVSampleBufferDisplayLayer *)displayLayer {
+    return (AVSampleBufferDisplayLayer *)self.layer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self commonInit];
+        // 黑底, 保持与原 MTKView 视觉一致 (无内容时显示黑屏而非系统默认背景).
+        self.backgroundColor = [UIColor blackColor];
+        // 保持原 Metal 版本的 letterbox 行为: 视频按比例 fit, 上下/左右留黑边.
+        self.displayLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     }
     return self;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)coder {
-    if (self = [super initWithCoder:coder]) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (void)commonInit {
-    _frameLock = [[NSLock alloc] init];
-    _latestPixelBuffer = NULL;
-
-    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
-    self.device = device;
-    self.commandQueue = [device newCommandQueue];
-
-    _textureCache = [[TVUIRLTextureCache alloc] initWithDevice:device];
-
-    _shaderProgram = [[TVUIRLShaderProgram alloc] initWithDevice:device];
-    [_shaderProgram createPipelineWithSource:kShaderSource
-                              vertexFunction:@"vertex_main"
-                            fragmentFunction:@"fragment_main"
-                                 pixelFormat:MTLPixelFormatBGRA8Unorm];
-
-    self.delegate = self;
-    self.enableSetNeedsDisplay = NO;
-    self.paused = NO;
-    self.colorPixelFormat = MTLPixelFormatBGRA8Unorm;
-    self.clearColor = MTLClearColorMake(0, 0, 0, 1);
-    self.backgroundColor = [UIColor blackColor];
-}
-
-- (void)dealloc {
-    if (_latestPixelBuffer) {
-        CFRelease(_latestPixelBuffer);
-    }
-}
-
-- (void)updateFrame:(CVPixelBufferRef)pixelBuffer {
-    [self.frameLock lock];
-    if (_latestPixelBuffer) {
-        CFRelease(_latestPixelBuffer);
-    }
-    _latestPixelBuffer = pixelBuffer;
-    if (_latestPixelBuffer) {
-        CFRetain(_latestPixelBuffer);
-    }
-    [self.frameLock unlock];
-}
-
-- (void)clearFrame {
-    [self.frameLock lock];
-    if (_latestPixelBuffer) {
-        CFRelease(_latestPixelBuffer);
-        _latestPixelBuffer = NULL;
-    }
-    [self.frameLock unlock];
-}
-
-#pragma mark - MTKViewDelegate
-
-- (void)mtkView:(MTKView *)view drawableSizeWillChange:(CGSize)size {
-}
-
-- (void)drawInMTKView:(MTKView *)view {
-    [self.frameLock lock];
-    CVPixelBufferRef pixelBuffer = _latestPixelBuffer;
-    if (pixelBuffer) {
-        CFRetain(pixelBuffer);
-    }
-    [self.frameLock unlock];
-
-    if (!pixelBuffer) return;
-
-    id<MTLTexture> yTexture = [self.textureCache textureForPixelBuffer:pixelBuffer
-                                                            planeIndex:0
-                                                           pixelFormat:MTLPixelFormatR8Unorm];
-    id<MTLTexture> cbCrTexture = [self.textureCache textureForPixelBuffer:pixelBuffer
-                                                               planeIndex:1
-                                                              pixelFormat:MTLPixelFormatRG8Unorm];
-    if (!yTexture || !cbCrTexture) {
-        CFRelease(pixelBuffer);
-        return;
-    }
-
-    id<CAMetalDrawable> drawable = self.currentDrawable;
-    MTLRenderPassDescriptor *passDesc = self.currentRenderPassDescriptor;
-    if (!drawable || !passDesc) {
-        CFRelease(pixelBuffer);
-        return;
-    }
-
-    id<MTLCommandBuffer> cmdBuffer = [self.commandQueue commandBuffer];
-    id<MTLRenderCommandEncoder> encoder = [cmdBuffer renderCommandEncoderWithDescriptor:passDesc];
-    if (!encoder) {
-        CFRelease(pixelBuffer);
-        return;
-    }
-
-    CGFloat videoWidth = CVPixelBufferGetWidth(pixelBuffer);
-    CGFloat videoHeight = CVPixelBufferGetHeight(pixelBuffer);
-    CGFloat viewAspect = self.drawableSize.width / self.drawableSize.height;
-    CGFloat videoAspect = videoWidth / videoHeight;
-
-    simd_float2 scale = (simd_float2){1.0f, 1.0f};
-    if (videoAspect > viewAspect) {
-        scale.y = (float)(viewAspect / videoAspect);
-    } else {
-        scale.x = (float)(videoAspect / viewAspect);
-    }
-
-    [encoder setRenderPipelineState:self.shaderProgram.pipelineState];
-    [encoder setVertexBytes:&scale length:sizeof(scale) atIndex:0];
-    [encoder setFragmentTexture:yTexture atIndex:0];
-    [encoder setFragmentTexture:cbCrTexture atIndex:1];
-    [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];
-    [encoder endEncoding];
-
-    [cmdBuffer presentDrawable:drawable];
-    [cmdBuffer commit];
-
-    CFRelease(pixelBuffer);
 }
 
 @end
@@ -195,25 +41,129 @@ static NSString *const kShaderSource = @"\n"
 
 @interface TVUIRLPreviewController ()
 @property (nonatomic, strong, readwrite) UIView *view;
-@property (nonatomic, strong) TVUIRLPreviewMetalView *metalView;
+@property (nonatomic, strong) TVUIRLPreviewDisplayView *displayView;
+/// 缓存的 CMVideoFormatDescription, 用于把裸 CVPixelBuffer 包成 CMSampleBuffer.
+/// 仅当 PixelBuffer 的 width/height/pixelFormat 变化时重建, 避免每帧一次创建.
+@property (nonatomic, assign) CMVideoFormatDescriptionRef cachedFormatDesc;
+@property (nonatomic, assign) size_t cachedWidth;
+@property (nonatomic, assign) size_t cachedHeight;
+@property (nonatomic, assign) OSType cachedPixelFormat;
 @end
 
 @implementation TVUIRLPreviewController
 
 - (instancetype)init {
     if (self = [super init]) {
-        _metalView = [[TVUIRLPreviewMetalView alloc] initWithFrame:CGRectZero];
-        _view = _metalView;
+        _displayView = [[TVUIRLPreviewDisplayView alloc] initWithFrame:CGRectZero];
+        _view = _displayView;
     }
     return self;
 }
 
+- (void)dealloc {
+    if (_cachedFormatDesc) {
+        CFRelease(_cachedFormatDesc);
+        _cachedFormatDesc = NULL;
+    }
+}
+
+#pragma mark - Public
+
+- (void)updateSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    if (sampleBuffer == NULL) return;
+    [self enqueueSampleBuffer:sampleBuffer];
+}
+
 - (void)updateFrame:(CVPixelBufferRef)pixelBuffer {
-    [self.metalView updateFrame:pixelBuffer];
+    if (pixelBuffer == NULL) return;
+    CMSampleBufferRef sampleBuffer = [self sampleBufferFromPixelBuffer:pixelBuffer];
+    if (sampleBuffer == NULL) return;
+    [self enqueueSampleBuffer:sampleBuffer];
+    CFRelease(sampleBuffer);
 }
 
 - (void)clearFrame {
-    [self.metalView clearFrame];
+    AVSampleBufferDisplayLayer *layer = self.displayView.displayLayer;
+    // flushAndRemoveImage 同时清掉队列里待显示的帧和当前显示的最后一帧, 用户体验上"立即黑屏".
+    if ([layer respondsToSelector:@selector(flushAndRemoveImage)]) {
+        [layer flushAndRemoveImage];
+    } else {
+        [layer flush];
+    }
+}
+
+#pragma mark - Private
+
+/// 把 sampleBuffer 标记为 DisplayImmediately 后 enqueue. 出错(layer.status==failed) 时 flush 重启.
+- (void)enqueueSampleBuffer:(CMSampleBufferRef)sampleBuffer {
+    AVSampleBufferDisplayLayer *layer = self.displayView.displayLayer;
+    if (layer.status == AVQueuedSampleBufferRenderingStatusFailed) {
+        // layer 进入 failed 后必须 flush 才能恢复; 常见原因是连续大量帧没消费完导致 OOM.
+        [layer flush];
+    }
+    [self markDisplayImmediately:sampleBuffer];
+    [layer enqueueSampleBuffer:sampleBuffer];
+}
+
+/// 把 sampleBuffer 的 attachments[0] 标记为 DisplayImmediately, 让 layer 不按 PTS 排程,
+/// 收到一帧就显示一帧 —— 与原 Metal "drawInMTKView 始终画 latestPixelBuffer" 行为一致.
+- (void)markDisplayImmediately:(CMSampleBufferRef)sampleBuffer {
+    CFArrayRef attachmentsArray = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer, /*create=*/true);
+    if (attachmentsArray == NULL || CFArrayGetCount(attachmentsArray) == 0) {
+        return;
+    }
+    CFMutableDictionaryRef dict =
+        (CFMutableDictionaryRef)CFArrayGetValueAtIndex(attachmentsArray, 0);
+    CFDictionarySetValue(dict, kCMSampleAttachmentKey_DisplayImmediately, kCFBooleanTrue);
+}
+
+/// 把 CVPixelBuffer 包成 CMSampleBuffer. PTS 用 kCMTimeInvalid + DisplayImmediately, 不影响排程.
+/// 调用方需要 CFRelease 返回值.
+- (CMSampleBufferRef)sampleBufferFromPixelBuffer:(CVPixelBufferRef)pixelBuffer CF_RETURNS_RETAINED {
+    size_t width = CVPixelBufferGetWidth(pixelBuffer);
+    size_t height = CVPixelBufferGetHeight(pixelBuffer);
+    OSType pixelFormat = CVPixelBufferGetPixelFormatType(pixelBuffer);
+
+    // 复用 CMVideoFormatDescription, 仅在尺寸/格式变化时重建.
+    if (self.cachedFormatDesc == NULL
+        || width != self.cachedWidth
+        || height != self.cachedHeight
+        || pixelFormat != self.cachedPixelFormat) {
+        if (self.cachedFormatDesc) {
+            CFRelease(self.cachedFormatDesc);
+            self.cachedFormatDesc = NULL;
+        }
+        CMVideoFormatDescriptionRef desc = NULL;
+        OSStatus status = CMVideoFormatDescriptionCreateForImageBuffer(
+            kCFAllocatorDefault, pixelBuffer, &desc);
+        if (status != noErr || desc == NULL) {
+            return NULL;
+        }
+        self.cachedFormatDesc = desc;
+        self.cachedWidth = width;
+        self.cachedHeight = height;
+        self.cachedPixelFormat = pixelFormat;
+    }
+
+    CMSampleTimingInfo timing = {
+        .duration = kCMTimeInvalid,
+        .presentationTimeStamp = kCMTimeInvalid,
+        .decodeTimeStamp = kCMTimeInvalid,
+    };
+    CMSampleBufferRef sampleBuffer = NULL;
+    OSStatus status = CMSampleBufferCreateForImageBuffer(
+        kCFAllocatorDefault,
+        pixelBuffer,
+        /*dataReady=*/true,
+        /*makeDataReadyCallback=*/NULL,
+        /*makeDataReadyRefcon=*/NULL,
+        self.cachedFormatDesc,
+        &timing,
+        &sampleBuffer);
+    if (status != noErr || sampleBuffer == NULL) {
+        return NULL;
+    }
+    return sampleBuffer;
 }
 
 @end

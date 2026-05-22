@@ -4,6 +4,7 @@
 //
 
 #import "TVUIRLStreamingServer.h"
+#import "TVUIRLDJILog.h"
 #import "TVUIRLStreamingServer+Internal.h"
 #import "TVUIRLStreamConnection.h"
 
@@ -28,7 +29,9 @@
         _config = [[TVUIRLStreamConfig alloc] initWithPort:config.port streams:config.streams noDelay:config.noDelay];
         _backend = backend;
         _connections = [NSMutableArray array];
-        _queue = dispatch_queue_create("com.tvu.rtmp-server", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_attr_t attr = dispatch_queue_attr_make_with_qos_class(
+            DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INITIATED, 0);
+        _queue = dispatch_queue_create("com.tvu.rtmp-server", attr);
         _meter = [[TVUIRLBandwidthMeter alloc] init];
     }
     return self;
@@ -45,7 +48,10 @@
 }
 
 - (void)stop {
-    dispatch_async(self.queue, ^{
+    // dispatch_sync 保证 stop 返回前所有连接已关闭、listener 已取消，彻底防止旧 server
+    // 在 startWithPort: 后继续向 RTMPIngestController 转发音视频。
+    // 调用方必须从 server 串行队列以外的线程调用，否则死锁。
+    dispatch_sync(self.queue, ^{
         for (TVUIRLStreamConnection *c in self.connections) {
             [c stopWithReason:@"Server stop"];
         }
@@ -54,7 +60,7 @@
         self.listener = nil;
         if (self.periodicTimer) {
             dispatch_source_cancel(self.periodicTimer);
-            self.periodicTimer = NULL;
+            self.periodicTimer = nil;
         }
     });
 }
@@ -97,15 +103,16 @@
         TVUIRLStreamConnection *streamConn = [[TVUIRLStreamConnection alloc] initWithServer:self_ transport:connection];
         [self_.connections addObject:streamConn];
         [streamConn start];
+        TVUIRLDJILog(@"[leak-check] new connection, total active=%lu", (unsigned long)self_.connections.count);
     }
                               error:&error];
     if (!ok) {
-        NSLog(@"rtmp-server[%@]: failed to start listener on port %u: %@",
+        TVUIRLDJILog(@"rtmp-server[%@]: failed to start listener on port %u: %@",
               [TVUIRLTransportFactory nameForBackend:self.backend],
               (unsigned)self.config.port,
               error);
     } else {
-        NSLog(@"rtmp-server[%@]: listening on port %u",
+        TVUIRLDJILog(@"rtmp-server[%@]: listening on port %u",
               [TVUIRLTransportFactory nameForBackend:self.backend],
               (unsigned)self.config.port);
     }
@@ -123,10 +130,10 @@
 }
 
 - (void)periodicTick {
-    NSDate *now = [NSDate date];
+    CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
     NSMutableArray *toRemove = [NSMutableArray array];
     for (TVUIRLStreamConnection *c in self.connections) {
-        if (c.latestReceiveTime && [now timeIntervalSinceDate:c.latestReceiveTime] > 10.0) {
+        if (now - c.latestReceiveAbsTime > 10.0) {
             [toRemove addObject:c];
         }
     }

@@ -4,6 +4,7 @@
 //
 
 #import "TVUIRLDJIStreamManager.h"
+#import "TVUIRLDJILog.h"
 #import "TVUIRLDJIDevice.h"
 #import "TVUIRLDJIDeviceScanner.h"
 
@@ -37,6 +38,8 @@
 @property (nonatomic, strong) TVUIRLDJIDeviceScanner *scanner;
 @property (nonatomic, strong) TVUIRLDJIDevice *device;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, TVUIRLDJIDiscoveredDevice *> *discoveredByUUID;
+/// 弱引用观察者表, 与 delegate 并存; 用于 Module 等需要"旁路"接收事件的模块
+@property (nonatomic, strong) NSHashTable<id<TVUIRLDJIStreamManagerDelegate>> *observers;
 
 @end
 
@@ -59,11 +62,24 @@
         _scanner = [TVUIRLDJIDeviceScanner sharedScanner];
         _device = [[TVUIRLDJIDevice alloc] init];
         _discoveredByUUID = [NSMutableDictionary dictionary];
+        _observers = [NSHashTable weakObjectsHashTable];
 
         _scanner.delegate = self;
         _device.delegate = self;
     }
     return self;
+}
+
+#pragma mark 观察者
+
+- (void)addObserver:(id<TVUIRLDJIStreamManagerDelegate>)observer {
+    if (observer == nil) return;
+    [_observers addObject:observer];
+}
+
+- (void)removeObserver:(id<TVUIRLDJIStreamManagerDelegate>)observer {
+    if (observer == nil) return;
+    [_observers removeObject:observer];
 }
 
 #pragma mark 扫描
@@ -75,6 +91,10 @@
 
 - (void)stopScan {
     [_scanner stopScanningForDevices];
+}
+
+- (BOOL)isScanning {
+    return _scanner.isScanning;
 }
 
 - (NSArray<TVUIRLDJIDiscoveredPeripheral *> *)discoveredPeripherals {
@@ -103,7 +123,7 @@
     NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:peripheralId];
     TVUIRLDJIDiscoveredDevice *entry = _discoveredByUUID[peripheralId];
     if (!uuid || !entry) {
-        NSLog(@"dji-controller: Unknown peripheral %@", peripheralId);
+        TVUIRLDJILog(@"dji-controller: Unknown peripheral %@", peripheralId);
         return NO;
     }
 
@@ -189,22 +209,40 @@
     NSString *uuid = device.peripheral.identifier.UUIDString;
     _discoveredByUUID[uuid] = device;
 
-    if ([self.delegate respondsToSelector:@selector(djiStreamManager:didDiscover:)]) {
-        TVUIRLDJIDiscoveredPeripheral *payload =
-            [[TVUIRLDJIDiscoveredPeripheral alloc] initWithPeripheralId:uuid
-                                                                   name:device.peripheral.name ?: @"Unknown"
-                                                              modelName:TVUIRLDJIDeviceModelDescription(device.model)];
-        [self.delegate djiStreamManager:self didDiscover:payload];
-    }
+    TVUIRLDJIDiscoveredPeripheral *payload =
+        [[TVUIRLDJIDiscoveredPeripheral alloc] initWithPeripheralId:uuid
+                                                               name:device.peripheral.name ?: @"Unknown"
+                                                          modelName:TVUIRLDJIDeviceModelDescription(device.model)];
+    [self dispatchToDelegateAndObserversWithSelector:@selector(djiStreamManager:didDiscover:)
+                                               block:^(id<TVUIRLDJIStreamManagerDelegate> target) {
+        [target djiStreamManager:self didDiscover:payload];
+    }];
 }
 
 #pragma mark - TVUIRLDJIDeviceDelegate
 
 - (void)djiDevice:(TVUIRLDJIDevice *)device didChangeState:(TVUIRLDJIStreamState)state {
-    if ([self.delegate respondsToSelector:@selector(djiStreamManager:didChangeState:stateName:)]) {
-        [self.delegate djiStreamManager:self
-                           didChangeState:state
-                                stateName:TVUIRLDJIStreamStateDescription(state)];
+    NSString *stateName = TVUIRLDJIStreamStateDescription(state);
+    [self dispatchToDelegateAndObserversWithSelector:@selector(djiStreamManager:didChangeState:stateName:)
+                                               block:^(id<TVUIRLDJIStreamManagerDelegate> target) {
+        [target djiStreamManager:self didChangeState:state stateName:stateName];
+    }];
+}
+
+#pragma mark - 观察者派发
+
+/// 把同一个事件先派给 delegate, 再派给所有观察者. observer 弱引用, allObjects 拷贝避免分发期间表变更
+- (void)dispatchToDelegateAndObserversWithSelector:(SEL)selector
+                                              block:(void (^)(id<TVUIRLDJIStreamManagerDelegate> target))block {
+    id<TVUIRLDJIStreamManagerDelegate> primary = self.delegate;
+    if ([primary respondsToSelector:selector]) {
+        block(primary);
+    }
+    for (id<TVUIRLDJIStreamManagerDelegate> obs in [_observers.allObjects copy]) {
+        if (obs == primary) continue;
+        if ([obs respondsToSelector:selector]) {
+            block(obs);
+        }
     }
 }
 

@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
-
+#import "TVUIRLStreamConnection.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @class TVUIRLAudioConfig;
@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TVUIRLAudioDecoder : NSObject
 
 @property (nonatomic, weak, nullable) id<TVUIRLAudioDecoderDelegate> delegate;
+/// 解码出口 PTS 重锚委托。设置后产出的 sampleBuffer 的 PTS 会被重写为 host time 域。
+@property (nonatomic, weak, nullable) id<TVUIRLDecodedPtsAnchor> ptsAnchor;
 @property (nonatomic, readonly) BOOL isReady;
 
 - (instancetype)init;

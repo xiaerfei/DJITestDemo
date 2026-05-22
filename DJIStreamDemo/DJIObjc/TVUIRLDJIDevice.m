@@ -4,6 +4,7 @@
 //
 
 #import "TVUIRLDJIDevice.h"
+#import "TVUIRLDJILog.h"
 #import "TVUIRLDJIMessage.h"
 #import "TVUIRLDJIDeviceMessage.h"
 #import "TVUIRLSimpleTimer.h"
@@ -106,7 +107,7 @@ static NSString * const kPairPinCode = @"mbln";
                  imageStabilization:(TVUIRLDJIStreamImageStabilization)imageStabilization
                            deviceId:(NSUUID *)deviceId
                               model:(TVUIRLDJIDeviceModel)model {
-    NSLog(@"dji-device: Start live stream for %@", TVUIRLDJIDeviceModelDescription(model));
+    TVUIRLDJILog(@"dji-device: Start live stream for %@", TVUIRLDJIDeviceModelDescription(model));
 
     // 保存参数，状态机后续要用
     self.wifiSsid = wifiSsid;
@@ -136,7 +137,7 @@ static NSString * const kPairPinCode = @"mbln";
 - (void)stopLiveStream {
     if (self.state == TVUIRLDJIStreamStateIdle) return;
 
-    NSLog(@"dji-device: Stop live stream");
+    TVUIRLDJILog(@"dji-device: Stop live stream");
     // 停止启动看门狗，启动停止看门狗（10 秒后强制 reset）
     [self stopStartStreamingTimer];
     [self startStopStreamingTimer];
@@ -195,7 +196,7 @@ static NSString * const kPairPinCode = @"mbln";
 /// 状态切换：相同状态不重复回调，便于 UI 层简化处理。
 - (void)setState:(TVUIRLDJIStreamState)state {
     if (state == _state) return;
-    NSLog(@"dji-device: State change %@ -> %@",
+    TVUIRLDJILog(@"dji-device: State change %@ -> %@",
           TVUIRLDJIStreamStateDescription(_state),
           TVUIRLDJIStreamStateDescription(state));
     _state = state;
@@ -284,7 +285,7 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     TVUIRLDJIMessage *message = [[TVUIRLDJIMessage alloc] initWithData:value error:&parseError];
     if (!message) {
         // CRC 错或长度错的包直接丢，避免误处理
-        NSLog(@"dji-device: Discarding corrupt message %@", TVUIRLDJIHexString(value));
+        TVUIRLDJILog(@"dji-device: Discarding corrupt message %@", TVUIRLDJIHexString(value));
         return;
     }
 
@@ -300,7 +301,7 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
         case TVUIRLDJIStreamStateStreaming:         [self processStreaming:message]; break;
         case TVUIRLDJIStreamStateStoppingStream:    [self processStoppingStream:message]; break;
         default:
-            NSLog(@"dji-device: Received message in unexpected state '%@'",
+            TVUIRLDJILog(@"dji-device: Received message in unexpected state '%@'",
                   TVUIRLDJIStreamStateDescription(self.state));
             break;
     }
@@ -526,7 +527,7 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
 
 /// 用日志记录命令再实际写入。
 - (void)writeMessage:(TVUIRLDJIMessage *)message {
-    NSLog(@"dji-device: Send %@", [message format]);
+    TVUIRLDJILog(@"dji-device: Send %@", [message format]);
     [self writeValue:[message encode]];
 }
 
