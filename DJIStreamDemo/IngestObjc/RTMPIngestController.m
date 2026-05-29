@@ -2,19 +2,26 @@
 //  RTMPIngestController.m
 //  DJIStreamDemo
 //
+//  纯 C tvu_irl_streaming_server 的薄 ObjC 桥接。
+//
+//  桥接方式：C 回调表 + (__bridge void *)self；每个 C 回调内部 (__bridge ...)
+//  转回 ObjC 并转发到原 delegate。RTMPIngestController 是单例，self 全程存活，
+//  __bridge 无所有权转移，回调指针永不悬空。
+//
 
 #import "RTMPIngestController.h"
-#import "TVUIRLStreamingServer.h"
-#import "TVUIRLStreamConfig.h"
 #import "TVUIRLPreviewController.h"
+#import "tvu_irl_streaming_server.h"
+#import "tvu_irl_stream_config.h"
 
-@interface RTMPIngestController () <TVUIRLStreamingServerDelegate>
+@interface RTMPIngestController ()
 @property (nonatomic, strong, readwrite) UIView *previewView;
 @property (nonatomic, strong) TVUIRLPreviewController *previewController;
-@property (nonatomic, strong, nullable) TVUIRLStreamingServer *server;
 @end
 
-@implementation RTMPIngestController
+@implementation RTMPIngestController {
+    tvu_irl_streaming_server_t *_server;     /* owned；NULL 表示未运行 */
+}
 
 + (instancetype)shared {
     static RTMPIngestController *instance;
@@ -32,85 +39,131 @@
         _latency = 0;
         _noDelay = YES;
         _frameQueueSize = 3;
-        _backend = TVUIRLTransportBackendNetwork;
         _previewEnabled = YES;
     }
     return self;
 }
 
+- (void)dealloc {
+    if (_server) {
+        tvu_irl_streaming_server_destroy(_server);
+        _server = NULL;
+    }
+}
+
+#pragma mark - C → ObjC bridge callbacks
+
+static void on_publish_start(const char *stream_key, void *user) {
+    RTMPIngestController *self = (__bridge RTMPIngestController *)user;
+    NSString *key = stream_key ? @(stream_key) : @"";
+    NSLog(@"rtmp-ingest: publish started for '%@'", key);
+    id<RTMPIngestControllerDelegate> d = self.delegate;
+    if ([d respondsToSelector:@selector(rtmpIngestDidStartPublishWithStreamKey:)]) {
+        [d rtmpIngestDidStartPublishWithStreamKey:key];
+    }
+}
+
+static void on_publish_stop(const char *stream_key, const char *reason, void *user) {
+    RTMPIngestController *self = (__bridge RTMPIngestController *)user;
+    NSString *key = stream_key ? @(stream_key) : @"";
+    NSString *reasonStr = reason ? @(reason) : @"";
+    NSLog(@"rtmp-ingest: publish stopped '%@' (%@)", key, reasonStr);
+    id<RTMPIngestControllerDelegate> d = self.delegate;
+    if ([d respondsToSelector:@selector(rtmpIngestDidStopPublishWithStreamKey:reason:)]) {
+        [d rtmpIngestDidStopPublishWithStreamKey:key reason:reasonStr];
+    }
+}
+
+static void on_video_sample_buffer(CMSampleBufferRef sb, void *user) {
+    RTMPIngestController *self = (__bridge RTMPIngestController *)user;
+    if (!self.previewEnabled) return;
+    [self.previewController updateSampleBuffer:sb];
+}
+
+static void on_video_image_buffer(CVImageBufferRef ib, void *user) {
+    RTMPIngestController *self = (__bridge RTMPIngestController *)user;
+    if (!self.previewEnabled) return;
+    [self.previewController updateFrame:ib];
+}
+
+static void on_audio_sample_buffer(CMSampleBufferRef sb, void *user) {
+    /* Demo 不处理音频 */
+    (void)sb; (void)user;
+}
+
+static void on_stats_update(tvu_irl_bandwidth_snapshot_t snapshot, void *user) {
+    /* 默认 server 暴露 updateStats（caller 主动拉），不通过 callback 推。 */
+    (void)snapshot; (void)user;
+}
+
+static void on_target_latencies(double video_latency, double audio_latency, void *user) {
+    /* Demo 不消费同步建议；预留接口便于将来扩展。 */
+    (void)video_latency; (void)audio_latency; (void)user;
+}
+
+#pragma mark - Lifecycle
+
 - (void)startWithPort:(uint16_t)port streamKey:(NSString *)streamKey {
     [self stop];
-    TVUIRLStreamProfile *profile = [[TVUIRLStreamProfile alloc] initWithStreamKey:streamKey latency:self.latency];
-    TVUIRLStreamConfig *config = [[TVUIRLStreamConfig alloc] initWithPort:port
-                                                                  streams:@[profile]
-                                                                  noDelay:self.noDelay];
-    TVUIRLStreamingServer *server = [[TVUIRLStreamingServer alloc] initWithConfig:config backend:self.backend];
-    server.delegate = self;
-    self.server = server;
-    [server start];
-    NSLog(@"rtmp-ingest: listening on port %u for key '%@' (display layer, backend=%@)",
-          port, streamKey, [TVUIRLTransportFactory nameForBackend:self.backend]);
+
+    /* 构造 stream_config */
+    tvu_irl_stream_config_t cfg;
+    tvu_irl_stream_config_init_with(&cfg, port, self.noDelay);
+    tvu_irl_stream_config_add_stream(&cfg,
+                                     tvu_irl_strv_from_cstr(streamKey.UTF8String ?: ""),
+                                     self.latency);
+
+    /* 构造 callbacks */
+    tvu_irl_server_callbacks_t cb = {
+        .on_publish_start         = on_publish_start,
+        .on_publish_stop          = on_publish_stop,
+        .on_video_sample_buffer   = on_video_sample_buffer,
+        .on_video_image_buffer    = on_video_image_buffer,
+        .on_audio_sample_buffer   = on_audio_sample_buffer,
+        .on_stats_update          = on_stats_update,
+        .on_target_latencies      = on_target_latencies,
+        .user                     = (__bridge void *)self,
+    };
+
+    _server = tvu_irl_streaming_server_create(&cfg, cb);
+    /* server 内部深拷贝了 config，原 config 销毁 */
+    tvu_irl_stream_config_destroy(&cfg);
+
+    if (!tvu_irl_streaming_server_start(_server)) {
+        tvu_irl_streaming_server_destroy(_server);
+        _server = NULL;
+        return;
+    }
+    NSLog(@"rtmp-ingest: listening on port %u for key '%@' (display layer, pure C backend)",
+          port, streamKey);
 }
 
 - (void)stop {
-    [self.server stop];
-    self.server = nil;
+    if (_server) {
+        tvu_irl_streaming_server_destroy(_server);
+        _server = NULL;
+    }
     [self.previewController clearFrame];
 }
 
 - (BOOL)isRunning {
-    return self.server != nil;
+    return _server != NULL;
 }
 
 - (TVUIRLBandwidthSnapshot)updateStats {
-    if (!self.server) {
+    if (!_server) {
         TVUIRLBandwidthSnapshot empty = {0, 0};
         return empty;
     }
-    return [self.server updateStats];
+    return tvu_irl_streaming_server_update_stats(_server);
 }
 
-// previewEnabled 关闭瞬间立即清屏, 避免显示一张冻结帧.
-// BOOL 写入本身字节原子, 不需要额外锁; setter 由 UI 主线程触发, 与 server 回调线程并发安全.
 - (void)setPreviewEnabled:(BOOL)enabled {
     BOOL wasEnabled = _previewEnabled;
     _previewEnabled = enabled;
     if (wasEnabled && !enabled) {
         [self.previewController clearFrame];
     }
-}
-
-#pragma mark - TVUIRLStreamingServerDelegate
-
-- (void)server:(TVUIRLStreamingServer *)server didStartPublishingStream:(NSString *)streamKey {
-    NSLog(@"rtmp-ingest: publish started for '%@'", streamKey);
-    if ([self.delegate respondsToSelector:@selector(rtmpIngestDidStartPublishWithStreamKey:)]) {
-        [self.delegate rtmpIngestDidStartPublishWithStreamKey:streamKey];
-    }
-}
-
-- (void)server:(TVUIRLStreamingServer *)server didStopPublishingStream:(NSString *)streamKey reason:(NSString *)reason {
-    NSLog(@"rtmp-ingest: publish stopped '%@' (%@)", streamKey, reason);
-    if ([self.delegate respondsToSelector:@selector(rtmpIngestDidStopPublishWithStreamKey:reason:)]) {
-        [self.delegate rtmpIngestDidStopPublishWithStreamKey:streamKey reason:reason];
-    }
-}
-
-- (void)server:(TVUIRLStreamingServer *)server didReceiveVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
-    // preview 关闭时直接 return, 跳过整条渲染链路, 便于隔离测 RTMP server + 解码的纯开销.
-    if (!self.previewEnabled) return;
-    // sampleBuffer 直送 display layer, 避免 image buffer 二次封包.
-    [self.previewController updateSampleBuffer:sampleBuffer];
-}
-
-- (void)server:(TVUIRLStreamingServer *)server didReceiveVideoImageBuffer:(CVImageBufferRef)imageBuffer {
-    if (!self.previewEnabled) return;
-    [self.previewController updateFrame:imageBuffer];
-}
-
-- (void)server:(TVUIRLStreamingServer *)server didReceiveAudioSampleBuffer:(CMSampleBufferRef)sampleBuffer {
-    // Demo 不处理音频
-    (void)sampleBuffer;
 }
 
 @end

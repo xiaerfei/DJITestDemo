@@ -27,34 +27,25 @@
 		2C8D94C02F9F545F0037014A /* TVUIRLDJIDeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94AF2F9F545F0037014A /* TVUIRLDJIDeviceModel.m */; };
 		2C8D94C12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94B12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m */; };
 		2C8D94C22F9F545F0037014A /* TVUIRLSimpleTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94A82F9F545F0037014A /* TVUIRLSimpleTimer.m */; };
-		2C8D94C62FA05E580037014A /* TVUIRLDataReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94C52FA05E580037014A /* TVUIRLDataReader.m */; };
-		2C8D94C92FA05E6F0037014A /* TVUIRLDataWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94C82FA05E6F0037014A /* TVUIRLDataWriter.m */; };
-		2C8D94CC2FA05E850037014A /* TVUIRLBandwidthMeter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94CB2FA05E850037014A /* TVUIRLBandwidthMeter.m */; };
-		2C8D94CF2FA05EAB0037014A /* TVUIRLAmfValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94CE2FA05EAB0037014A /* TVUIRLAmfValue.m */; };
-		2C8D94D22FA05EC50037014A /* TVUIRLAmfEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94D12FA05EC50037014A /* TVUIRLAmfEncoder.m */; };
-		2C8D94D52FA05EF50037014A /* TVUIRLAmfDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94D42FA05EF50037014A /* TVUIRLAmfDecoder.m */; };
-		2C8D94D82FA05F3F0037014A /* TVUIRLProtocolMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94D72FA05F3F0037014A /* TVUIRLProtocolMessage.m */; };
-		2C8D94DB2FA05F4C0037014A /* TVUIRLAckMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94DA2FA05F4C0037014A /* TVUIRLAckMessage.m */; };
-		2C8D94DE2FA05F5A0037014A /* TVUIRLWindowAckMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94DD2FA05F5A0037014A /* TVUIRLWindowAckMessage.m */; };
-		2C8D94E12FA05F650037014A /* TVUIRLFlowControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94E02FA05F650037014A /* TVUIRLFlowControl.m */; };
-		2C8D94E42FA05F780037014A /* TVUIRLBandwidthConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94E32FA05F780037014A /* TVUIRLBandwidthConfig.m */; };
-		2C8D94E72FA05F9B0037014A /* TVUIRLCommandMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94E62FA05F9B0037014A /* TVUIRLCommandMessage.m */; };
-		2C8D94EA2FA05FD80037014A /* TVUIRLMediaPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94E92FA05FD80037014A /* TVUIRLMediaPacket.m */; };
-		2C8D94ED2FA060130037014A /* TVUIRLVideoConfigAvc.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94EC2FA060130037014A /* TVUIRLVideoConfigAvc.m */; };
-		2C8D94F02FA0602B0037014A /* TVUIRLVideoConfigHevc.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94EF2FA0602B0037014A /* TVUIRLVideoConfigHevc.m */; };
-		2C8D94F32FA0604B0037014A /* TVUIRLAudioConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94F22FA0604B0037014A /* TVUIRLAudioConfig.m */; };
-		2C8D94F62FA060B00037014A /* TVUIRLStreamConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94F52FA060B00037014A /* TVUIRLStreamConfig.m */; };
-		2C8D94F92FA060C40037014A /* TVUIRLMediaClock.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D94F82FA060C40037014A /* TVUIRLMediaClock.m */; };
-		2C8D95012FA0613A0037014A /* TVUIRLStreamingServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95002FA0613A0037014A /* TVUIRLStreamingServer.m */; };
-		2C8D95032FA062090037014A /* TVUIRLStreamConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95022FA062090037014A /* TVUIRLStreamConnection.m */; };
-		2C8D95052FA062880037014A /* TVUIRLMediaPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95042FA062880037014A /* TVUIRLMediaPipeline.m */; };
-		2C8D95072FA077D80037014A /* TVUIRLHardwareDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95062FA077D80037014A /* TVUIRLHardwareDecoder.m */; };
-		2C8D95092FA077F60037014A /* TVUIRLAudioDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95082FA077F60037014A /* TVUIRLAudioDecoder.m */; };
-		2C8D950D2FA07B8A0037014A /* TVUIRLNetworkTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D950C2FA07B8A0037014A /* TVUIRLNetworkTransport.m */; };
-		2C8D95102FA07BA90037014A /* TVUIRLAsyncSocketTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D950F2FA07BA90037014A /* TVUIRLAsyncSocketTransport.m */; };
-		2C8D95122FA07BB30037014A /* TVUIRLTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95112FA07BB30037014A /* TVUIRLTransport.m */; };
 		2C8D95152FA07FBF0037014A /* RTMPIngestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95142FA07FBF0037014A /* RTMPIngestController.m */; };
 		2C8D95532FA090BF0037014A /* TVUIRLPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */; };
+		2C8D96032FCA00000037014A /* tvu_irl_log.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96022FCA00000037014A /* tvu_irl_log.c */; };
+		2C8D96062FCA00000037014A /* tvu_irl_bytes.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96052FCA00000037014A /* tvu_irl_bytes.c */; };
+		2C8D96092FCA00000037014A /* tvu_irl_str.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96082FCA00000037014A /* tvu_irl_str.c */; };
+		2C8D960C2FCA00000037014A /* tvu_irl_bandwidth_meter.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D960B2FCA00000037014A /* tvu_irl_bandwidth_meter.c */; };
+		2C8D960F2FCA00000037014A /* tvu_irl_stream_config.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D960E2FCA00000037014A /* tvu_irl_stream_config.c */; };
+		2C8D96132FCA00000037014A /* tvu_irl_amf.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96122FCA00000037014A /* tvu_irl_amf.c */; };
+		2C8D96162FCA00000037014A /* tvu_irl_messages.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96152FCA00000037014A /* tvu_irl_messages.c */; };
+		2C8D96192FCA00000037014A /* tvu_irl_video_config.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96182FCA00000037014A /* tvu_irl_video_config.c */; };
+		2C8D961C2FCA00000037014A /* tvu_irl_audio_config.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D961B2FCA00000037014A /* tvu_irl_audio_config.c */; };
+		2C8D961F2FCA00000037014A /* tvu_irl_media_clock.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D961E2FCA00000037014A /* tvu_irl_media_clock.c */; };
+		2C8D96222FCA00000037014A /* tvu_irl_media_packet.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96212FCA00000037014A /* tvu_irl_media_packet.c */; };
+		2C8D96252FCA00000037014A /* tvu_irl_hardware_decoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96242FCA00000037014A /* tvu_irl_hardware_decoder.c */; };
+		2C8D96282FCA00000037014A /* tvu_irl_audio_decoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96272FCA00000037014A /* tvu_irl_audio_decoder.c */; };
+		2C8D962C2FCA00000037014A /* tvu_irl_transport.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D962B2FCA00000037014A /* tvu_irl_transport.c */; };
+		2C8D962F2FCA00000037014A /* tvu_irl_stream_connection.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D962E2FCA00000037014A /* tvu_irl_stream_connection.c */; };
+		2C8D96322FCA00000037014A /* tvu_irl_media_pipeline.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96312FCA00000037014A /* tvu_irl_media_pipeline.c */; };
+		2C8D96352FCA00000037014A /* tvu_irl_streaming_server.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D96342FCA00000037014A /* tvu_irl_streaming_server.c */; };
 		3223E841F5B4CA77814944C6 /* Pods_DJIStreamDemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1C3CA46F5DB5217E658BC3E /* Pods_DJIStreamDemoTests.framework */; };
 		AA8C4DEAAC03EA9D79DD8D11 /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A72C08608C59BBF286C162A /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework */; };
 		D6D659F2DCC7E74783545036 /* Pods_DJIStreamDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BBB5707B7BE8B4AB2C5BDAD /* Pods_DJIStreamDemo.framework */; };
@@ -116,63 +107,46 @@
 		2C8D94B52F9F545F0037014A /* TVUIRLDJIStreamManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJIStreamManager.m; sourceTree = "<group>"; };
 		2C8D94B62F9F545F0037014A /* TVUIRLDJITypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJITypes.h; sourceTree = "<group>"; };
 		2C8D94B72F9F545F0037014A /* TVUIRLDJITypes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDJITypes.m; sourceTree = "<group>"; };
-		2C8D94C42FA05E440037014A /* TVUIRLDataReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDataReader.h; sourceTree = "<group>"; };
-		2C8D94C52FA05E580037014A /* TVUIRLDataReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDataReader.m; sourceTree = "<group>"; };
-		2C8D94C72FA05E620037014A /* TVUIRLDataWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLDataWriter.h; sourceTree = "<group>"; };
-		2C8D94C82FA05E6F0037014A /* TVUIRLDataWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLDataWriter.m; sourceTree = "<group>"; };
-		2C8D94CA2FA05E790037014A /* TVUIRLBandwidthMeter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLBandwidthMeter.h; sourceTree = "<group>"; };
-		2C8D94CB2FA05E850037014A /* TVUIRLBandwidthMeter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLBandwidthMeter.m; sourceTree = "<group>"; };
-		2C8D94CD2FA05E990037014A /* TVUIRLAmfValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAmfValue.h; sourceTree = "<group>"; };
-		2C8D94CE2FA05EAB0037014A /* TVUIRLAmfValue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAmfValue.m; sourceTree = "<group>"; };
-		2C8D94D02FA05EB20037014A /* TVUIRLAmfEncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAmfEncoder.h; sourceTree = "<group>"; };
-		2C8D94D12FA05EC50037014A /* TVUIRLAmfEncoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAmfEncoder.m; sourceTree = "<group>"; };
-		2C8D94D32FA05ED10037014A /* TVUIRLAmfDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAmfDecoder.h; sourceTree = "<group>"; };
-		2C8D94D42FA05EF50037014A /* TVUIRLAmfDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAmfDecoder.m; sourceTree = "<group>"; };
-		2C8D94D62FA05F370037014A /* TVUIRLProtocolMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLProtocolMessage.h; sourceTree = "<group>"; };
-		2C8D94D72FA05F3F0037014A /* TVUIRLProtocolMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLProtocolMessage.m; sourceTree = "<group>"; };
-		2C8D94D92FA05F440037014A /* TVUIRLAckMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAckMessage.h; sourceTree = "<group>"; };
-		2C8D94DA2FA05F4C0037014A /* TVUIRLAckMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAckMessage.m; sourceTree = "<group>"; };
-		2C8D94DC2FA05F530037014A /* TVUIRLWindowAckMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLWindowAckMessage.h; sourceTree = "<group>"; };
-		2C8D94DD2FA05F5A0037014A /* TVUIRLWindowAckMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLWindowAckMessage.m; sourceTree = "<group>"; };
-		2C8D94DF2FA05F5F0037014A /* TVUIRLFlowControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLFlowControl.h; sourceTree = "<group>"; };
-		2C8D94E02FA05F650037014A /* TVUIRLFlowControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLFlowControl.m; sourceTree = "<group>"; };
-		2C8D94E22FA05F6E0037014A /* TVUIRLBandwidthConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLBandwidthConfig.h; sourceTree = "<group>"; };
-		2C8D94E32FA05F780037014A /* TVUIRLBandwidthConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLBandwidthConfig.m; sourceTree = "<group>"; };
-		2C8D94E52FA05F850037014A /* TVUIRLCommandMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLCommandMessage.h; sourceTree = "<group>"; };
-		2C8D94E62FA05F9B0037014A /* TVUIRLCommandMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLCommandMessage.m; sourceTree = "<group>"; };
-		2C8D94E82FA05FC20037014A /* TVUIRLMediaPacket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLMediaPacket.h; sourceTree = "<group>"; };
-		2C8D94E92FA05FD80037014A /* TVUIRLMediaPacket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLMediaPacket.m; sourceTree = "<group>"; };
-		2C8D94EB2FA060060037014A /* TVUIRLVideoConfigAvc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLVideoConfigAvc.h; sourceTree = "<group>"; };
-		2C8D94EC2FA060130037014A /* TVUIRLVideoConfigAvc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLVideoConfigAvc.m; sourceTree = "<group>"; };
-		2C8D94EE2FA0601E0037014A /* TVUIRLVideoConfigHevc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLVideoConfigHevc.h; sourceTree = "<group>"; };
-		2C8D94EF2FA0602B0037014A /* TVUIRLVideoConfigHevc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLVideoConfigHevc.m; sourceTree = "<group>"; };
-		2C8D94F12FA0603B0037014A /* TVUIRLAudioConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAudioConfig.h; sourceTree = "<group>"; };
-		2C8D94F22FA0604B0037014A /* TVUIRLAudioConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAudioConfig.m; sourceTree = "<group>"; };
-		2C8D94F42FA060A40037014A /* TVUIRLStreamConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLStreamConfig.h; sourceTree = "<group>"; };
-		2C8D94F52FA060B00037014A /* TVUIRLStreamConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLStreamConfig.m; sourceTree = "<group>"; };
-		2C8D94F72FA060B90037014A /* TVUIRLMediaClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLMediaClock.h; sourceTree = "<group>"; };
-		2C8D94F82FA060C40037014A /* TVUIRLMediaClock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLMediaClock.m; sourceTree = "<group>"; };
-		2C8D94FA2FA060DA0037014A /* TVUIRLHardwareDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLHardwareDecoder.h; sourceTree = "<group>"; };
-		2C8D94FB2FA060E20037014A /* TVUIRLAudioDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAudioDecoder.h; sourceTree = "<group>"; };
-		2C8D94FC2FA060F10037014A /* TVUIRLStreamingServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLStreamingServer.h; sourceTree = "<group>"; };
-		2C8D94FD2FA060FB0037014A /* TVUIRLStreamingServer+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TVUIRLStreamingServer+Internal.h"; sourceTree = "<group>"; };
-		2C8D94FE2FA061090037014A /* TVUIRLStreamConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLStreamConnection.h; sourceTree = "<group>"; };
-		2C8D94FF2FA061150037014A /* TVUIRLMediaPipeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLMediaPipeline.h; sourceTree = "<group>"; };
-		2C8D95002FA0613A0037014A /* TVUIRLStreamingServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLStreamingServer.m; sourceTree = "<group>"; };
-		2C8D95022FA062090037014A /* TVUIRLStreamConnection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLStreamConnection.m; sourceTree = "<group>"; };
-		2C8D95042FA062880037014A /* TVUIRLMediaPipeline.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLMediaPipeline.m; sourceTree = "<group>"; };
-		2C8D95062FA077D80037014A /* TVUIRLHardwareDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLHardwareDecoder.m; sourceTree = "<group>"; };
-		2C8D95082FA077F60037014A /* TVUIRLAudioDecoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAudioDecoder.m; sourceTree = "<group>"; };
-		2C8D950A2FA07B660037014A /* TVUIRLTransport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLTransport.h; sourceTree = "<group>"; };
-		2C8D950B2FA07B6F0037014A /* TVUIRLNetworkTransport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLNetworkTransport.h; sourceTree = "<group>"; };
-		2C8D950C2FA07B8A0037014A /* TVUIRLNetworkTransport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLNetworkTransport.m; sourceTree = "<group>"; };
-		2C8D950E2FA07B920037014A /* TVUIRLAsyncSocketTransport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLAsyncSocketTransport.h; sourceTree = "<group>"; };
-		2C8D950F2FA07BA90037014A /* TVUIRLAsyncSocketTransport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLAsyncSocketTransport.m; sourceTree = "<group>"; };
-		2C8D95112FA07BB30037014A /* TVUIRLTransport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLTransport.m; sourceTree = "<group>"; };
 		2C8D95132FA07F930037014A /* RTMPIngestController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMPIngestController.h; sourceTree = "<group>"; };
 		2C8D95142FA07FBF0037014A /* RTMPIngestController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMPIngestController.m; sourceTree = "<group>"; };
 		2C8D95422FA090BF0037014A /* TVUIRLPreviewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TVUIRLPreviewController.h; sourceTree = "<group>"; };
 		2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TVUIRLPreviewController.m; sourceTree = "<group>"; };
+		2C8D96012FCA00000037014A /* tvu_irl_log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_log.h; sourceTree = "<group>"; };
+		2C8D96022FCA00000037014A /* tvu_irl_log.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_log.c; sourceTree = "<group>"; };
+		2C8D96042FCA00000037014A /* tvu_irl_bytes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_bytes.h; sourceTree = "<group>"; };
+		2C8D96052FCA00000037014A /* tvu_irl_bytes.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_bytes.c; sourceTree = "<group>"; };
+		2C8D96072FCA00000037014A /* tvu_irl_str.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_str.h; sourceTree = "<group>"; };
+		2C8D96082FCA00000037014A /* tvu_irl_str.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_str.c; sourceTree = "<group>"; };
+		2C8D960A2FCA00000037014A /* tvu_irl_io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_io.h; sourceTree = "<group>"; };
+		2C8D960B2FCA00000037014A /* tvu_irl_bandwidth_meter.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_bandwidth_meter.c; sourceTree = "<group>"; };
+		2C8D960D2FCA00000037014A /* tvu_irl_bandwidth_meter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_bandwidth_meter.h; sourceTree = "<group>"; };
+		2C8D960E2FCA00000037014A /* tvu_irl_stream_config.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_stream_config.c; sourceTree = "<group>"; };
+		2C8D96102FCA00000037014A /* tvu_irl_stream_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_stream_config.h; sourceTree = "<group>"; };
+		2C8D96112FCA00000037014A /* tvu_irl_amf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_amf.h; sourceTree = "<group>"; };
+		2C8D96122FCA00000037014A /* tvu_irl_amf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_amf.c; sourceTree = "<group>"; };
+		2C8D96142FCA00000037014A /* tvu_irl_messages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_messages.h; sourceTree = "<group>"; };
+		2C8D96152FCA00000037014A /* tvu_irl_messages.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_messages.c; sourceTree = "<group>"; };
+		2C8D96172FCA00000037014A /* tvu_irl_video_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_video_config.h; sourceTree = "<group>"; };
+		2C8D96182FCA00000037014A /* tvu_irl_video_config.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_video_config.c; sourceTree = "<group>"; };
+		2C8D961A2FCA00000037014A /* tvu_irl_audio_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_audio_config.h; sourceTree = "<group>"; };
+		2C8D961B2FCA00000037014A /* tvu_irl_audio_config.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_audio_config.c; sourceTree = "<group>"; };
+		2C8D961D2FCA00000037014A /* tvu_irl_media_clock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_media_clock.h; sourceTree = "<group>"; };
+		2C8D961E2FCA00000037014A /* tvu_irl_media_clock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_media_clock.c; sourceTree = "<group>"; };
+		2C8D96202FCA00000037014A /* tvu_irl_media_packet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_media_packet.h; sourceTree = "<group>"; };
+		2C8D96212FCA00000037014A /* tvu_irl_media_packet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_media_packet.c; sourceTree = "<group>"; };
+		2C8D96232FCA00000037014A /* tvu_irl_hardware_decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_hardware_decoder.h; sourceTree = "<group>"; };
+		2C8D96242FCA00000037014A /* tvu_irl_hardware_decoder.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_hardware_decoder.c; sourceTree = "<group>"; };
+		2C8D96262FCA00000037014A /* tvu_irl_audio_decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_audio_decoder.h; sourceTree = "<group>"; };
+		2C8D96272FCA00000037014A /* tvu_irl_audio_decoder.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_audio_decoder.c; sourceTree = "<group>"; };
+		2C8D96292FCA00000037014A /* tvu_irl_decoded_pts_anchor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_decoded_pts_anchor.h; sourceTree = "<group>"; };
+		2C8D962A2FCA00000037014A /* tvu_irl_transport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_transport.h; sourceTree = "<group>"; };
+		2C8D962B2FCA00000037014A /* tvu_irl_transport.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_transport.c; sourceTree = "<group>"; };
+		2C8D962D2FCA00000037014A /* tvu_irl_stream_connection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_stream_connection.h; sourceTree = "<group>"; };
+		2C8D962E2FCA00000037014A /* tvu_irl_stream_connection.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_stream_connection.c; sourceTree = "<group>"; };
+		2C8D96302FCA00000037014A /* tvu_irl_media_pipeline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_media_pipeline.h; sourceTree = "<group>"; };
+		2C8D96312FCA00000037014A /* tvu_irl_media_pipeline.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_media_pipeline.c; sourceTree = "<group>"; };
+		2C8D96332FCA00000037014A /* tvu_irl_streaming_server.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tvu_irl_streaming_server.h; sourceTree = "<group>"; };
+		2C8D96342FCA00000037014A /* tvu_irl_streaming_server.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tvu_irl_streaming_server.c; sourceTree = "<group>"; };
 		32D45325092FFCE21D500478 /* Pods-DJIStreamDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemoTests/Pods-DJIStreamDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6BB6B34982B433D6E77DCB0E /* Pods-DJIStreamDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemoTests.release.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemoTests/Pods-DJIStreamDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		7BBB5707B7BE8B4AB2C5BDAD /* Pods_DJIStreamDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,7 +155,6 @@
 		8A72C08608C59BBF286C162A /* Pods_DJIStreamDemo_DJIStreamDemoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemo_DJIStreamDemoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1C3CA46F5DB5217E658BC3E /* Pods_DJIStreamDemoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DJIStreamDemoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E109A146404C5E1E72442540 /* Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig"; path = "Target Support Files/Pods-DJIStreamDemo-DJIStreamDemoUITests/Pods-DJIStreamDemo-DJIStreamDemoUITests.release.xcconfig"; sourceTree = "<group>"; };
-		F56BDBB273FB7A513C5492B2 /* TVUIRLDJILog.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = TVUIRLDJILog.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,7 +223,7 @@
 		2C8D86042F9A21C30037014A /* DJIStreamDemo */ = {
 			isa = PBXGroup;
 			children = (
-				2C8D94C32FA05E380037014A /* RTMPServerObjc */,
+				2C8D96002FCA00000037014A /* RTMPServerC */,
 				2C8D954C2FA090BF0037014A /* IngestObjc */,
 				2C8D94B82F9F545F0037014A /* DJIObjc */,
 				2C8D85F72F9A21C30037014A /* AppDelegate.h */,
@@ -320,67 +293,6 @@
 			path = DJIObjc;
 			sourceTree = "<group>";
 		};
-		2C8D94C32FA05E380037014A /* RTMPServerObjc */ = {
-			isa = PBXGroup;
-			children = (
-				2C8D94C42FA05E440037014A /* TVUIRLDataReader.h */,
-				2C8D94C52FA05E580037014A /* TVUIRLDataReader.m */,
-				2C8D94C72FA05E620037014A /* TVUIRLDataWriter.h */,
-				2C8D94C82FA05E6F0037014A /* TVUIRLDataWriter.m */,
-				2C8D94CA2FA05E790037014A /* TVUIRLBandwidthMeter.h */,
-				2C8D94CB2FA05E850037014A /* TVUIRLBandwidthMeter.m */,
-				2C8D94CD2FA05E990037014A /* TVUIRLAmfValue.h */,
-				2C8D94CE2FA05EAB0037014A /* TVUIRLAmfValue.m */,
-				2C8D94D02FA05EB20037014A /* TVUIRLAmfEncoder.h */,
-				2C8D94D12FA05EC50037014A /* TVUIRLAmfEncoder.m */,
-				2C8D94D32FA05ED10037014A /* TVUIRLAmfDecoder.h */,
-				2C8D94D42FA05EF50037014A /* TVUIRLAmfDecoder.m */,
-				2C8D94D62FA05F370037014A /* TVUIRLProtocolMessage.h */,
-				2C8D94D72FA05F3F0037014A /* TVUIRLProtocolMessage.m */,
-				2C8D94D92FA05F440037014A /* TVUIRLAckMessage.h */,
-				2C8D94DA2FA05F4C0037014A /* TVUIRLAckMessage.m */,
-				2C8D94DC2FA05F530037014A /* TVUIRLWindowAckMessage.h */,
-				2C8D94DD2FA05F5A0037014A /* TVUIRLWindowAckMessage.m */,
-				2C8D94DF2FA05F5F0037014A /* TVUIRLFlowControl.h */,
-				2C8D94E02FA05F650037014A /* TVUIRLFlowControl.m */,
-				2C8D94E22FA05F6E0037014A /* TVUIRLBandwidthConfig.h */,
-				2C8D94E32FA05F780037014A /* TVUIRLBandwidthConfig.m */,
-				2C8D94E52FA05F850037014A /* TVUIRLCommandMessage.h */,
-				2C8D94E62FA05F9B0037014A /* TVUIRLCommandMessage.m */,
-				2C8D94E82FA05FC20037014A /* TVUIRLMediaPacket.h */,
-				2C8D94E92FA05FD80037014A /* TVUIRLMediaPacket.m */,
-				2C8D94EB2FA060060037014A /* TVUIRLVideoConfigAvc.h */,
-				2C8D94EC2FA060130037014A /* TVUIRLVideoConfigAvc.m */,
-				2C8D94EE2FA0601E0037014A /* TVUIRLVideoConfigHevc.h */,
-				2C8D94EF2FA0602B0037014A /* TVUIRLVideoConfigHevc.m */,
-				2C8D94F12FA0603B0037014A /* TVUIRLAudioConfig.h */,
-				2C8D94F22FA0604B0037014A /* TVUIRLAudioConfig.m */,
-				2C8D94F42FA060A40037014A /* TVUIRLStreamConfig.h */,
-				2C8D94F52FA060B00037014A /* TVUIRLStreamConfig.m */,
-				2C8D94F72FA060B90037014A /* TVUIRLMediaClock.h */,
-				2C8D94F82FA060C40037014A /* TVUIRLMediaClock.m */,
-				2C8D94FA2FA060DA0037014A /* TVUIRLHardwareDecoder.h */,
-				2C8D94FB2FA060E20037014A /* TVUIRLAudioDecoder.h */,
-				2C8D94FC2FA060F10037014A /* TVUIRLStreamingServer.h */,
-				2C8D94FD2FA060FB0037014A /* TVUIRLStreamingServer+Internal.h */,
-				2C8D94FE2FA061090037014A /* TVUIRLStreamConnection.h */,
-				2C8D94FF2FA061150037014A /* TVUIRLMediaPipeline.h */,
-				2C8D95002FA0613A0037014A /* TVUIRLStreamingServer.m */,
-				2C8D95022FA062090037014A /* TVUIRLStreamConnection.m */,
-				2C8D95042FA062880037014A /* TVUIRLMediaPipeline.m */,
-				2C8D95062FA077D80037014A /* TVUIRLHardwareDecoder.m */,
-				2C8D95082FA077F60037014A /* TVUIRLAudioDecoder.m */,
-				2C8D950A2FA07B660037014A /* TVUIRLTransport.h */,
-				2C8D950B2FA07B6F0037014A /* TVUIRLNetworkTransport.h */,
-				2C8D950C2FA07B8A0037014A /* TVUIRLNetworkTransport.m */,
-				2C8D950E2FA07B920037014A /* TVUIRLAsyncSocketTransport.h */,
-				2C8D950F2FA07BA90037014A /* TVUIRLAsyncSocketTransport.m */,
-				2C8D95112FA07BB30037014A /* TVUIRLTransport.m */,
-				F56BDBB273FB7A513C5492B2 /* TVUIRLDJILog.h */,
-			);
-			path = RTMPServerObjc;
-			sourceTree = "<group>";
-		};
 		2C8D954C2FA090BF0037014A /* IngestObjc */ = {
 			isa = PBXGroup;
 			children = (
@@ -390,6 +302,49 @@
 				2C8D95432FA090BF0037014A /* TVUIRLPreviewController.m */,
 			);
 			path = IngestObjc;
+			sourceTree = "<group>";
+		};
+		2C8D96002FCA00000037014A /* RTMPServerC */ = {
+			isa = PBXGroup;
+			children = (
+				2C8D96012FCA00000037014A /* tvu_irl_log.h */,
+				2C8D96022FCA00000037014A /* tvu_irl_log.c */,
+				2C8D96042FCA00000037014A /* tvu_irl_bytes.h */,
+				2C8D96052FCA00000037014A /* tvu_irl_bytes.c */,
+				2C8D96072FCA00000037014A /* tvu_irl_str.h */,
+				2C8D96082FCA00000037014A /* tvu_irl_str.c */,
+				2C8D960A2FCA00000037014A /* tvu_irl_io.h */,
+				2C8D960D2FCA00000037014A /* tvu_irl_bandwidth_meter.h */,
+				2C8D960B2FCA00000037014A /* tvu_irl_bandwidth_meter.c */,
+				2C8D96102FCA00000037014A /* tvu_irl_stream_config.h */,
+				2C8D960E2FCA00000037014A /* tvu_irl_stream_config.c */,
+				2C8D96112FCA00000037014A /* tvu_irl_amf.h */,
+				2C8D96122FCA00000037014A /* tvu_irl_amf.c */,
+				2C8D96142FCA00000037014A /* tvu_irl_messages.h */,
+				2C8D96152FCA00000037014A /* tvu_irl_messages.c */,
+				2C8D96172FCA00000037014A /* tvu_irl_video_config.h */,
+				2C8D96182FCA00000037014A /* tvu_irl_video_config.c */,
+				2C8D961A2FCA00000037014A /* tvu_irl_audio_config.h */,
+				2C8D961B2FCA00000037014A /* tvu_irl_audio_config.c */,
+				2C8D96292FCA00000037014A /* tvu_irl_decoded_pts_anchor.h */,
+				2C8D961D2FCA00000037014A /* tvu_irl_media_clock.h */,
+				2C8D961E2FCA00000037014A /* tvu_irl_media_clock.c */,
+				2C8D96202FCA00000037014A /* tvu_irl_media_packet.h */,
+				2C8D96212FCA00000037014A /* tvu_irl_media_packet.c */,
+				2C8D96232FCA00000037014A /* tvu_irl_hardware_decoder.h */,
+				2C8D96242FCA00000037014A /* tvu_irl_hardware_decoder.c */,
+				2C8D96262FCA00000037014A /* tvu_irl_audio_decoder.h */,
+				2C8D96272FCA00000037014A /* tvu_irl_audio_decoder.c */,
+				2C8D962A2FCA00000037014A /* tvu_irl_transport.h */,
+				2C8D962B2FCA00000037014A /* tvu_irl_transport.c */,
+				2C8D962D2FCA00000037014A /* tvu_irl_stream_connection.h */,
+				2C8D962E2FCA00000037014A /* tvu_irl_stream_connection.c */,
+				2C8D96302FCA00000037014A /* tvu_irl_media_pipeline.h */,
+				2C8D96312FCA00000037014A /* tvu_irl_media_pipeline.c */,
+				2C8D96332FCA00000037014A /* tvu_irl_streaming_server.h */,
+				2C8D96342FCA00000037014A /* tvu_irl_streaming_server.c */,
+			);
+			path = RTMPServerC;
 			sourceTree = "<group>";
 		};
 		FC98268F113A8C156777CF9E /* Frameworks */ = {
@@ -650,47 +605,38 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C8D86052F9A21C30037014A /* AppDelegate.m in Sources */,
-				2C8D95012FA0613A0037014A /* TVUIRLStreamingServer.m in Sources */,
 				2C8D86062F9A21C30037014A /* main.m in Sources */,
 				2C8D86072F9A21C30037014A /* SceneDelegate.m in Sources */,
 				2C8D86082F9A21C30037014A /* ViewController.m in Sources */,
-				2C8D94C62FA05E580037014A /* TVUIRLDataReader.m in Sources */,
-				2C8D95122FA07BB30037014A /* TVUIRLTransport.m in Sources */,
-				2C8D94DB2FA05F4C0037014A /* TVUIRLAckMessage.m in Sources */,
-				2C8D950D2FA07B8A0037014A /* TVUIRLNetworkTransport.m in Sources */,
 				2C8D95152FA07FBF0037014A /* RTMPIngestController.m in Sources */,
-				2C8D95092FA077F60037014A /* TVUIRLAudioDecoder.m in Sources */,
-				2C8D94E72FA05F9B0037014A /* TVUIRLCommandMessage.m in Sources */,
 				2C8D95532FA090BF0037014A /* TVUIRLPreviewController.m in Sources */,
-				2C8D94D82FA05F3F0037014A /* TVUIRLProtocolMessage.m in Sources */,
-				2C8D94F92FA060C40037014A /* TVUIRLMediaClock.m in Sources */,
 				2C8D94B92F9F545F0037014A /* TVUIRLDJIDeviceMessage.m in Sources */,
 				2C8D94BA2F9F545F0037014A /* TVUIRLDJITypes.m in Sources */,
 				2C8D94BB2F9F545F0037014A /* TVUIRLDJIMessage.m in Sources */,
 				2C8D94BC2F9F545F0037014A /* TVUIRLDJIStreamManager.m in Sources */,
-				2C8D95052FA062880037014A /* TVUIRLMediaPipeline.m in Sources */,
 				2C8D94BD2F9F545F0037014A /* TVUIRLDJIDevice.m in Sources */,
 				2C8D94BE2F9F545F0037014A /* TVUIRLDJICrc.m in Sources */,
-				2C8D94F32FA0604B0037014A /* TVUIRLAudioConfig.m in Sources */,
 				2C8D94BF2F9F545F0037014A /* TVUIRLByteIO.m in Sources */,
 				2C8D94C02F9F545F0037014A /* TVUIRLDJIDeviceModel.m in Sources */,
 				2C8D94C12F9F545F0037014A /* TVUIRLDJIDeviceScanner.m in Sources */,
 				2C8D94C22F9F545F0037014A /* TVUIRLSimpleTimer.m in Sources */,
-				2C8D94E12FA05F650037014A /* TVUIRLFlowControl.m in Sources */,
-				2C8D94ED2FA060130037014A /* TVUIRLVideoConfigAvc.m in Sources */,
-				2C8D94CF2FA05EAB0037014A /* TVUIRLAmfValue.m in Sources */,
-				2C8D95032FA062090037014A /* TVUIRLStreamConnection.m in Sources */,
-				2C8D94EA2FA05FD80037014A /* TVUIRLMediaPacket.m in Sources */,
-				2C8D94CC2FA05E850037014A /* TVUIRLBandwidthMeter.m in Sources */,
-				2C8D94F62FA060B00037014A /* TVUIRLStreamConfig.m in Sources */,
-				2C8D94DE2FA05F5A0037014A /* TVUIRLWindowAckMessage.m in Sources */,
-				2C8D94F02FA0602B0037014A /* TVUIRLVideoConfigHevc.m in Sources */,
-				2C8D94D52FA05EF50037014A /* TVUIRLAmfDecoder.m in Sources */,
-				2C8D94E42FA05F780037014A /* TVUIRLBandwidthConfig.m in Sources */,
-				2C8D95072FA077D80037014A /* TVUIRLHardwareDecoder.m in Sources */,
-				2C8D94C92FA05E6F0037014A /* TVUIRLDataWriter.m in Sources */,
-				2C8D95102FA07BA90037014A /* TVUIRLAsyncSocketTransport.m in Sources */,
-				2C8D94D22FA05EC50037014A /* TVUIRLAmfEncoder.m in Sources */,
+				2C8D96032FCA00000037014A /* tvu_irl_log.c in Sources */,
+				2C8D96062FCA00000037014A /* tvu_irl_bytes.c in Sources */,
+				2C8D96092FCA00000037014A /* tvu_irl_str.c in Sources */,
+				2C8D960C2FCA00000037014A /* tvu_irl_bandwidth_meter.c in Sources */,
+				2C8D960F2FCA00000037014A /* tvu_irl_stream_config.c in Sources */,
+				2C8D96132FCA00000037014A /* tvu_irl_amf.c in Sources */,
+				2C8D96162FCA00000037014A /* tvu_irl_messages.c in Sources */,
+				2C8D96192FCA00000037014A /* tvu_irl_video_config.c in Sources */,
+				2C8D961C2FCA00000037014A /* tvu_irl_audio_config.c in Sources */,
+				2C8D961F2FCA00000037014A /* tvu_irl_media_clock.c in Sources */,
+				2C8D96222FCA00000037014A /* tvu_irl_media_packet.c in Sources */,
+				2C8D96252FCA00000037014A /* tvu_irl_hardware_decoder.c in Sources */,
+				2C8D96282FCA00000037014A /* tvu_irl_audio_decoder.c in Sources */,
+				2C8D962C2FCA00000037014A /* tvu_irl_transport.c in Sources */,
+				2C8D962F2FCA00000037014A /* tvu_irl_stream_connection.c in Sources */,
+				2C8D96322FCA00000037014A /* tvu_irl_media_pipeline.c in Sources */,
+				2C8D96352FCA00000037014A /* tvu_irl_streaming_server.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
